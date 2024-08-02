@@ -1,8 +1,10 @@
-import { NestFactory } from '@nestjs/core';
+import { CommandFactory } from 'nest-commander';
 import { BatchModule } from './batch.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(BatchModule);
-  await app.listen(3000);
+  await CommandFactory.run(BatchModule, {
+    logger: ['log', 'error', 'warn', 'debug', 'verbose', 'fatal'],
+  });
 }
+
 bootstrap();
