@@ -1,22 +1,22 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/ant-sting/src",
+  "sourceRoot": "apps/api/src",
   "compilerOptions": {
+    "builder": "tsc",
     "deleteOutDir": true,
-    "webpack": true,
-    "tsConfigPath": "apps/ant-sting/tsconfig.app.json"
+    "tsConfigPath": "apps/api/tsconfig.app.json"
   },
   "monorepo": true,
-  "root": "apps/ant-sting",
+  "root": "apps/api",
   "projects": {
-    "ant-sting": {
+    "api": {
       "type": "application",
-      "root": "apps/ant-sting",
+      "root": "apps/api",
       "entryFile": "main",
-      "sourceRoot": "apps/ant-sting/src",
+      "sourceRoot": "apps/api/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/ant-sting/tsconfig.app.json"
+        "tsConfigPath": "apps/api/tsconfig.app.json"
       }
     },
     "batch": {
