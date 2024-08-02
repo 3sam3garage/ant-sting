@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ReportCrawlerCommand } from './commands';
-import { ReportCrawlerTask } from './tasks';
+import { InvestReportCrawlerTask } from './tasks';
 
 @Module({
-  providers: [ReportCrawlerCommand, ReportCrawlerTask],
+  providers: [ReportCrawlerCommand, InvestReportCrawlerTask],
 })
 export class ReportBatchModule {}
