@@ -18,10 +18,11 @@ export class ReportCrawlerTask {
     const root = eucKR2utf8(response.data);
     const html = parseToHTML(root);
 
-    const rows = html.querySelectorAll(
-      'table[summary="투자정보 리포트 게시판 글목록"] > tbody > tr',
-    );
-    // .map((row) => console.log(row.innerHTML));
+    const rows = html
+      .querySelectorAll('#contentarea_left > div.box_type_m > table.type_1 > tr')
+      .map((row) => console.log(row.innerHTML));
+
+    console.log(rows.length);
 
     console.log(1);
     console.log(1);
