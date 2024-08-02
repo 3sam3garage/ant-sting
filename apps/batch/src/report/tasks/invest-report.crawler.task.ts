@@ -4,11 +4,17 @@ import { Injectable } from '@nestjs/common';
 import { eucKR2utf8, formatSixDigitDate } from '@libs/common';
 import { REQUEST_HEADERS } from '../constants';
 import { InvestReport } from '../interface';
+import {
+  InvestReportRepository,
+  InvestReport as InvestReportEntity,
+} from '@libs/domain';
 
 @Injectable()
 export class InvestReportCrawlerTask {
   private readonly N_PAY_RESEARCH =
     'https://finance.naver.com/research/invest_list.naver';
+
+  constructor(private readonly investReportRepo: InvestReportRepository) {}
 
   async exec() {
     const response = await axios.get(`${this.N_PAY_RESEARCH}?&page=3`, {
@@ -23,7 +29,7 @@ export class InvestReportCrawlerTask {
       .querySelectorAll('#contentarea_left > div.box_type_m > table.type_1 tr')
       .filter((row) => row.querySelector('td.file'));
 
-    const items: InvestReport[] = [];
+    const investReports: InvestReport[] = [];
     for (const row of rows) {
       const cells = row.querySelectorAll('td:not(.file)');
       const titleAnchor = cells.shift().querySelector('a');
@@ -32,7 +38,7 @@ export class InvestReportCrawlerTask {
       );
       const anchor = row.querySelector('td.file > a');
 
-      items.push({
+      investReports.push({
         title: titleAnchor.innerHTML.trim(),
         detailUrl: titleAnchor.getAttribute('href'),
         stockFirm,
@@ -42,7 +48,9 @@ export class InvestReportCrawlerTask {
       });
     }
 
-    console.log(items);
-    return null;
+    for (const report of investReports) {
+      const entity = InvestReportEntity.create(report);
+      await this.investReportRepo.createOne(entity);
+    }
   }
 }
