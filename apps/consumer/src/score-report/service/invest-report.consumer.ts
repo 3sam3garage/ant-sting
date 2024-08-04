@@ -18,5 +18,8 @@ export class InvestReportConsumer extends BaseConsumer {
       new ObjectId(data.id),
     );
     Logger.log(investReport.title);
+
+    // 1. 페이지에 간다.
+    // 2. 페이지 요약 정보를 가져온다.
   }
 }
