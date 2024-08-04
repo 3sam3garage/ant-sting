@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { NODE_ENV } from '../config.constants';
+import { NODE_ENV } from '../constants';
 import commonConfig from '../source/common.config';
 
 @Injectable()

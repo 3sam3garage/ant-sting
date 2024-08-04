@@ -37,10 +37,10 @@
       "@libs/domain/*": [
         "libs/domain/src/*"
       ],
-      "@config/config": [
+      "@libs/config": [
         "libs/config/src"
       ],
-      "@config/config/*": [
+      "@libs/config/*": [
         "libs/config/src/*"
       ]
     }

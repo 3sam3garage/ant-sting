@@ -12,3 +12,7 @@ export enum NODE_ENV {
 export enum DB_NAME {
   ANT_STING = 'ant-sting',
 }
+
+export enum QUEUE_NAME {
+  INVEST_REPORT_SUMMARY = 'INVEST_REPORT_SUMMARY',
+}

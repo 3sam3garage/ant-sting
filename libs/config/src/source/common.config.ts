@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { NODE_ENV } from '../config.constants';
+import { NODE_ENV } from '../constants';
 
 export interface CommonConfig {
   /** 컨테이너 여부 */

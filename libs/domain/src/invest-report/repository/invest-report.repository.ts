@@ -1,4 +1,4 @@
-import { MongoRepository } from 'typeorm';
+import { MongoRepository, ObjectId } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InvestReport } from '../entity';
@@ -14,5 +14,9 @@ export class InvestReportRepository extends MongoRepository<InvestReport> {
 
   async createOne(data: InvestReport) {
     return this.repo.insertOne(data);
+  }
+
+  async findOneById(id: ObjectId) {
+    return this.repo.findOne({ where: { _id: id } });
   }
 }

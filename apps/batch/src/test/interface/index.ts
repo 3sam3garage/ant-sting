@@ -1,0 +1,32 @@
+export interface Review {
+  reviewId: string;
+  displayWriter: string;
+  reviewAt: string;
+  createdAt: string;
+  title: string;
+  content: string;
+  itemName: string;
+  displayName: string;
+  profileImage: string;
+  helpfulTrueCount: number;
+  helpfulCount: number;
+  ratingStars: string;
+  ratingAverage: number;
+  answers: string;
+  appLink: string;
+  reviewerBadges: string;
+  hasImageAttachment: string;
+  hasVideoAttachment: string;
+  attachmentCount: string;
+  imageAttachmentThumbnail: string;
+  videoAttachmentThumbnail: string;
+  attachments: string;
+  reviewTags: string;
+  representType: string;
+  vendorName: string;
+  footer: string;
+  vine: string;
+  vineType: string;
+  titleHighlights: string;
+  _rank?: number;
+}
