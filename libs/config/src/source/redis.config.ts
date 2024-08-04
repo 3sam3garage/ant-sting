@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
-import { ConnectionOptions } from 'bullmq';
+import { CommonRedisOptions } from 'ioredis';
 
-export default registerAs<ConnectionOptions>('REDIS', () => {
+export default registerAs<CommonRedisOptions>('REDIS', () => {
   const { env } = process;
 
   return {

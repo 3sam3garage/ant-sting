@@ -1,11 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {
-  AppConfigModule,
-  DatabaseConfigService,
-  RedisConfigService,
-} from '@libs/config';
-import { BullModule } from '@nestjs/bullmq';
+import { AppConfigModule, DatabaseConfigService } from '@libs/config';
 
 @Module({
   imports: [
@@ -13,12 +8,6 @@ import { BullModule } from '@nestjs/bullmq';
     TypeOrmModule.forRootAsync({
       inject: [DatabaseConfigService],
       useFactory: (config: DatabaseConfigService) => config.getConfig(),
-    }),
-    BullModule.forRootAsync({
-      inject: [RedisConfigService],
-      useFactory: (config: RedisConfigService) => ({
-        connection: config.getConfig(),
-      }),
     }),
   ],
 })

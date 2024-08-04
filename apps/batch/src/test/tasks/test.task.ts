@@ -17,7 +17,10 @@ export class TestTask {
 
     for (const item of items) {
       const id = item._id.toString();
-      await this.queue.add(id, { jobId: id });
+      await this.queue.add(
+        { id },
+        { jobId: id, removeOnComplete: true, removeOnFail: true },
+      );
     }
   }
 }

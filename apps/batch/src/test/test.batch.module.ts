@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { InvestReportDomainModule } from '@libs/domain';
+import { BullModule } from '@nestjs/bull';
+import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { TestCommand } from './commands';
 import { TestTask } from './tasks';
-import { BullModule } from '@nestjs/bullmq';
-import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 
 @Module({
   imports: [
@@ -11,8 +11,8 @@ import { QUEUE_NAME, RedisConfigService } from '@libs/config';
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.INVEST_REPORT_SCORE,
       inject: [RedisConfigService],
-      useFactory: (config: RedisConfigService) => {
-        return { connection: config.getConfig() };
+      useFactory: async (config: RedisConfigService) => {
+        return { redis: config.getConfig() };
       },
     }),
   ],
