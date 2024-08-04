@@ -16,8 +16,22 @@ export class InvestReportCrawlerTask {
 
   constructor(private readonly investReportRepo: InvestReportRepository) {}
 
+  private figureNid(link: string): string {
+    const [, params] = link.split('?');
+    const queries = params.split('&');
+
+    for (const query of queries) {
+      if (query.includes('nid')) {
+        const [, value] = query.split('=');
+        return value?.trim();
+      }
+    }
+
+    return '';
+  }
+
   async exec() {
-    const response = await axios.get(`${this.N_PAY_RESEARCH}?&page=3`, {
+    const response = await axios.get(`${this.N_PAY_RESEARCH}?&page=2`, {
       headers: { ...REQUEST_HEADERS },
       responseType: 'arraybuffer',
     });
@@ -37,10 +51,12 @@ export class InvestReportCrawlerTask {
         cell.innerText.trim(),
       );
       const anchor = row.querySelector('td.file > a');
+      const detailUrl = titleAnchor.getAttribute('href');
 
       investReports.push({
         title: titleAnchor.innerHTML.trim(),
-        detailUrl: titleAnchor.getAttribute('href'),
+        nid: this.figureNid(detailUrl),
+        detailUrl,
         stockFirm,
         date: formatSixDigitDate(date),
         views,
@@ -49,8 +65,13 @@ export class InvestReportCrawlerTask {
     }
 
     for (const report of investReports) {
-      const entity = InvestReportEntity.create(report);
-      await this.investReportRepo.createOne(entity);
+      const investReport = await this.investReportRepo.findOneByNid(report.nid);
+      if (investReport) {
+        await this.investReportRepo.updateOne(investReport, report);
+      } else {
+        const entity = InvestReportEntity.create(report);
+        await this.investReportRepo.createOne(entity);
+      }
     }
   }
 }

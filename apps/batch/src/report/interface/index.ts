@@ -1,4 +1,5 @@
 export interface BaseReport {
+  nid: string;
   title: string;
   detailUrl: string;
   stockFirm: string;

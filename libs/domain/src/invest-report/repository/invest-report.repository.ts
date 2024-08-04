@@ -13,10 +13,19 @@ export class InvestReportRepository extends MongoRepository<InvestReport> {
   }
 
   async createOne(data: InvestReport) {
-    return this.repo.insertOne(data);
+    return this.repo.save(data);
   }
 
   async findOneById(id: ObjectId) {
     return this.repo.findOne({ where: { _id: id } });
+  }
+
+  async findOneByNid(nid: string) {
+    return this.repo.findOne({ where: { nid } });
+  }
+
+  async updateOne(entity: InvestReport, data: Partial<InvestReport>) {
+    Object.assign(entity, data);
+    return this.repo.save(entity);
   }
 }

@@ -21,5 +21,7 @@ export class InvestReportConsumer extends BaseConsumer {
 
     // 1. 페이지에 간다.
     // 2. 페이지 요약 정보를 가져온다.
+    // 3. ai 요청을 날린다.
+    // 4. 요약 정보와 ai 요청 결과를 DB에 저장한다.
   }
 }
