@@ -1,11 +1,12 @@
 import { Processor } from '@nestjs/bullmq';
 import { Process } from '@nestjs/bull';
 import { Job } from 'bull';
-import { QUEUE_NAME } from '../constants';
-import { BaseConsumer } from '../../base.consumer';
 import { InvestReportRepository } from '@libs/domain';
+import { QUEUE_NAME } from '@libs/config';
+import { BaseConsumer } from '../../base.consumer';
+import { Logger } from '@nestjs/common';
 
-@Processor(QUEUE_NAME.INVEST_REPORT_SUMMARY)
+@Processor(QUEUE_NAME.INVEST_REPORT_SCORE)
 export class InvestReportConsumer extends BaseConsumer {
   constructor(private readonly investReportRepo: InvestReportRepository) {
     super();
@@ -13,9 +14,7 @@ export class InvestReportConsumer extends BaseConsumer {
 
   @Process()
   async run({ data }: Job) {
-    console.log(data);
-
     const investReport = await this.investReportRepo.findOneById(data.id);
-    console.log(investReport);
+    Logger.log(investReport);
   }
 }
