@@ -1,7 +1,6 @@
 import { IsDate, IsNumber, IsString, ValidateNested } from 'class-validator';
-import { plainToInstance, Type } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import {
-  BaseEntity,
   BeforeInsert,
   BeforeUpdate,
   Column,
@@ -68,14 +67,27 @@ export class InvestReport {
     return plainToInstance(InvestReport, data);
   }
 
+  // assign(entity: InvestReport, data: Partial<InvestReport>) {
+  //   Object.assign(entity, data);
+  //   return entity;
+  // }
+
+  addAiScore(aiScore: AIScore): void {
+    if (!this.aiScores) {
+      this.aiScores = [];
+    }
+
+    this.aiScores.push(aiScore);
+  }
+
   @BeforeInsert()
-  createTimestamp() {
+  onCreate() {
     this.createdAt = new Date();
     this.updatedAt = new Date();
   }
 
   @BeforeUpdate()
-  updateTimestamp() {
+  onUpdate() {
     this.updatedAt = new Date();
   }
 }

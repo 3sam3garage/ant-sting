@@ -3,7 +3,7 @@ import { InvestReportDomainModule } from '@libs/domain';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { TestCommand } from './commands';
-import { TestTask } from './tasks';
+import { ReportSummaryTask, TestTask } from './tasks';
 
 @Module({
   imports: [
@@ -16,6 +16,6 @@ import { TestTask } from './tasks';
       },
     }),
   ],
-  providers: [TestCommand, TestTask],
+  providers: [TestCommand, TestTask, ReportSummaryTask],
 })
 export class TestBatchModule {}

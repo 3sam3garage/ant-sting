@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { POST_FIX, QUERY, REPORT_SUMMARY } from './constant';
+import { REPORT_SUMMARY, QUERY, POST_FIX } from '@libs/domain';
 
 describe('ollama', () => {
   it(

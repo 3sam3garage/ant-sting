@@ -15,6 +15,7 @@
     "start:batch:report:invest": "nest start batch -- report invest",
     "start:batch:report:stock": "nest start batch -- report stock",
     "start:batch:test:queue": "nest start batch -- test queue",
+    "start:batch:test:report-summary": "nest start batch -- test report-summary",
     "start:consumer": "nest start consumer",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",

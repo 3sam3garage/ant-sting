@@ -16,8 +16,8 @@ export class InvestReportRepository extends MongoRepository<InvestReport> {
     return this.repo.save(data);
   }
 
-  async findOneById(id: ObjectId) {
-    return this.repo.findOne({ where: { _id: id } });
+  async findOneById(_id: ObjectId) {
+    return this.repo.findOne({ where: { _id } });
   }
 
   async findOneByNid(nid: string) {
