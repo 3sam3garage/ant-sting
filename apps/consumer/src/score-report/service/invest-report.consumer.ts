@@ -1,27 +1,58 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { InvestReportRepository } from '@libs/domain';
-import { QUEUE_NAME } from '@libs/config';
-import { BaseConsumer } from '../../base.consumer';
 import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
+import axios from 'axios';
+import { parse as parseToHTML } from 'node-html-parser';
+import { InvestReportRepository, POST_FIX, QUERY } from '@libs/domain';
+import { QUEUE_NAME } from '@libs/config';
+import { eucKR2utf8, joinUrl } from '@libs/common';
+import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.INVEST_REPORT_SCORE)
 export class InvestReportConsumer extends BaseConsumer {
-  constructor(private readonly investReportRepo: InvestReportRepository) {
+  private readonly BASE_URL = 'https://finance.naver.com/research';
+
+  constructor(private readonly repo: InvestReportRepository) {
     super();
   }
 
-  @Process()
+  @Process({ concurrency: 2 })
   async run({ data }: Job<{ _id: string }>) {
-    const investReport = await this.investReportRepo.findOneById(
-      new ObjectId(data._id),
-    );
-    Logger.log(investReport.title);
+    const investReport = await this.repo.findOneById(new ObjectId(data._id));
 
-    // 1. 페이지에 간다.
-    // 2. 페이지 요약 정보를 가져온다.
-    // 3. ai 요청을 날린다.
-    // 4. 요약 정보와 ai 요청 결과를 DB에 저장한다.
+    if (!investReport.summary) {
+      const response = await axios.get(
+        joinUrl(this.BASE_URL, investReport.detailUrl),
+        { responseType: 'arraybuffer' },
+      );
+
+      const text = eucKR2utf8(response.data);
+      const html = parseToHTML(text);
+
+      investReport.summary = html
+        .querySelectorAll('table td.view_cnt p')
+        .map((item) => item?.innerText?.trim())
+        .join('\n');
+
+      await this.repo.save(investReport);
+    }
+
+    try {
+      const aiResponse = await axios.post(
+        'http://localhost:11434/api/generate',
+        {
+          model: 'llama3.1',
+          prompt: `${investReport.summary} \n\n ${QUERY} \n\n ${POST_FIX}`,
+          stream: false,
+        },
+      );
+
+      const { reason, score } = JSON.parse(aiResponse.data.response);
+      investReport.addAiScore({ reason, score: +score });
+      await this.repo.save(investReport);
+    } catch (e) {
+      Logger.error(e);
+    }
   }
 }

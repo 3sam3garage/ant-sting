@@ -44,6 +44,7 @@ export class ReportSummaryTask {
 
       try {
         const { reason, score } = JSON.parse(aiResponse.data.response);
+        investReport.summary = summary;
         investReport.addAiScore({ reason, score: +score });
         await this.repo.save(investReport);
       } catch (e) {

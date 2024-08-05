@@ -51,6 +51,10 @@ export class InvestReport {
   // @deprecated 실제론 number 타입임
   views: string;
 
+  @IsString()
+  @Column()
+  summary?: string;
+
   @Column(() => AIScore, { array: true })
   @ValidateNested({ each: true })
   aiScores?: AIScore[];
