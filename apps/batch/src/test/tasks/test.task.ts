@@ -8,18 +8,17 @@ import { Queue } from 'bull';
 export class TestTask {
   constructor(
     private readonly repo: InvestReportRepository,
-    @InjectQueue(QUEUE_NAME.INVEST_REPORT_SCORE)
-    private readonly queue: Queue,
+    @InjectQueue(QUEUE_NAME.INVEST_REPORT_SCORE) private readonly queue: Queue,
   ) {}
 
   async exec(): Promise<void> {
     const items = await this.repo.find({ take: 30 });
 
     for (const item of items) {
-      const id = item._id.toString();
+      const _id = item._id.toString();
       await this.queue.add(
-        { id },
-        { jobId: id, removeOnComplete: true, removeOnFail: true },
+        { _id },
+        { jobId: _id, removeOnComplete: true, removeOnFail: true },
       );
     }
   }

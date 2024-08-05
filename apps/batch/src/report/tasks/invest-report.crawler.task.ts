@@ -8,13 +8,19 @@ import {
   InvestReportRepository,
   InvestReport as InvestReportEntity,
 } from '@libs/domain';
+import { InjectQueue } from '@nestjs/bull';
+import { QUEUE_NAME } from '@libs/config';
+import { Queue } from 'bull';
 
 @Injectable()
 export class InvestReportCrawlerTask {
   private readonly N_PAY_RESEARCH =
     'https://finance.naver.com/research/invest_list.naver';
 
-  constructor(private readonly investReportRepo: InvestReportRepository) {}
+  constructor(
+    private readonly investReportRepo: InvestReportRepository,
+    @InjectQueue(QUEUE_NAME.INVEST_REPORT_SCORE) private readonly queue: Queue,
+  ) {}
 
   private figureNid(link: string): string {
     const [, params] = link.split('?');
@@ -65,13 +71,19 @@ export class InvestReportCrawlerTask {
     }
 
     for (const report of investReports) {
-      const investReport = await this.investReportRepo.findOneByNid(report.nid);
+      let investReport = await this.investReportRepo.findOneByNid(report.nid);
       if (investReport) {
         await this.investReportRepo.updateOne(investReport, report);
       } else {
         const entity = InvestReportEntity.create(report);
-        await this.investReportRepo.createOne(entity);
+        investReport = await this.investReportRepo.createOne(entity);
       }
+
+      const _id = investReport._id.toString();
+      await this.queue.add(
+        { _id },
+        { jobId: _id, removeOnComplete: true, removeOnFail: true },
+      );
     }
   }
 }
