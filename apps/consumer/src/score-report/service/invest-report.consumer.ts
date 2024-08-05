@@ -13,9 +13,9 @@ export class InvestReportConsumer extends BaseConsumer {
   }
 
   @Process()
-  async run({ data }: Job) {
+  async run({ data }: Job<{ _id: string }>) {
     const investReport = await this.investReportRepo.findOneById(
-      new ObjectId(data.id),
+      new ObjectId(data._id),
     );
     Logger.log(investReport.title);
 
