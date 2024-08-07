@@ -3,14 +3,25 @@ import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
 import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
 import { N_PAY_RESEARCH, REQUEST_HEADERS } from '../constants';
-import { InvestReport, MarketInfoReport } from '../interface';
+import { MarketInfoReport } from '../interface';
 import { figureNid } from '../utils';
+import {
+  MarketInfoReport as MarketInfoReportEntity,
+  MarketInfoReportRepository,
+} from '@libs/domain';
+import { InjectQueue } from '@nestjs/bull';
+import { QUEUE_NAME } from '@libs/config';
+import { Queue } from 'bull';
 
 @Injectable()
 export class MarketInfoReportCrawlerTask {
   private readonly URL = joinUrl(N_PAY_RESEARCH, 'market_info_list.naver');
 
-  constructor() {} // @InjectQueue(QUEUE_NAME.INVEST_REPORT_SCORE) private readonly queue: Queue, // private readonly investReportRepo: InvestReportRepository,
+  constructor(
+    private readonly marketInfoReportRepo: MarketInfoReportRepository,
+    @InjectQueue(QUEUE_NAME.MARKET_INFO_REPORT_SCORE)
+    private readonly queue: Queue,
+  ) {}
 
   async exec() {
     const response = await axios.get(this.URL, {
@@ -44,6 +55,24 @@ export class MarketInfoReportCrawlerTask {
         views,
         file: anchor.getAttribute('href'),
       });
+    }
+
+    for (const report of marketInfoReports) {
+      let investReport = await this.marketInfoReportRepo.findOneByNid(
+        report.nid,
+      );
+      if (investReport) {
+        await this.marketInfoReportRepo.updateOne(investReport, report);
+      } else {
+        const entity = MarketInfoReportEntity.create(report);
+        investReport = await this.marketInfoReportRepo.createOne(entity);
+      }
+
+      const _id = investReport._id.toString();
+      await this.queue.add(
+        { _id },
+        { jobId: _id, removeOnComplete: true, removeOnFail: true },
+      );
     }
   }
 }

@@ -2,9 +2,10 @@ import { Command, CommandRunner } from 'nest-commander';
 import { InvestReportCrawlerTask, MarketInfoReportCrawlerTask } from '../tasks';
 
 enum SUB_COMMAND {
-  INVEST = 'invest',
   STOCK = 'stock',
+  INVEST = 'invest',
   MARKET_INFO = 'market-info',
+  INDUSTRY = 'industry',
 }
 
 @Command({ name: 'report' })

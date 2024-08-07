@@ -21,4 +21,6 @@ describe('ollama', () => {
     },
     120 * 1000,
   );
+
+  it('llama 3.1 api', async () => {});
 });
