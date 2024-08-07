@@ -3,7 +3,7 @@ import { BullModule } from '@nestjs/bull';
 import { InvestReportDomainModule } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { ReportCrawlerCommand } from './commands';
-import { InvestReportCrawlerTask } from './tasks';
+import { InvestReportCrawlerTask, MarketInfoReportCrawlerTask } from './tasks';
 
 @Module({
   imports: [
@@ -16,6 +16,10 @@ import { InvestReportCrawlerTask } from './tasks';
       },
     }),
   ],
-  providers: [ReportCrawlerCommand, InvestReportCrawlerTask],
+  providers: [
+    ReportCrawlerCommand,
+    InvestReportCrawlerTask,
+    MarketInfoReportCrawlerTask,
+  ],
 })
 export class ReportBatchModule {}

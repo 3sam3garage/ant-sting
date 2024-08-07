@@ -4,3 +4,5 @@ export const REQUEST_HEADERS = {
   'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
   'Accept-Encoding': 'gzip, deflate, br, zstd',
 };
+
+export const N_PAY_RESEARCH = 'https://finance.naver.com/research';

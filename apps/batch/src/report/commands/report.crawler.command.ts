@@ -1,16 +1,17 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { InvestReportCrawlerTask } from '../tasks';
+import { InvestReportCrawlerTask, MarketInfoReportCrawlerTask } from '../tasks';
 
 enum SUB_COMMAND {
-  // 목록 크롤링
   INVEST = 'invest',
   STOCK = 'stock',
+  MARKET_INFO = 'market-info',
 }
 
 @Command({ name: 'report' })
 export class ReportCrawlerCommand extends CommandRunner {
   constructor(
-    private readonly financialStatementCrawlerTask: InvestReportCrawlerTask,
+    private readonly investReportCrawlerTask: InvestReportCrawlerTask,
+    private readonly marketInfoReportCrawlerTask: MarketInfoReportCrawlerTask,
   ) {
     super();
   }
@@ -21,7 +22,9 @@ export class ReportCrawlerCommand extends CommandRunner {
 
     switch (subcommand) {
       case SUB_COMMAND.INVEST:
-        return await this.financialStatementCrawlerTask.exec();
+        return await this.investReportCrawlerTask.exec();
+      case SUB_COMMAND.MARKET_INFO:
+        return await this.marketInfoReportCrawlerTask.exec();
       case SUB_COMMAND.STOCK:
       // return await this.financialStatementCrawlerTask.exec();
       default:

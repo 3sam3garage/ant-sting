@@ -13,7 +13,7 @@
     "start:api:prod": "node dist/apps/api/main",
     "start:batch:financial-statement": "nest start batch -- financial-statement",
     "start:batch:report:invest": "nest start batch -- report invest",
-    "start:batch:report:stock": "nest start batch -- report stock",
+    "start:batch:report:market-info": "nest start batch -- report market-info",
     "start:batch:report-summary:invest": "nest start batch -- report-summary daily-invest",
     "start:batch:test:queue": "nest start batch -- test queue",
     "start:batch:test:report-summary": "nest start batch -- test report-summary",
