@@ -5,8 +5,6 @@ enum SUB_COMMAND {
   // 목록 크롤링
   INVEST = 'invest',
   STOCK = 'stock',
-
-  // summary 종합하여 일간 리포트 요약
 }
 
 @Command({ name: 'report' })
