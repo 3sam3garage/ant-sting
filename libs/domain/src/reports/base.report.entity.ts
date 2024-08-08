@@ -1,7 +1,6 @@
+import { BaseEntity } from '../base.entity';
+import { Column } from 'typeorm';
 import { IsNumber, IsString, ValidateNested } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-import { Column, Entity } from 'typeorm';
-import { BaseEntity } from '../../base.entity';
 
 class AIScore {
   @Column()
@@ -13,8 +12,7 @@ class AIScore {
   reason: string;
 }
 
-@Entity({ name: 'market-info-reports' })
-export class MarketInfoReport extends BaseEntity {
+export class BaseReportEntity extends BaseEntity {
   @Column()
   @IsString()
   title: string;
@@ -47,10 +45,6 @@ export class MarketInfoReport extends BaseEntity {
   @Column(() => AIScore, { array: true })
   @ValidateNested({ each: true })
   aiScores?: AIScore[];
-
-  static create(data: Partial<MarketInfoReport>) {
-    return plainToInstance(MarketInfoReport, data);
-  }
 
   addAiScore(aiScore: AIScore): void {
     if (!this.aiScores) {

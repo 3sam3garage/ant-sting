@@ -58,8 +58,6 @@ export class IndustryReportCrawlerTask {
       });
     }
 
-    console.log(1);
-
     for (const report of industryReports) {
       let industryReport = await this.industryReportRepo.findOneByNid(
         report.nid,
