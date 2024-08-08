@@ -18,7 +18,7 @@
     "start:batch:report:economy": "nest start batch -- report economy",
     "start:batch:report:debenture": "nest start batch -- report debenture",
     "start:batch:report:stock": "nest start batch -- report stock",
-    "start:batch:report-summary:invest": "nest start batch -- report-summary daily-invest",
+    "start:batch:report-summary:daily": "nest start batch -- report-summary daily",
     "start:batch:test:queue": "nest start batch -- test queue",
     "start:batch:test:report-summary": "nest start batch -- test report-summary",
     "start:consumer": "nest start consumer",

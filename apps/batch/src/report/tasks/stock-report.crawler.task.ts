@@ -50,7 +50,7 @@ export class StockReportCrawlerTask {
       const cells = row.querySelectorAll('td:not(.file)');
       const [itemAnchor, titleAnchor] = row.querySelectorAll('td > a');
 
-      const [stockName, stockFirm, date, views] = cells.map((cell) =>
+      const [stockName, , stockFirm, date, views] = cells.map((cell) =>
         cell.innerText.trim(),
       );
       const anchor = row.querySelector('td.file > a');

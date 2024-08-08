@@ -1,43 +1,30 @@
 import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
-import { Injectable } from '@nestjs/common';
-import { eucKR2utf8, formatSixDigitDate } from '@libs/common';
-import { REQUEST_HEADERS } from '../constants';
-import { InvestReport } from '../interface';
 import {
   InvestReportRepository,
   InvestReport as InvestReportEntity,
 } from '@libs/domain';
 import { InjectQueue } from '@nestjs/bull';
-import { QUEUE_NAME } from '@libs/config';
 import { Queue } from 'bull';
+import { Injectable } from '@nestjs/common';
+import { QUEUE_NAME } from '@libs/config';
+import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
+import { N_PAY_RESEARCH, REQUEST_HEADERS } from '../constants';
+import { InvestReport } from '../interface';
+
+import { figureNid } from '../utils';
 
 @Injectable()
 export class InvestReportCrawlerTask {
-  private readonly N_PAY_RESEARCH =
-    'https://finance.naver.com/research/invest_list.naver';
+  private readonly URL = joinUrl(N_PAY_RESEARCH, 'invest_list.naver');
 
   constructor(
     private readonly investReportRepo: InvestReportRepository,
     @InjectQueue(QUEUE_NAME.INVEST_REPORT_SCORE) private readonly queue: Queue,
   ) {}
 
-  private figureNid(link: string): string {
-    const [, params] = link.split('?');
-    const queries = params.split('&');
-
-    for (const query of queries) {
-      if (query.includes('nid')) {
-        const [, value] = query.split('=');
-        return value?.trim();
-      }
-    }
-
-    return '';
-  }
-
   async exec() {
-    const response = await axios.get(`${this.N_PAY_RESEARCH}?&page=2`, {
+    const response = await axios.get(this.URL, {
       headers: { ...REQUEST_HEADERS },
       responseType: 'arraybuffer',
     });
@@ -61,7 +48,7 @@ export class InvestReportCrawlerTask {
 
       investReports.push({
         title: titleAnchor.innerHTML.trim(),
-        nid: this.figureNid(detailUrl),
+        nid: figureNid(detailUrl),
         detailUrl,
         stockFirm,
         date: formatSixDigitDate(date),

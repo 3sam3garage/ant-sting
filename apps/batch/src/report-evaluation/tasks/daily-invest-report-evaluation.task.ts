@@ -1,54 +1,106 @@
 import { Injectable } from '@nestjs/common';
 import { format } from 'date-fns';
 import {
+  DebentureReport,
+  DebentureReportRepository,
+  EconomyReport,
+  EconomyReportRepository,
+  IndustryReport,
+  IndustryReportRepository,
+  InvestReport,
   InvestReportRepository,
-  POST_FIX,
-  QUERY,
+  MarketInfoReport,
+  MarketInfoReportRepository,
   ReportSummary,
   ReportSummaryRepository,
+  StockReport,
+  StockReportRepository,
 } from '@libs/domain';
-import axios from 'axios';
 import { retry } from '@libs/common';
-import { REPORT_SUMMARY_TYPE } from '@libs/domain/report-summary/constants';
+import { REPORT_SUMMARY_TYPE } from '@libs/domain';
+import { OllamaService } from '@libs/ai';
 
 @Injectable()
 export class DailyInvestReportEvaluationTask {
   constructor(
     private readonly investReportRepo: InvestReportRepository,
+    private readonly debentureReportRepo: DebentureReportRepository,
+    private readonly economyReportRepo: EconomyReportRepository,
+    private readonly stockReportRepo: StockReportRepository,
+    private readonly industryReportRepo: IndustryReportRepository,
+    private readonly marketInfoReportRepo: MarketInfoReportRepository,
     private readonly reportSummaryRepo: ReportSummaryRepository,
+    private readonly ollamaService: OllamaService,
   ) {}
 
+  private figureType(
+    entity:
+      | InvestReport
+      | DebentureReport
+      | EconomyReport
+      | StockReport
+      | IndustryReport
+      | MarketInfoReport,
+  ): REPORT_SUMMARY_TYPE {
+    switch (true) {
+      case entity instanceof InvestReport:
+        return REPORT_SUMMARY_TYPE.DAILY_INVEST_REPORT_SUMMARY;
+      case entity instanceof DebentureReport:
+        return REPORT_SUMMARY_TYPE.DAILY_DEBENTURE_REPORT_SUMMARY;
+      case entity instanceof EconomyReport:
+        return REPORT_SUMMARY_TYPE.DAILY_ECONOMY_REPORT_SUMMARY;
+      case entity instanceof StockReport:
+        return REPORT_SUMMARY_TYPE.DAILY_STOCK_REPORT_SUMMARY;
+      case entity instanceof IndustryReport:
+        return REPORT_SUMMARY_TYPE.DAILY_INDUSTRY_REPORT_SUMMARY;
+      case entity instanceof MarketInfoReport:
+        return REPORT_SUMMARY_TYPE.DAILY_MARKET_INFO_REPORT_SUMMARY;
+    }
+  }
+
   async exec() {
-    const date = format(new Date('2024-08-01'), 'yyyy-MM-dd');
-    // @todo 요 date 날짜는 나중에 뺄 것.
-    const reports = await this.investReportRepo.find({
+    // @todo date fixed 된 값 나중에 뺄 것.
+    const date = format(new Date('2024-08-08'), 'yyyy-MM-dd');
+    const query = {
       where: { summary: { $exists: true }, date },
       select: { summary: true },
-    });
+    };
+    const reportLists = await Promise.all([
+      this.investReportRepo.find(query),
+      this.debentureReportRepo.find(query),
+      this.economyReportRepo.find(query),
+      this.stockReportRepo.find(query),
+      this.industryReportRepo.find(query),
+      this.marketInfoReportRepo.find(query),
+    ]);
 
-    const summary = reports.reduce((acc, report) => {
-      acc += report.summary + `\n\n`;
-      return acc;
-    }, '');
+    for (const reports of reportLists) {
+      const summary = reports.map((item) => item.summary).join('\n\n');
+      const entity = reports.shift();
+      const type = this.figureType(entity);
 
-    await retry(async () => {
-      const aiResponse = await axios.post(
-        'http://localhost:11434/api/generate',
-        {
-          model: 'llama3.1',
-          prompt: `${summary} \n\n ${QUERY} \n\n ${POST_FIX}`,
-          stream: false,
-        },
-      );
+      if (!type) {
+        continue;
+      }
 
-      const response = JSON.parse(aiResponse.data.response);
+      await retry(async () => {
+        const aiScore = await this.ollamaService.scoreSummary(summary);
+        const report = await this.reportSummaryRepo.findOne({
+          where: { date, type },
+        });
 
-      const entity = ReportSummary.create({
-        ...response,
-        date,
-        type: REPORT_SUMMARY_TYPE.DAILY_INVEST_REPORT_SUMMARY,
-      });
-      await this.reportSummaryRepo.save(entity);
-    }, 3);
+        if (report) {
+          report.addAiScore(aiScore);
+          await this.reportSummaryRepo.save(report);
+        } else {
+          const entity = ReportSummary.create({
+            date,
+            type,
+            aiScores: [aiScore],
+          });
+          await this.reportSummaryRepo.save(entity);
+        }
+      }, 3);
+    }
   }
 }

@@ -4,7 +4,7 @@ import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
-import { EconomyReportRepository, POST_FIX, QUERY } from '@libs/domain';
+import { EconomyReportRepository } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { eucKR2utf8, joinUrl } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';

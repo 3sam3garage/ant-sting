@@ -3,10 +3,10 @@ import { DailyInvestReportEvaluationTask } from '../tasks';
 
 enum SUB_COMMAND {
   // summary 종합하여 일간 리포트 요약
-  DAILY_INVEST = 'daily-invest',
+  DAILY_INVEST = 'daily',
 }
 
-@Command({ name: 'report-evaluation' })
+@Command({ name: 'report-summary' })
 export class ReportEvaluationCommand extends CommandRunner {
   constructor(
     private readonly dailyInvestReportSummaryTask: DailyInvestReportEvaluationTask,

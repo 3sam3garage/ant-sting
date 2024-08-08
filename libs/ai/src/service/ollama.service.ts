@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { AiConfigService } from '@libs/config';
+import { AiScore } from '@libs/ai';
 import { POST_FIX, QUERY } from '../constants';
 
 @Injectable()
@@ -12,7 +13,7 @@ export class OllamaService {
     this.OLLAMA_URL = this.aiConfigService.ollamaUrl;
   }
 
-  async scoreSummary(summary: string) {
+  async scoreSummary(summary: string): Promise<AiScore> {
     const aiResponse = await axios.post(`${this.OLLAMA_URL}/api/generate`, {
       ...this.BASE_PARAM,
       prompt: `${summary} \n\n ${QUERY} \n\n ${POST_FIX}`,
