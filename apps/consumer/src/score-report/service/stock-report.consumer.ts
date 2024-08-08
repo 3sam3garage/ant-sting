@@ -4,8 +4,9 @@ import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
-import { POST_FIX, QUERY, StockReportRepository } from '@libs/domain';
+import { StockReportRepository } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
+import { OllamaService } from '@libs/ai';
 import { eucKR2utf8, joinUrl } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
 
@@ -13,7 +14,10 @@ import { BaseConsumer } from '../../base.consumer';
 export class StockReportConsumer extends BaseConsumer {
   private readonly BASE_URL = 'https://finance.naver.com/research';
 
-  constructor(private readonly repo: StockReportRepository) {
+  constructor(
+    private readonly repo: StockReportRepository,
+    private readonly ollamaService: OllamaService,
+  ) {
     super();
   }
 
@@ -39,16 +43,10 @@ export class StockReportConsumer extends BaseConsumer {
     }
 
     try {
-      const aiResponse = await axios.post(
-        'http://localhost:11434/api/generate',
-        {
-          model: 'llama3.1',
-          prompt: `${report.summary} \n\n ${QUERY} \n\n ${POST_FIX}`,
-          stream: false,
-        },
+      const { reason, score } = await this.ollamaService.scoreSummary(
+        report.summary,
       );
 
-      const { reason, score } = JSON.parse(aiResponse.data.response);
       report.addAiScore({ reason, score: +score });
       await this.repo.save(report);
     } catch (e) {

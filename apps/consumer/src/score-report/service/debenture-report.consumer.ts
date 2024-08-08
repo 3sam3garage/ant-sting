@@ -4,20 +4,24 @@ import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
-import { DebentureReportRepository, POST_FIX, QUERY } from '@libs/domain';
+import { DebentureReportRepository } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { eucKR2utf8, joinUrl } from '@libs/common';
+import { OllamaService } from '@libs/ai';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.DEBENTURE_REPORT_SCORE)
 export class DebentureReportConsumer extends BaseConsumer {
   private readonly BASE_URL = 'https://finance.naver.com/research';
 
-  constructor(private readonly repo: DebentureReportRepository) {
+  constructor(
+    private readonly repo: DebentureReportRepository,
+    private readonly ollamaService: OllamaService,
+  ) {
     super();
   }
 
-  @Process({ concurrency: 2 })
+  @Process({ concurrency: 1 })
   async run({ data }: Job<{ _id: string }>) {
     const report = await this.repo.findOneById(new ObjectId(data._id));
 
@@ -39,16 +43,10 @@ export class DebentureReportConsumer extends BaseConsumer {
     }
 
     try {
-      const aiResponse = await axios.post(
-        'http://localhost:11434/api/generate',
-        {
-          model: 'llama3.1',
-          prompt: `${report.summary} \n\n ${QUERY} \n\n ${POST_FIX}`,
-          stream: false,
-        },
+      const { reason, score } = await this.ollamaService.scoreSummary(
+        report.summary,
       );
 
-      const { reason, score } = JSON.parse(aiResponse.data.response);
       report.addAiScore({ reason, score: +score });
       await this.repo.save(report);
     } catch (e) {

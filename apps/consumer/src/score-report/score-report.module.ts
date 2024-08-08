@@ -9,6 +9,7 @@ import {
 } from '@libs/domain';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
+import { AiModule } from '@libs/ai';
 import {
   DebentureReportConsumer,
   EconomyReportConsumer,
@@ -26,6 +27,7 @@ import {
     EconomyReportDomainModule,
     DebentureReportDomainModule,
     StockReportDomainModule,
+    AiModule,
     BullModule.registerQueueAsync(
       {
         name: QUEUE_NAME.INVEST_REPORT_SCORE,

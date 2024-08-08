@@ -8,12 +8,16 @@ import { EconomyReportRepository, POST_FIX, QUERY } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { eucKR2utf8, joinUrl } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
+import { OllamaService } from '@libs/ai';
 
 @Processor(QUEUE_NAME.ECONOMY_REPORT_SCORE)
 export class EconomyReportConsumer extends BaseConsumer {
   private readonly BASE_URL = 'https://finance.naver.com/research';
 
-  constructor(private readonly repo: EconomyReportRepository) {
+  constructor(
+    private readonly repo: EconomyReportRepository,
+    private readonly ollamaService: OllamaService,
+  ) {
     super();
   }
 
@@ -39,16 +43,9 @@ export class EconomyReportConsumer extends BaseConsumer {
     }
 
     try {
-      const aiResponse = await axios.post(
-        'http://localhost:11434/api/generate',
-        {
-          model: 'llama3.1',
-          prompt: `${report.summary} \n\n ${QUERY} \n\n ${POST_FIX}`,
-          stream: false,
-        },
+      const { reason, score } = await this.ollamaService.scoreSummary(
+        report.summary,
       );
-
-      const { reason, score } = JSON.parse(aiResponse.data.response);
       report.addAiScore({ reason, score: +score });
       await this.repo.save(report);
     } catch (e) {

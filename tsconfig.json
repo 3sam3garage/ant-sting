@@ -42,6 +42,12 @@
       ],
       "@libs/config/*": [
         "libs/config/src/*"
+      ],
+      "@libs/ai": [
+        "libs/ai/src"
+      ],
+      "@libs/ai/*": [
+        "libs/ai/src/*"
       ]
     }
   }
