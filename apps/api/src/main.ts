@@ -1,11 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { CommonConfigService } from '@libs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  app.useGlobalPipes(new ValidationPipe());
+  const configService = app.get(CommonConfigService);
+  const port = configService.port;
 
-  Logger.log('Server on http://localhost:3000');
+  app.setGlobalPrefix('api');
+
+  await app.listen(port || 3001);
+
+  Logger.log(`Server on http://localhost:${port}`);
 }
 bootstrap();
