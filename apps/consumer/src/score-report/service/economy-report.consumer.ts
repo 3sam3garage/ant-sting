@@ -21,7 +21,7 @@ export class EconomyReportConsumer extends BaseConsumer {
     super();
   }
 
-  @Process({ concurrency: 2 })
+  @Process({ concurrency: 1 })
   async run({ data }: Job<{ _id: string }>) {
     const report = await this.repo.findOneById(new ObjectId(data._id));
 
