@@ -11,8 +11,8 @@ import {
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
-import { ReportEvaluationCommand } from './commands';
-import { DailyInvestReportEvaluationTask } from './tasks';
+import { ReportSummaryCommand } from './commands';
+import { DailyReportSummaryTask } from './tasks';
 
 @Module({
   imports: [
@@ -32,6 +32,6 @@ import { DailyInvestReportEvaluationTask } from './tasks';
       },
     }),
   ],
-  providers: [ReportEvaluationCommand, DailyInvestReportEvaluationTask],
+  providers: [ReportSummaryCommand, DailyReportSummaryTask],
 })
-export class ReportEvaluationBatchModule {}
+export class ReportSummaryBatchModule {}

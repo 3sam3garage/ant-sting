@@ -46,7 +46,7 @@ export class IndustryReportConsumer extends BaseConsumer {
       const { reason, score } = await this.ollamaService.scoreSummary(
         report.summary,
       );
-      report.addAiScore({ reason, score: +score });
+      report.addScore({ reason, score: +score });
       await this.repo.save(report);
     } catch (e) {
       Logger.error(e);

@@ -1,8 +1,9 @@
 import { BaseEntity } from '../base.entity';
 import { Column } from 'typeorm';
 import { IsNumber, IsString, ValidateNested } from 'class-validator';
+import { figureAverageScore } from '@libs/domain/reports/utils';
 
-class AIScore {
+export class AIScore {
   @Column()
   @IsNumber()
   score: number;
@@ -10,6 +11,16 @@ class AIScore {
   @Column()
   @IsString()
   reason: string;
+}
+
+export class ScoreInfo {
+  @Column()
+  @IsNumber()
+  avgScore: number;
+
+  @Column(() => AIScore, { array: true })
+  @ValidateNested({ each: true })
+  items: AIScore[] = [];
 }
 
 export class BaseReportEntity extends BaseEntity {
@@ -42,15 +53,16 @@ export class BaseReportEntity extends BaseEntity {
   @Column()
   summary?: string;
 
-  @Column(() => AIScore, { array: true })
-  @ValidateNested({ each: true })
-  aiScores?: AIScore[];
+  @Column(() => ScoreInfo)
+  @ValidateNested()
+  scoreInfo?: ScoreInfo;
 
-  addAiScore(aiScore: AIScore): void {
-    if (!this.aiScores) {
-      this.aiScores = [];
+  addScore(aiScore: AIScore): void {
+    if (!this.scoreInfo) {
+      this.scoreInfo = new ScoreInfo();
     }
 
-    this.aiScores.push(aiScore);
+    this.scoreInfo.items.push(aiScore);
+    this.scoreInfo.avgScore = figureAverageScore(this.scoreInfo.items);
   }
 }

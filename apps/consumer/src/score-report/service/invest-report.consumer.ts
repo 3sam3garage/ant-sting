@@ -47,7 +47,7 @@ export class InvestReportConsumer extends BaseConsumer {
         report.summary,
       );
 
-      report.addAiScore({ reason, score: +score });
+      report.addScore({ reason, score: +score });
       await this.repo.save(report);
     } catch (e) {
       Logger.error(e);

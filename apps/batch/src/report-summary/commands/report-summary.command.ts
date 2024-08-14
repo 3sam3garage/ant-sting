@@ -1,5 +1,5 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { DailyInvestReportEvaluationTask } from '../tasks';
+import { DailyReportSummaryTask } from '../tasks';
 
 enum SUB_COMMAND {
   // summary 종합하여 일간 리포트 요약
@@ -7,9 +7,9 @@ enum SUB_COMMAND {
 }
 
 @Command({ name: 'report-summary' })
-export class ReportEvaluationCommand extends CommandRunner {
+export class ReportSummaryCommand extends CommandRunner {
   constructor(
-    private readonly dailyInvestReportSummaryTask: DailyInvestReportEvaluationTask,
+    private readonly dailyInvestReportSummaryTask: DailyReportSummaryTask,
   ) {
     super();
   }

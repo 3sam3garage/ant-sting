@@ -21,7 +21,7 @@ import { REPORT_SUMMARY_TYPE } from '@libs/domain';
 import { OllamaService } from '@libs/ai';
 
 @Injectable()
-export class DailyInvestReportEvaluationTask {
+export class DailyReportSummaryTask {
   constructor(
     private readonly investReportRepo: InvestReportRepository,
     private readonly debentureReportRepo: DebentureReportRepository,
@@ -90,14 +90,10 @@ export class DailyInvestReportEvaluationTask {
         });
 
         if (report) {
-          report.addAiScore(aiScore);
+          report.addScore(aiScore);
           await this.reportSummaryRepo.save(report);
         } else {
-          const entity = ReportSummary.create({
-            date,
-            type,
-            aiScores: [aiScore],
-          });
+          const entity = ReportSummary.create({ date, type });
           await this.reportSummaryRepo.save(entity);
         }
       }, 3);
