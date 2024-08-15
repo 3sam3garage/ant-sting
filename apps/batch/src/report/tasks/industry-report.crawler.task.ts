@@ -70,9 +70,11 @@ export class IndustryReportCrawlerTask {
       }
 
       const _id = industryReport._id.toString();
-      await this.queue.add(
-        { _id },
-        { removeOnComplete: true, removeOnFail: true },
+      await this.queue.addBulk(
+        new Array(10).fill({
+          data: { _id },
+          opts: { removeOnComplete: true, removeOnFail: true },
+        }),
       );
     }
   }
