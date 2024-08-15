@@ -72,7 +72,7 @@ export class DebentureReportCrawlerTask {
       const _id = debentureReport._id.toString();
       await this.queue.add(
         { _id },
-        { jobId: _id, removeOnComplete: true, removeOnFail: true },
+        { removeOnComplete: true, removeOnFail: true },
       );
     }
   }
