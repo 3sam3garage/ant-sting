@@ -5,4 +5,4 @@ export const REQUEST_HEADERS = {
   'Accept-Encoding': 'gzip, deflate, br, zstd',
 };
 
-export const N_PAY_RESEARCH = 'https://finance.naver.com/research';
+export const N_PAY_RESEARCH_URL = 'https://finance.naver.com/research';

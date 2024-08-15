@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
 import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
-import { N_PAY_RESEARCH, REQUEST_HEADERS } from '../constants';
+import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
 import { EconomyReport } from '../interface';
 import { figureNid } from '../utils';
 import {
@@ -15,7 +15,7 @@ import { Queue } from 'bull';
 
 @Injectable()
 export class EconomyReportCrawlerTask {
-  private readonly URL = joinUrl(N_PAY_RESEARCH, 'economy_list.naver');
+  private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'economy_list.naver');
 
   constructor(
     private readonly economyReportRepo: EconomyReportRepository,

@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
-import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
-import { N_PAY_RESEARCH, REQUEST_HEADERS } from '../constants';
-import { DebentureReport } from '../interface';
-import { figureNid } from '../utils';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 import {
   DebentureReportRepository,
   DebentureReport as DebentureEntity,
 } from '@libs/domain';
-import { InjectQueue } from '@nestjs/bull';
 import { QUEUE_NAME } from '@libs/config';
-import { Queue } from 'bull';
+import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
+import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
+import { DebentureReport } from '../interface';
+import { figureNid } from '../utils';
 
 @Injectable()
 export class DebentureReportCrawlerTask {
-  private readonly URL = joinUrl(N_PAY_RESEARCH, 'debenture_list.naver');
+  private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'debenture_list.naver');
 
   constructor(
     private readonly debentureReportRepository: DebentureReportRepository,

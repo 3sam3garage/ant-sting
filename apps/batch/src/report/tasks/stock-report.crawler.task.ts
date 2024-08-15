@@ -9,13 +9,13 @@ import {
   StockReport as StockReportEntity,
   StockReportRepository,
 } from '@libs/domain';
-import { N_PAY_RESEARCH, REQUEST_HEADERS } from '../constants';
+import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
 import { StockReport } from '../interface';
 import { figureNid } from '../utils';
 
 @Injectable()
 export class StockReportCrawlerTask {
-  private readonly URL = joinUrl(N_PAY_RESEARCH, 'company_list.naver');
+  private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'company_list.naver');
 
   constructor(
     private readonly stockReportRepo: StockReportRepository,

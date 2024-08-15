@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
 import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
-import { N_PAY_RESEARCH, REQUEST_HEADERS } from '../constants';
+import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
 import { MarketInfoReport } from '../interface';
 import { figureNid } from '../utils';
 import {
@@ -15,7 +15,7 @@ import { Queue } from 'bull';
 
 @Injectable()
 export class MarketInfoReportCrawlerTask {
-  private readonly URL = joinUrl(N_PAY_RESEARCH, 'market_info_list.naver');
+  private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'market_info_list.naver');
 
   constructor(
     private readonly marketInfoReportRepo: MarketInfoReportRepository,

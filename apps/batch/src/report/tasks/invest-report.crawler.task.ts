@@ -9,14 +9,14 @@ import { Queue } from 'bull';
 import { Injectable } from '@nestjs/common';
 import { QUEUE_NAME } from '@libs/config';
 import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
-import { N_PAY_RESEARCH, REQUEST_HEADERS } from '../constants';
+import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
 import { InvestReport } from '../interface';
 
 import { figureNid } from '../utils';
 
 @Injectable()
 export class InvestReportCrawlerTask {
-  private readonly URL = joinUrl(N_PAY_RESEARCH, 'invest_list.naver');
+  private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'invest_list.naver');
 
   constructor(
     private readonly investReportRepo: InvestReportRepository,
