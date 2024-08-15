@@ -22,8 +22,9 @@ export class BaseEntity {
 
   @BeforeInsert()
   onCreate() {
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    const date = new Date();
+    this.createdAt = date;
+    this.updatedAt = date;
   }
 
   @BeforeUpdate()
