@@ -1,11 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { IndustryReportService } from '../services';
+import { InvestReportService } from '../services';
 import { FindReportQuery } from '../dto';
 import { ObjectId } from 'mongodb';
 
 @Controller('invest-reports')
 export class InvestReportController {
-  constructor(private readonly service: IndustryReportService) {}
+  constructor(private readonly service: InvestReportService) {}
 
   @Get()
   async findMany(@Query() { date }: FindReportQuery) {
