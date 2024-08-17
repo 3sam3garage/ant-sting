@@ -6,7 +6,7 @@ import { ObjectId } from 'typeorm';
 export class StockReportService {
   constructor(private readonly repo: StockReportRepository) {}
 
-  async findOne(_id: ObjectId) {
+  async findOneById(_id: ObjectId) {
     return this.repo.findOne({ where: { _id } });
   }
 
