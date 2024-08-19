@@ -13,7 +13,7 @@ export class DailyReportSummaryTask {
 
   async exec() {
     await this.queue.addBulk(
-      new Array(10).fill({
+      new Array(5).fill({
         data: { date: format(new Date(), 'yyyy-MM-dd') },
         options: { removeOnComplete: true },
       }),
