@@ -3,7 +3,6 @@ import { CoreModule } from '@libs/core';
 import { FinancialStatementBatchModule } from './financial-statement';
 import { ReportBatchModule } from './report';
 import { TestBatchModule } from './test';
-import { ReportSummaryBatchModule } from './report-summary';
 
 @Module({
   imports: [
@@ -11,7 +10,6 @@ import { ReportSummaryBatchModule } from './report-summary';
     TestBatchModule,
     FinancialStatementBatchModule,
     ReportBatchModule,
-    ReportSummaryBatchModule,
   ],
 })
 export class BatchModule {}

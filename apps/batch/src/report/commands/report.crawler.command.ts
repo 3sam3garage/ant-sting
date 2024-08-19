@@ -7,6 +7,7 @@ import {
   DebentureReportCrawlerTask,
   StockReportCrawlerTask,
 } from '../tasks';
+import { DailyReportSummaryTask } from '../tasks/daily-report-summary.task';
 
 enum SUB_COMMAND {
   // 시황 정보 리포트
@@ -21,6 +22,8 @@ enum SUB_COMMAND {
   ECONOMY = 'economy',
   // 채권 분석 리포트
   DEBENTURE = 'debenture',
+
+  DAILY_SUMMARY = 'summary',
 }
 
 @Command({ name: 'report' })
@@ -32,6 +35,7 @@ export class ReportCrawlerCommand extends CommandRunner {
     private readonly economyReportCrawlerTask: EconomyReportCrawlerTask,
     private readonly debentureReportCrawlerTask: DebentureReportCrawlerTask,
     private readonly stockReportCrawlerTask: StockReportCrawlerTask,
+    private readonly dailyReportSummaryTask: DailyReportSummaryTask,
   ) {
     super();
   }
@@ -53,6 +57,8 @@ export class ReportCrawlerCommand extends CommandRunner {
         return await this.economyReportCrawlerTask.exec();
       case SUB_COMMAND.DEBENTURE:
         return await this.debentureReportCrawlerTask.exec();
+      case SUB_COMMAND.DAILY_SUMMARY:
+        return await this.dailyReportSummaryTask.exec();
       default:
         throw new Error('서브커맨드가 입력되지 않았습니다.');
     }

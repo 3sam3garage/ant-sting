@@ -4,3 +4,4 @@ export * from './economy-report.crawler.task';
 export * from './industry-report.crawler.task';
 export * from './debenture-report.crawler.task';
 export * from './stock-report.crawler.task';
+export * from './daily-report-summary.task';

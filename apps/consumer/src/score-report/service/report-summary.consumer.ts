@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { format } from 'date-fns';
+import { Process, Processor } from '@nestjs/bull';
+import { Job } from 'bull';
 import {
   DebentureReport,
   DebentureReportRepository,
@@ -11,17 +12,18 @@ import {
   InvestReportRepository,
   MarketInfoReport,
   MarketInfoReportRepository,
+  REPORT_SUMMARY_TYPE,
   ReportSummary,
   ReportSummaryRepository,
   StockReport,
   StockReportRepository,
 } from '@libs/domain';
-import { retry } from '@libs/common';
-import { REPORT_SUMMARY_TYPE } from '@libs/domain';
+import { QUEUE_NAME } from '@libs/config';
 import { OllamaService } from '@libs/ai';
+import { BaseConsumer } from '../../base.consumer';
 
-@Injectable()
-export class DailyReportSummaryTask {
+@Processor(QUEUE_NAME.REPORT_SUMMARY)
+export class ReportSummaryConsumer extends BaseConsumer {
   constructor(
     private readonly investReportRepo: InvestReportRepository,
     private readonly debentureReportRepo: DebentureReportRepository,
@@ -31,7 +33,9 @@ export class DailyReportSummaryTask {
     private readonly marketInfoReportRepo: MarketInfoReportRepository,
     private readonly reportSummaryRepo: ReportSummaryRepository,
     private readonly ollamaService: OllamaService,
-  ) {}
+  ) {
+    super();
+  }
 
   private figureType(
     entity:
@@ -58,9 +62,8 @@ export class DailyReportSummaryTask {
     }
   }
 
-  async exec() {
-    // @todo date fixed 된 값 나중에 뺄 것.
-    const date = format(new Date('2024-08-08'), 'yyyy-MM-dd');
+  @Process({ concurrency: 1 })
+  async run({ data: { date } }: Job<{ date: string }>) {
     const query = {
       where: { summary: { $exists: true }, date },
       select: { summary: true },
@@ -83,20 +86,18 @@ export class DailyReportSummaryTask {
         continue;
       }
 
-      await retry(async () => {
-        const aiScore = await this.ollamaService.scoreSummary(summary);
-        const report = await this.reportSummaryRepo.findOne({
-          where: { date, type },
-        });
+      const aiScore = await this.ollamaService.scoreSummary(summary);
+      const report = await this.reportSummaryRepo.findOne({
+        where: { date, type },
+      });
 
-        if (report) {
-          report.addScore(aiScore);
-          await this.reportSummaryRepo.save(report);
-        } else {
-          const entity = ReportSummary.create({ date, type });
-          await this.reportSummaryRepo.save(entity);
-        }
-      }, 3);
+      if (report) {
+        report.addScore(aiScore);
+        await this.reportSummaryRepo.save(report);
+      } else {
+        const entity = ReportSummary.create({ date, type });
+        await this.reportSummaryRepo.save(entity);
+      }
     }
   }
 }

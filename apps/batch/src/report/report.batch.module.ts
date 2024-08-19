@@ -17,6 +17,7 @@ import {
   EconomyReportCrawlerTask,
   DebentureReportCrawlerTask,
   StockReportCrawlerTask,
+  DailyReportSummaryTask,
 } from './tasks';
 
 @Module({
@@ -70,6 +71,13 @@ import {
           return { redis: config.getConfig() };
         },
       },
+      {
+        name: QUEUE_NAME.REPORT_SUMMARY,
+        inject: [RedisConfigService],
+        useFactory: async (config: RedisConfigService) => {
+          return { redis: config.getConfig() };
+        },
+      },
     ),
   ],
   providers: [
@@ -80,6 +88,7 @@ import {
     EconomyReportCrawlerTask,
     DebentureReportCrawlerTask,
     StockReportCrawlerTask,
+    DailyReportSummaryTask,
   ],
 })
 export class ReportBatchModule {}
