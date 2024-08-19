@@ -5,6 +5,7 @@ import {
   IndustryReportDomainModule,
   InvestReportDomainModule,
   MarketInfoReportDomainModule,
+  ReportSummaryDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
 import { BullModule } from '@nestjs/bull';
@@ -16,6 +17,7 @@ import {
   IndustryReportConsumer,
   InvestReportConsumer,
   MarketInfoReportConsumer,
+  ReportSummaryConsumer,
   StockReportConsumer,
 } from './service';
 
@@ -27,6 +29,7 @@ import {
     EconomyReportDomainModule,
     DebentureReportDomainModule,
     StockReportDomainModule,
+    ReportSummaryDomainModule,
     AiModule,
     BullModule.registerQueueAsync(
       {
@@ -71,6 +74,13 @@ import {
           return { redis: config.getConfig() };
         },
       },
+      {
+        name: QUEUE_NAME.REPORT_SUMMARY,
+        inject: [RedisConfigService],
+        useFactory: async (config: RedisConfigService) => {
+          return { redis: config.getConfig() };
+        },
+      },
     ),
   ],
   providers: [
@@ -80,6 +90,7 @@ import {
     EconomyReportConsumer,
     DebentureReportConsumer,
     StockReportConsumer,
+    ReportSummaryConsumer,
   ],
 })
 export class ScoreReportModule {}

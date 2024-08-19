@@ -4,3 +4,4 @@ export * from './debenture-report.consumer';
 export * from './economy-report.consumer';
 export * from './industry-report.consumer';
 export * from './stock-report.consumer';
+export * from './report-summary.consumer';

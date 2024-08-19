@@ -1,27 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { format } from 'date-fns';
-import {
-  DebentureReport,
-  DebentureReportRepository,
-  EconomyReport,
-  EconomyReportRepository,
-  IndustryReport,
-  IndustryReportRepository,
-  InvestReport,
-  InvestReportRepository,
-  MarketInfoReport,
-  MarketInfoReportRepository,
-  ReportSummary,
-  ReportSummaryRepository,
-  StockReport,
-  StockReportRepository,
-} from '@libs/domain';
-import { retry } from '@libs/common';
-import { REPORT_SUMMARY_TYPE } from '@libs/domain';
-import { OllamaService } from '@libs/ai';
 import { InjectQueue } from '@nestjs/bull';
-import { QUEUE_NAME } from '@libs/config';
 import { Queue } from 'bull';
+import { QUEUE_NAME } from '@libs/config';
 
 @Injectable()
 export class DailyReportSummaryTask {
