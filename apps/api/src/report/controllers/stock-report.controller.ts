@@ -12,6 +12,11 @@ export class StockReportController {
     return this.service.findByDate(date);
   }
 
+  @Get('highest-gap')
+  async findReportWithHighestGap() {
+    return this.service.findReportWithHighestGap();
+  }
+
   @Get(':_id')
   async findOneById(@Param('_id') _id: string) {
     return this.service.findOneById(new ObjectId(_id));

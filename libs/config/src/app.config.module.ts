@@ -4,19 +4,19 @@ import { ConfigModule } from '@nestjs/config';
 import commonConfig from './source/common.config';
 import databaseConfig from './source/database.config';
 import redisConfig from './source/redis.config';
-import aiConfig from './source/ai.config';
+import externalApiConfig from './source/external-api-config';
 import {
   CommonConfigService,
   DatabaseConfigService,
   RedisConfigService,
-  AiConfigService,
+  ExternalApiConfigService,
 } from './service';
 
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [commonConfig, databaseConfig, redisConfig, aiConfig],
+      load: [commonConfig, databaseConfig, redisConfig, externalApiConfig],
       isGlobal: true,
     }),
   ],
@@ -24,13 +24,13 @@ import {
     CommonConfigService,
     DatabaseConfigService,
     RedisConfigService,
-    AiConfigService,
+    ExternalApiConfigService,
   ],
   exports: [
     CommonConfigService,
     DatabaseConfigService,
     RedisConfigService,
-    AiConfigService,
+    ExternalApiConfigService,
   ],
 })
 export class AppConfigModule {}

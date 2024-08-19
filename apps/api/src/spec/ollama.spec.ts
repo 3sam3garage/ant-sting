@@ -27,8 +27,7 @@ describe('ollama', () => {
       'https://apis.data.go.kr/1160100/service/GetMarketIndexInfoService/getStockMarketIndex',
       {
         params: {
-          serviceKey:
-            'zP1AqGVnekq2IFOq1nhqEmV8KOZZqVPKTIipBVW6h/G3lOI8HnoCX2QYbxVYJi2qHGl6SrfZqmHMlS7yAHLF4A==',
+          serviceKey: process.env.DATA_GO_SERVICE_KEY,
           idxNm: '코스피',
           resultType: 'json',
           numOfRows: 30,
@@ -37,5 +36,10 @@ describe('ollama', () => {
     );
 
     console.log(res.data);
+  });
+
+  it('includes', async () => {
+    const q = '2024-08-08'.replaceAll(/\-/g, '');
+    console.log(q);
   });
 });

@@ -33,59 +33,64 @@ export class StockReportCrawlerTask {
   }
 
   async exec() {
-    const response = await axios.get(this.URL, {
-      headers: { ...REQUEST_HEADERS },
-      responseType: 'arraybuffer',
-    });
-
-    const text = eucKR2utf8(response.data);
-    const html = parseToHTML(text);
-
-    const rows = html
-      .querySelectorAll('#contentarea_left > div.box_type_m > table.type_1 tr')
-      .filter((row) => row.querySelector('td.file'));
-
-    const stockReports: StockReport[] = [];
-    for (const row of rows) {
-      const cells = row.querySelectorAll('td:not(.file)');
-      const [itemAnchor, titleAnchor] = row.querySelectorAll('td > a');
-
-      const [stockName, , stockFirm, date, views] = cells.map((cell) =>
-        cell.innerText.trim(),
-      );
-      const anchor = row.querySelector('td.file > a');
-      const detailUrl = titleAnchor.getAttribute('href');
-      const itemUrl = itemAnchor.getAttribute('href');
-
-      stockReports.push({
-        stockName,
-        code: this.figureCode(itemUrl),
-        title: titleAnchor.innerText.trim(),
-        nid: figureNid(detailUrl),
-        detailUrl,
-        stockFirm,
-        date: formatSixDigitDate(date),
-        views,
-        file: anchor.getAttribute('href'),
+    for (let i = 11; i <= 300; i++) {
+      const response = await axios.get(this.URL, {
+        headers: { ...REQUEST_HEADERS },
+        responseType: 'arraybuffer',
+        params: { page: i },
       });
-    }
 
-    for (const stockReport of stockReports) {
-      let report = await this.stockReportRepo.findOneByNid(stockReport.nid);
-      if (report) {
-        await this.stockReportRepo.updateOne(report, stockReport);
-      } else {
-        const entity = StockReportEntity.create(stockReport);
-        report = await this.stockReportRepo.createOne(entity);
+      const text = eucKR2utf8(response.data);
+      const html = parseToHTML(text);
+
+      const rows = html
+        .querySelectorAll(
+          '#contentarea_left > div.box_type_m > table.type_1 tr',
+        )
+        .filter((row) => row.querySelector('td.file'));
+
+      const stockReports: StockReport[] = [];
+      for (const row of rows) {
+        const cells = row.querySelectorAll('td:not(.file)');
+        const [itemAnchor, titleAnchor] = row.querySelectorAll('td > a');
+
+        const [stockName, , stockFirm, date, views] = cells.map((cell) =>
+          cell.innerText.trim(),
+        );
+        const anchor = row.querySelector('td.file > a');
+        const detailUrl = titleAnchor.getAttribute('href');
+        const itemUrl = itemAnchor.getAttribute('href');
+
+        stockReports.push({
+          stockName,
+          code: this.figureCode(itemUrl),
+          title: titleAnchor.innerText.trim(),
+          nid: figureNid(detailUrl),
+          detailUrl,
+          stockFirm,
+          date: formatSixDigitDate(date),
+          views,
+          file: anchor.getAttribute('href'),
+        });
       }
 
-      const _id = report._id.toString();
-      await this.queue.addBulk(
-        new Array(10).fill({
-          data: { _id },
-          opts: { removeOnComplete: true, removeOnFail: true },
-        }),
-      );
+      for (const stockReport of stockReports) {
+        let report = await this.stockReportRepo.findOneByNid(stockReport.nid);
+        if (report) {
+          await this.stockReportRepo.updateOne(report, stockReport);
+        } else {
+          const entity = StockReportEntity.create(stockReport);
+          report = await this.stockReportRepo.createOne(entity);
+        }
+
+        const _id = report._id.toString();
+        await this.queue.addBulk(
+          new Array(5).fill({
+            data: { _id },
+            opts: { removeOnComplete: true, removeOnFail: true },
+          }),
+        );
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InvestReportRepository } from '@libs/domain';
+import { StockReportRepository } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
@@ -7,19 +7,31 @@ import { Queue } from 'bull';
 @Injectable()
 export class TestTask {
   constructor(
-    private readonly repo: InvestReportRepository,
-    @InjectQueue(QUEUE_NAME.INVEST_REPORT_SCORE) private readonly queue: Queue,
+    private readonly repo: StockReportRepository,
+    @InjectQueue(QUEUE_NAME.STOCK_REPORT_SCORE) private readonly queue: Queue,
   ) {}
 
   async exec(): Promise<void> {
-    const items = await this.repo.find({ take: 30 });
+    const reports = await this.repo.find();
+    for (const report of reports) {
+      // await this.queue.add(
+      //   { _id: report._id.toString() },
+      //   { removeOnFail: true, removeOnComplete: true, attempts: 3 },
+      // );
 
-    for (const item of items) {
-      const _id = item._id.toString();
-      await this.queue.add(
-        { _id },
-        { jobId: _id, removeOnComplete: true, removeOnFail: true },
-      );
+      if (!report?.recommendation?.disparateRatio) {
+        const { price, targetPrice, position } = report?.recommendation || {};
+
+        if (price && targetPrice) {
+          report.addRecommendation({
+            price: price.toString(),
+            targetPrice: targetPrice.toString(),
+            position,
+          });
+        }
+
+        await this.repo.save(report);
+      }
     }
   }
 }

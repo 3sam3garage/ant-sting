@@ -13,4 +13,17 @@ export class StockReportService {
   async findByDate(date: string) {
     return this.repo.find({ where: { date } });
   }
+
+  async findReportWithHighestGap() {
+    const reports = await this.repo.find({ take: 3000 });
+    return reports
+      .filter((item) => item.recommendation?.disparateRatio)
+      .sort((pre, post) => {
+        return (
+          post.recommendation?.disparateRatio -
+          pre.recommendation?.disparateRatio
+        );
+      })
+      .splice(0, 50);
+  }
 }

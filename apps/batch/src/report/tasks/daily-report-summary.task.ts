@@ -15,7 +15,7 @@ export class DailyReportSummaryTask {
     await this.queue.addBulk(
       new Array(5).fill({
         data: { date: format(new Date(), 'yyyy-MM-dd') },
-        options: { removeOnComplete: true },
+        options: { removeOnComplete: true, removeOnFail: true },
       }),
     );
   }

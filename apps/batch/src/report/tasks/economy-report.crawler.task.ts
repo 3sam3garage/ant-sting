@@ -67,7 +67,7 @@ export class EconomyReportCrawlerTask {
 
       const _id = economyReport._id.toString();
       await this.queue.addBulk(
-        new Array(10).fill({
+        new Array(5).fill({
           data: { _id },
           opts: { removeOnComplete: true, removeOnFail: true },
         }),
