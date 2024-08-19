@@ -70,11 +70,11 @@ export class ReportSummaryConsumer extends BaseConsumer {
     };
     const reportLists = await Promise.all([
       this.investReportRepo.find(query),
-      this.debentureReportRepo.find(query),
-      this.economyReportRepo.find(query),
-      this.stockReportRepo.find(query),
-      this.industryReportRepo.find(query),
       this.marketInfoReportRepo.find(query),
+      this.economyReportRepo.find(query),
+      this.industryReportRepo.find(query),
+      this.debentureReportRepo.find(query),
+      this.stockReportRepo.find(query),
     ]);
 
     for (const reports of reportLists) {
