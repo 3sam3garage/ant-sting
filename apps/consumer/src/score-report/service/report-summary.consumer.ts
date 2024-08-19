@@ -92,10 +92,11 @@ export class ReportSummaryConsumer extends BaseConsumer {
       });
 
       if (report) {
+        report.summary = summary;
         report.addScore(aiScore);
         await this.reportSummaryRepo.save(report);
       } else {
-        const entity = ReportSummary.create({ date, type });
+        const entity = ReportSummary.create({ date, type, summary });
         await this.reportSummaryRepo.save(entity);
       }
     }

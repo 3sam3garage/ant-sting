@@ -6,5 +6,5 @@ export const figureAverageScore = (scores: AIScore[]) => {
     return acc;
   }, 0);
 
-  return sum / scores.length;
+  return +(sum / scores.length)?.toFixed(2);
 };
