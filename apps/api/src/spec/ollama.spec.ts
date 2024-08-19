@@ -22,5 +22,20 @@ describe('ollama', () => {
     120 * 1000,
   );
 
-  it('llama 3.1 api', async () => {});
+  it('kospi api', async () => {
+    const res = await axios.get(
+      'https://apis.data.go.kr/1160100/service/GetMarketIndexInfoService/getStockMarketIndex',
+      {
+        params: {
+          serviceKey:
+            'zP1AqGVnekq2IFOq1nhqEmV8KOZZqVPKTIipBVW6h/G3lOI8HnoCX2QYbxVYJi2qHGl6SrfZqmHMlS7yAHLF4A==',
+          idxNm: '코스피',
+          resultType: 'json',
+          numOfRows: 30,
+        },
+      },
+    );
+
+    console.log(res.data);
+  });
 });
