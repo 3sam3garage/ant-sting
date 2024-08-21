@@ -15,7 +15,7 @@ export class StockReportService {
   }
 
   async findReportWithHighestGap() {
-    const reports = await this.repo.find({ take: 3000 });
+    const reports = await this.repo.find({ take: 4000 });
     return reports
       .filter((item) => item.recommendation?.disparateRatio)
       .sort((pre, post) => {
