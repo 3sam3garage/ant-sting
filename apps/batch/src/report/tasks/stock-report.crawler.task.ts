@@ -33,7 +33,7 @@ export class StockReportCrawlerTask {
   }
 
   async exec() {
-    for (let i = 11; i <= 300; i++) {
+    for (let i = 1; i <= 3; i++) {
       const response = await axios.get(this.URL, {
         headers: { ...REQUEST_HEADERS },
         responseType: 'arraybuffer',
