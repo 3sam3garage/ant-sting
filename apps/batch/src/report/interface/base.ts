@@ -10,7 +10,7 @@ export interface BaseReport {
   // file download link
   file: string;
   // 작성일
-  date: string;
+  date: Date;
   // 조회수
   views: string; // todo 실제론 number 타입인데 파싱 번거로워서
 }
