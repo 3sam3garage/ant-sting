@@ -12,10 +12,6 @@ export class DebentureReportRepository extends MongoRepository<DebentureReport> 
     super(DebentureReport, repo.manager);
   }
 
-  async createOne(data: DebentureReport) {
-    return this.repo.save(data);
-  }
-
   async findOneById(_id: ObjectId) {
     return this.repo.findOne({ where: { _id } });
   }
@@ -24,8 +20,14 @@ export class DebentureReportRepository extends MongoRepository<DebentureReport> 
     return this.repo.findOne({ where: { nid } });
   }
 
-  async updateOne(entity: DebentureReport, data: Partial<DebentureReport>) {
-    Object.assign(entity, data);
-    return this.repo.save(entity);
+  async findWithinRange(startDate: string, endDate: string) {
+    return this.repo.find({
+      where: {
+        date: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+      },
+    });
   }
 }
