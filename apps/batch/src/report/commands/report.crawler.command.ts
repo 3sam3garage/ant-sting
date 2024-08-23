@@ -6,8 +6,8 @@ import {
   IndustryReportCrawlerTask,
   DebentureReportCrawlerTask,
   StockReportCrawlerTask,
+  DailyReportSummaryTask,
 } from '../tasks';
-import { DailyReportSummaryTask } from '../tasks/daily-report-summary.task';
 
 enum SUB_COMMAND {
   // 시황 정보 리포트
