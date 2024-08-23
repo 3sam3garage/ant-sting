@@ -1,6 +1,5 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
 import { format } from 'date-fns';
@@ -46,7 +45,7 @@ export class StockReportConsumer extends BaseConsumer {
       case item?.includes('not rated'):
       case item?.includes('Not Rated'):
       case item?.includes('없음'):
-        return 'NR';
+        return 'NEUTRAL';
     }
 
     return text;
@@ -55,7 +54,7 @@ export class StockReportConsumer extends BaseConsumer {
   @Process({ concurrency: 3 })
   async run({ data }: Job<{ _id: string }>) {
     const report = await this.repo.findOneById(new ObjectId(data._id));
-    // 개별 리포트 정보가 아닌 뭉태기로 묶어오는 리포트면 건너뛰기
+    // 개별 리포트 정보가 아닌 뭉태기로 묶어오는 리포트면 건너뛰기 - 특정 증권사들
     if (this.FIRMS_TO_EXCLUDE.includes(report.stockFirm)) {
       return;
     }
@@ -97,15 +96,10 @@ export class StockReportConsumer extends BaseConsumer {
       await this.repo.save(report);
     }
 
-    // try {
-    //   const { reason, score } = await this.ollamaService.scoreSummary(
-    //     report.summary,
-    //   );
-    //
-    //   report.addScore({ reason, score: +score });
-    //   await this.repo.save(report);
-    // } catch (e) {
-    //   Logger.error(e);
-    // }
+    const { reason, score } = await this.ollamaService.scoreSummary(
+      report.summary,
+    );
+    report.addScore({ reason, score: +score });
+    await this.repo.save(report);
   }
 }
