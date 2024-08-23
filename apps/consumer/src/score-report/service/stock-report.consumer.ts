@@ -6,7 +6,13 @@ import { format } from 'date-fns';
 import { StockReportRepository } from '@libs/domain';
 import { ExternalApiConfigService, QUEUE_NAME } from '@libs/config';
 import { OllamaService } from '@libs/ai';
-import { joinUrl, omitIsNil, requestAndParseEucKr, retry } from '@libs/common';
+import {
+  joinUrl,
+  omitIsNil,
+  requestAndParseEucKr,
+  retry,
+  sleep,
+} from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.STOCK_REPORT_SCORE)
@@ -51,7 +57,7 @@ export class StockReportConsumer extends BaseConsumer {
     return text;
   }
 
-  @Process({ concurrency: 3 })
+  @Process({ concurrency: 1 })
   async run({ data }: Job<{ _id: string }>) {
     const report = await this.repo.findOneById(new ObjectId(data._id));
     // 개별 리포트 정보가 아닌 뭉태기로 묶어오는 리포트면 건너뛰기 - 특정 증권사들
