@@ -12,20 +12,11 @@ export class StockReportRepository extends MongoRepository<StockReport> {
     super(StockReport, repo.manager);
   }
 
-  async createOne(data: StockReport) {
-    return this.repo.save(data);
-  }
-
   async findOneById(_id: ObjectId) {
     return this.repo.findOne({ where: { _id } });
   }
 
   async findOneByNid(nid: string) {
     return this.repo.findOne({ where: { nid } });
-  }
-
-  async updateOne(entity: StockReport, data: Partial<StockReport>) {
-    Object.assign(entity, data);
-    return this.repo.save(entity);
   }
 }

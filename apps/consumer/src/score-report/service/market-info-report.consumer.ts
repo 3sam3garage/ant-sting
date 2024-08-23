@@ -2,12 +2,10 @@ import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import axios from 'axios';
-import { parse as parseToHTML } from 'node-html-parser';
 import { MarketInfoReportRepository } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { OllamaService } from '@libs/ai';
-import { eucKR2utf8, joinUrl } from '@libs/common';
+import { joinUrl, requestAndParseEucKr } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.MARKET_INFO_REPORT_SCORE)
@@ -26,13 +24,9 @@ export class MarketInfoReportConsumer extends BaseConsumer {
     const report = await this.repo.findOneById(new ObjectId(data._id));
 
     if (!report.summary) {
-      const response = await axios.get(
+      const html = await requestAndParseEucKr(
         joinUrl(this.BASE_URL, report.detailUrl),
-        { responseType: 'arraybuffer' },
       );
-
-      const text = eucKR2utf8(response.data);
-      const html = parseToHTML(text);
 
       report.summary = html
         .querySelectorAll('table td.view_cnt p')

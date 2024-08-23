@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
-import { parse as parseToHTML } from 'node-html-parser';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import {
@@ -8,8 +6,12 @@ import {
   DebentureReport as DebentureEntity,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
-import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
+import {
+  formatSixDigitDate,
+  joinUrl,
+  requestAndParseEucKr,
+} from '@libs/common';
+import { N_PAY_RESEARCH_URL } from '../constants';
 import { DebentureReport } from '../interface';
 import { figureNid } from '../utils';
 
@@ -24,13 +26,7 @@ export class DebentureReportCrawlerTask {
   ) {}
 
   async exec() {
-    const response = await axios.get(this.URL, {
-      headers: { ...REQUEST_HEADERS },
-      responseType: 'arraybuffer',
-    });
-
-    const text = eucKR2utf8(response.data);
-    const html = parseToHTML(text);
+    const html = await requestAndParseEucKr(this.URL);
 
     const rows = html
       .querySelectorAll('#contentarea_left > div.box_type_m > table.type_1 tr')
@@ -62,11 +58,13 @@ export class DebentureReportCrawlerTask {
         report.nid,
       );
       if (debentureReport) {
-        await this.debentureReportRepository.updateOne(debentureReport, report);
+        await this.debentureReportRepository.save({
+          ...debentureReport,
+          ...report,
+        });
       } else {
         const entity = DebentureEntity.create(report);
-        debentureReport =
-          await this.debentureReportRepository.createOne(entity);
+        debentureReport = await this.debentureReportRepository.save(entity);
       }
 
       const _id = debentureReport._id.toString();

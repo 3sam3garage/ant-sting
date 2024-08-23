@@ -3,17 +3,18 @@ import { Job } from 'bull';
 import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
-import { parse as parseToHTML } from 'node-html-parser';
-
+import { format } from 'date-fns';
 import { StockReportRepository } from '@libs/domain';
 import { ExternalApiConfigService, QUEUE_NAME } from '@libs/config';
 import { OllamaService } from '@libs/ai';
-import { eucKR2utf8, joinUrl, retry } from '@libs/common';
+import { joinUrl, omitIsNil, requestAndParseEucKr, retry } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.STOCK_REPORT_SCORE)
 export class StockReportConsumer extends BaseConsumer {
-  private readonly BASE_URL = 'https://finance.naver.com/research';
+  private readonly N_PAY_BASE_URL = 'https://finance.naver.com/research';
+  private readonly GOV_STOCK_INFO_URL =
+    'https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo';
   private FIRMS_TO_EXCLUDE = [
     '나이스디앤비',
     '한국기술신용평가(주)',
@@ -60,33 +61,27 @@ export class StockReportConsumer extends BaseConsumer {
     }
 
     if (!report.summary) {
-      const response = await axios.get(
-        joinUrl(this.BASE_URL, report.detailUrl),
-        { responseType: 'arraybuffer' },
+      const html = await requestAndParseEucKr(
+        joinUrl(this.N_PAY_BASE_URL, report.detailUrl),
       );
-
-      const text = eucKR2utf8(response.data);
-      const html = parseToHTML(text);
 
       report.summary = html
         .querySelectorAll('table td.view_cnt p')
         .map((item) => item?.innerText?.trim())
         .join('\n');
 
+      const params = omitIsNil({
+        serviceKey: this.externalApiConfigService.dataGoServiceKey,
+        resultType: 'json',
+        numOfRows: 1,
+        itmsNm: report.stockName.trim(),
+        basDt:
+          format(new Date(), 'yyyy-MM-dd') === report.date
+            ? null
+            : report.date.replaceAll(/\-/g, ''),
+      });
       const stockInfo = await retry(
-        () =>
-          axios.get(
-            'https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo',
-            {
-              params: {
-                serviceKey: this.externalApiConfigService.dataGoServiceKey,
-                resultType: 'json',
-                numOfRows: 1,
-                itmsNm: report.stockName.trim(),
-                basDt: report.date.replaceAll(/\-/g, ''),
-              },
-            },
-          ),
+        () => axios.get(this.GOV_STOCK_INFO_URL, { params }),
         3,
       );
       const [item] = stockInfo.data.response.body.items.item;
@@ -102,15 +97,15 @@ export class StockReportConsumer extends BaseConsumer {
       await this.repo.save(report);
     }
 
-    try {
-      const { reason, score } = await this.ollamaService.scoreSummary(
-        report.summary,
-      );
-
-      report.addScore({ reason, score: +score });
-      await this.repo.save(report);
-    } catch (e) {
-      Logger.error(e);
-    }
+    // try {
+    //   const { reason, score } = await this.ollamaService.scoreSummary(
+    //     report.summary,
+    //   );
+    //
+    //   report.addScore({ reason, score: +score });
+    //   await this.repo.save(report);
+    // } catch (e) {
+    //   Logger.error(e);
+    // }
   }
 }

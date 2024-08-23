@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
-import { parse as parseToHTML } from 'node-html-parser';
-import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
-import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
+import {
+  formatSixDigitDate,
+  joinUrl,
+  requestAndParseEucKr,
+} from '@libs/common';
+import { N_PAY_RESEARCH_URL } from '../constants';
 import { EconomyReport } from '../interface';
 import { figureNid } from '../utils';
 import {
@@ -23,13 +25,7 @@ export class EconomyReportCrawlerTask {
   ) {}
 
   async exec() {
-    const response = await axios.get(this.URL, {
-      headers: { ...REQUEST_HEADERS },
-      responseType: 'arraybuffer',
-    });
-
-    const text = eucKR2utf8(response.data);
-    const html = parseToHTML(text);
+    const html = await requestAndParseEucKr(this.URL);
 
     const rows = html
       .querySelectorAll('#contentarea_left > div.box_type_m > table.type_1 tr')
@@ -59,7 +55,7 @@ export class EconomyReportCrawlerTask {
     for (const report of economyReports) {
       let economyReport = await this.economyReportRepo.findOneByNid(report.nid);
       if (economyReport) {
-        await this.economyReportRepo.updateOne(economyReport, report);
+        await this.economyReportRepo.save({ ...economyReport, ...report });
       } else {
         const entity = EconomyReportEntity.create(report);
         economyReport = await this.economyReportRepo.createOne(entity);

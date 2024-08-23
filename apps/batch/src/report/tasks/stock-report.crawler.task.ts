@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
-import { parse as parseToHTML } from 'node-html-parser';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { QUEUE_NAME } from '@libs/config';
-import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
+import {
+  formatSixDigitDate,
+  joinUrl,
+  requestAndParseEucKr,
+} from '@libs/common';
 import {
   StockReport as StockReportEntity,
   StockReportRepository,
 } from '@libs/domain';
-import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
+import { N_PAY_RESEARCH_URL } from '../constants';
 import { StockReport } from '../interface';
 import { figureNid } from '../utils';
 
@@ -23,7 +25,7 @@ export class StockReportCrawlerTask {
     private readonly queue: Queue,
   ) {}
 
-  private figureCode(url: string) {
+  private figureStockCode(url: string) {
     const matched = url.match(/code=(\d+)/);
     if (!matched) {
       throw new Error('Cannot figure out code from url');
@@ -33,15 +35,8 @@ export class StockReportCrawlerTask {
   }
 
   async exec() {
-    for (let i = 1; i <= 3; i++) {
-      const response = await axios.get(this.URL, {
-        headers: { ...REQUEST_HEADERS },
-        responseType: 'arraybuffer',
-        params: { page: i },
-      });
-
-      const text = eucKR2utf8(response.data);
-      const html = parseToHTML(text);
+    for (let i = 1; i <= 1; i++) {
+      const html = await requestAndParseEucKr(this.URL, { page: i });
 
       const rows = html
         .querySelectorAll(
@@ -63,24 +58,25 @@ export class StockReportCrawlerTask {
 
         stockReports.push({
           stockName,
-          code: this.figureCode(itemUrl),
+          code: this.figureStockCode(itemUrl),
           title: titleAnchor.innerText.trim(),
           nid: figureNid(detailUrl),
           detailUrl,
           stockFirm,
           date: formatSixDigitDate(date),
           views,
-          file: anchor.getAttribute('href'),
+          file: anchor?.getAttribute('href'),
         });
       }
 
       for (const stockReport of stockReports) {
         let report = await this.stockReportRepo.findOneByNid(stockReport.nid);
+
         if (report) {
-          await this.stockReportRepo.updateOne(report, stockReport);
+          await this.stockReportRepo.save({ ...report, ...stockReport });
         } else {
           const entity = StockReportEntity.create(stockReport);
-          report = await this.stockReportRepo.createOne(entity);
+          report = await this.stockReportRepo.save(entity);
         }
 
         const _id = report._id.toString();

@@ -1,5 +1,3 @@
-import axios from 'axios';
-import { parse as parseToHTML } from 'node-html-parser';
 import {
   InvestReportRepository,
   InvestReport as InvestReportEntity,
@@ -8,8 +6,12 @@ import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { Injectable } from '@nestjs/common';
 import { QUEUE_NAME } from '@libs/config';
-import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
-import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
+import {
+  formatSixDigitDate,
+  joinUrl,
+  requestAndParseEucKr,
+} from '@libs/common';
+import { N_PAY_RESEARCH_URL } from '../constants';
 import { InvestReport } from '../interface';
 
 import { figureNid } from '../utils';
@@ -24,13 +26,7 @@ export class InvestReportCrawlerTask {
   ) {}
 
   async exec() {
-    const response = await axios.get(this.URL, {
-      headers: { ...REQUEST_HEADERS },
-      responseType: 'arraybuffer',
-    });
-
-    const text = eucKR2utf8(response.data);
-    const html = parseToHTML(text);
+    const html = await requestAndParseEucKr(this.URL);
 
     const rows = html
       .querySelectorAll('#contentarea_left > div.box_type_m > table.type_1 tr')
@@ -60,7 +56,7 @@ export class InvestReportCrawlerTask {
     for (const report of investReports) {
       let investReport = await this.investReportRepo.findOneByNid(report.nid);
       if (investReport) {
-        await this.investReportRepo.updateOne(investReport, report);
+        await this.investReportRepo.save({ ...investReport, ...report });
       } else {
         const entity = InvestReportEntity.create(report);
         investReport = await this.investReportRepo.createOne(entity);

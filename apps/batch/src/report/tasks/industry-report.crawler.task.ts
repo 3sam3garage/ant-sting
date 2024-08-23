@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
-import { parse as parseToHTML } from 'node-html-parser';
-import { eucKR2utf8, formatSixDigitDate, joinUrl } from '@libs/common';
-import { N_PAY_RESEARCH_URL, REQUEST_HEADERS } from '../constants';
+import {
+  formatSixDigitDate,
+  joinUrl,
+  requestAndParseEucKr,
+} from '@libs/common';
+import { N_PAY_RESEARCH_URL } from '../constants';
 import { IndustryReport } from '../interface';
 import { figureNid } from '../utils';
 import {
@@ -24,13 +26,7 @@ export class IndustryReportCrawlerTask {
   ) {}
 
   async exec() {
-    const response = await axios.get(this.URL, {
-      headers: { ...REQUEST_HEADERS },
-      responseType: 'arraybuffer',
-    });
-
-    const text = eucKR2utf8(response.data);
-    const html = parseToHTML(text);
+    const html = await requestAndParseEucKr(this.URL);
 
     const rows = html
       .querySelectorAll('#contentarea_left > div.box_type_m > table.type_1 tr')
@@ -63,7 +59,7 @@ export class IndustryReportCrawlerTask {
         report.nid,
       );
       if (industryReport) {
-        await this.industryReportRepo.updateOne(industryReport, report);
+        await this.industryReportRepo.save({ ...industryReport, ...report });
       } else {
         const entity = IndustryReportEntity.create(report);
         industryReport = await this.industryReportRepo.createOne(entity);
