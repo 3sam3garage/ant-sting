@@ -21,4 +21,8 @@ export class CommonConfigService {
   get nodeEnv(): NODE_ENV {
     return this.config.NODE_ENV;
   }
+
+  get isProduction(): boolean {
+    return this.nodeEnv === NODE_ENV.PRODUCTION;
+  }
 }
