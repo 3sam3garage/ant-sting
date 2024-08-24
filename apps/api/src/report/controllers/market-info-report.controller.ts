@@ -10,7 +10,7 @@ export class MarketInfoReportController {
   constructor(private readonly service: MarketInfoReportService) {}
 
   @Get()
-  async findMany(@Query() { date }: FindReportQuery) {
+  async findByDate(@Query() { date }: FindReportQuery) {
     return this.service.findByDate(date);
   }
 

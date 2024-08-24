@@ -13,7 +13,7 @@ export class ScoreInfo {
   @ApiProperty()
   avgScore: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: AIScore, isArray: true })
   items: AIScore[];
 }
 
@@ -33,7 +33,7 @@ export class BaseReportResponse {
   @ApiProperty()
   file: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '2024-08-08', default: '2024-08-08' })
   date: string;
 
   @ApiProperty()
@@ -42,6 +42,6 @@ export class BaseReportResponse {
   @ApiProperty({ required: false })
   summary?: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, type: ScoreInfo })
   scoreInfo?: ScoreInfo;
 }
