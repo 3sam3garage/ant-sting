@@ -1,6 +1,5 @@
 import { IsString, Matches } from 'class-validator';
-
-const DATE_FORMAT_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+import { DATE_FORMAT_REGEX } from '../constants';
 
 export class FindReportQuery {
   @Matches(DATE_FORMAT_REGEX)
