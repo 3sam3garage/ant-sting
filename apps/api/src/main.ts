@@ -16,10 +16,14 @@ async function bootstrap() {
     const config = new DocumentBuilder().setTitle('Ant-sting').build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('docs', app, document);
+    Logger.log(`Swagger on http://localhost:${port}/docs`);
   }
 
   await app.listen(port || 3001);
 
   Logger.log(`Server on http://localhost:${port}`);
+  if (!configService.isProduction) {
+    Logger.log(`Swagger on http://localhost:${port}/docs`);
+  }
 }
 bootstrap();
