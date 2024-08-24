@@ -1,7 +1,7 @@
 import { ObjectId } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { DebentureReportRepository } from '@libs/domain';
-import { DebentureReportResponse } from '../dto/debenture-report.response';
+import { DebentureReportResponse } from '../dto';
 
 @Injectable()
 export class DebentureReportService {

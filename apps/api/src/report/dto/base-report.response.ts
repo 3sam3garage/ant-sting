@@ -33,7 +33,7 @@ export class BaseReportResponse {
   @ApiProperty()
   file: string;
 
-  @ApiProperty({ example: '2024-08-08', default: '2024-08-08' })
+  @ApiProperty({ example: '2024-08-08' })
   date: string;
 
   @ApiProperty()
