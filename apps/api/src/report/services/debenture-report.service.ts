@@ -1,6 +1,7 @@
 import { ObjectId } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { DebentureReportRepository } from '@libs/domain';
+import { DebentureReportResponse } from '../dto/debenture-report.response';
 
 @Injectable()
 export class DebentureReportService {
@@ -10,7 +11,7 @@ export class DebentureReportService {
     return this.repo.findOne({ where: { _id } });
   }
 
-  async findByDate(date: string) {
+  async findByDate(date: string): Promise<DebentureReportResponse[]> {
     return this.repo.find({ where: { date } });
   }
 }
