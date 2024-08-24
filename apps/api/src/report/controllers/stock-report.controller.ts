@@ -1,8 +1,10 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ObjectId } from 'mongodb';
+import { ApiTags } from '@nestjs/swagger';
 import { StockReportService } from '../services';
 import { FindReportQuery } from '../dto';
-import { ObjectId } from 'mongodb';
 
+@ApiTags('stock-reports')
 @Controller('stock-reports')
 export class StockReportController {
   constructor(private readonly service: StockReportService) {}
