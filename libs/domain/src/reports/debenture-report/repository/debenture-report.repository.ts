@@ -19,15 +19,4 @@ export class DebentureReportRepository extends MongoRepository<DebentureReport> 
   async findOneByNid(nid: string) {
     return this.repo.findOne({ where: { nid } });
   }
-
-  async findWithinRange(startDate: string, endDate: string) {
-    return this.repo.find({
-      where: {
-        date: {
-          $gte: startDate,
-          $lt: endDate,
-        },
-      },
-    });
-  }
 }

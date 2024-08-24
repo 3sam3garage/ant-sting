@@ -1,7 +1,7 @@
-import { BaseEntity } from '../base.entity';
 import { Column } from 'typeorm';
-import { IsDate, IsNumber, IsString, ValidateNested } from 'class-validator';
-import { figureAverageScore } from '@libs/domain/reports/utils';
+import { IsNumber, IsString, ValidateNested } from 'class-validator';
+import { BaseEntity } from '../base.entity';
+import { figureAverageScore } from './utils';
 
 export class AIScore {
   @Column()
@@ -41,8 +41,8 @@ export class BaseReportEntity extends BaseEntity {
   file: string;
 
   @Column()
-  @IsDate()
-  date: Date;
+  @IsString()
+  date: string;
 
   @Column()
   @IsString()

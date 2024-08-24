@@ -16,4 +16,8 @@ export class ExternalApiConfigService {
   get dataGoServiceKey(): string {
     return this.config.DATA_GO_SERVICE_KEY;
   }
+
+  get openDartApiKey(): string {
+    return this.config.OPEN_DART_API_KEY;
+  }
 }
