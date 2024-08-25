@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '@libs/core';
-import { FinancialStatementBatchModule } from './financial-statement';
+import { CorporationBatchModule } from './corporation';
 import { ReportBatchModule } from './report';
 import { TestBatchModule } from './test';
 
@@ -8,7 +8,7 @@ import { TestBatchModule } from './test';
   imports: [
     CoreModule,
     TestBatchModule,
-    FinancialStatementBatchModule,
+    CorporationBatchModule,
     ReportBatchModule,
   ],
 })
