@@ -48,6 +48,8 @@ export class StockReportConsumer extends BaseConsumer {
         return 'SELL';
       case item?.includes('nr'):
       case item?.includes('NR'):
+      case item?.includes('NEUTRAL'):
+      case item?.includes('Neutral'):
       case item?.includes('not rated'):
       case item?.includes('Not Rated'):
       case item?.includes('없음'):
@@ -100,6 +102,7 @@ export class StockReportConsumer extends BaseConsumer {
       });
 
       await this.repo.save(report);
+      // await sleep(500);
     }
 
     const { reason, score } = await this.ollamaService.scoreSummary(
