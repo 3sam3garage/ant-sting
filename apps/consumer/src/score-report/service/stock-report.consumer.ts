@@ -6,14 +6,9 @@ import { format } from 'date-fns';
 import { StockReportRepository } from '@libs/domain';
 import { ExternalApiConfigService, QUEUE_NAME } from '@libs/config';
 import { OllamaService } from '@libs/ai';
-import {
-  joinUrl,
-  omitIsNil,
-  requestAndParseEucKr,
-  retry,
-  sleep,
-} from '@libs/common';
+import { joinUrl, omitIsNil, requestAndParseEucKr, retry } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
+import { Logger } from '@nestjs/common';
 
 @Processor(QUEUE_NAME.STOCK_REPORT_SCORE)
 export class StockReportConsumer extends BaseConsumer {
@@ -72,10 +67,8 @@ export class StockReportConsumer extends BaseConsumer {
         joinUrl(this.N_PAY_BASE_URL, report.detailUrl),
       );
 
-      report.summary = html
-        .querySelectorAll('table td.view_cnt p')
-        .map((item) => item?.innerText?.trim())
-        .join('\n');
+      report.summary =
+        html.querySelector('table.type_1 td.view_cnt')?.innerText || '';
 
       const params = omitIsNil({
         serviceKey: this.externalApiConfigService.dataGoServiceKey,
@@ -102,7 +95,11 @@ export class StockReportConsumer extends BaseConsumer {
       });
 
       await this.repo.save(report);
-      // await sleep(500);
+    }
+
+    if (!report.summary) {
+      Logger.debug('no summary exists');
+      return;
     }
 
     const { reason, score } = await this.ollamaService.scoreSummary(
