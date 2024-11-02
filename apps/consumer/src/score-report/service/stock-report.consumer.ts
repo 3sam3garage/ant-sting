@@ -2,7 +2,6 @@ import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
-import { format } from 'date-fns';
 import { StockReportRepository } from '@libs/domain';
 import { ExternalApiConfigService, QUEUE_NAME } from '@libs/config';
 import { ClaudeService } from '@libs/ai';
@@ -55,7 +54,7 @@ export class StockReportConsumer extends BaseConsumer {
     return text;
   }
 
-  @Process({ concurrency: 1 })
+  @Process({ concurrency: 2 })
   async run({ data }: Job<{ _id: string }>) {
     const report = await this.repo.findOneById(new ObjectId(data._id));
     // 개별 리포트 정보가 아닌 뭉태기로 묶어오는 리포트면 건너뛰기 - 특정 증권사들
@@ -76,10 +75,10 @@ export class StockReportConsumer extends BaseConsumer {
         resultType: 'json',
         numOfRows: 1,
         itmsNm: report.stockName.trim(),
-        basDt:
-          format(new Date(), 'yyyy-MM-dd') === report.date
-            ? null
-            : report.date.replaceAll(/\-/g, ''),
+        basDt: null,
+        // format(new Date(), 'yyyy-MM-dd') === report.date
+        //   ? null
+        //   : report.date.replaceAll(/\-/g, ''),
       });
       const stockInfo = await retry(
         () => axios.get(this.GOV_STOCK_INFO_URL, { params }),

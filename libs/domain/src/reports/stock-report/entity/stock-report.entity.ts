@@ -51,7 +51,7 @@ export class StockReport extends BaseReportEntity {
     const targetPrice = onlyNumber(opinion.targetPrice);
     let disparateRatio = 0;
     if (price && targetPrice) {
-      disparateRatio = +((1 - price / targetPrice) * 100).toFixed(2);
+      disparateRatio = +Math.abs((1 - targetPrice / price) * 100).toFixed(2);
     }
 
     this.recommendation = plainToInstance(Recommendation, {
