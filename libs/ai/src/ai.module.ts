@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppConfigModule } from '@libs/config';
-import { OllamaService } from '@libs/ai/service';
+import { ClaudeService, OllamaService } from './service';
 
 @Module({
   imports: [AppConfigModule],
-  providers: [OllamaService],
-  exports: [OllamaService],
+  providers: [OllamaService, ClaudeService],
+  exports: [OllamaService, ClaudeService],
 })
 export class AiModule {}

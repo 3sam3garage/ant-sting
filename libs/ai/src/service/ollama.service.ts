@@ -12,7 +12,7 @@ import {
   QUERY,
   OPINION_QUERY,
   OPINION_QUERY_POST_FIX,
-} from '../constants';
+} from '../ollama.constants';
 
 @Injectable()
 export class OllamaService {

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { StockReportRepository } from '@libs/domain';
 import { ExternalApiConfigService, QUEUE_NAME } from '@libs/config';
-import { OllamaService } from '@libs/ai';
+import { ClaudeService } from '@libs/ai';
 import { joinUrl, omitIsNil, requestAndParseEucKr, retry } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
 import { Logger } from '@nestjs/common';
@@ -23,7 +23,8 @@ export class StockReportConsumer extends BaseConsumer {
 
   constructor(
     private readonly repo: StockReportRepository,
-    private readonly ollamaService: OllamaService,
+    // private readonly ollamaService: OllamaService,
+    private readonly claudeService: ClaudeService,
     private readonly externalApiConfigService: ExternalApiConfigService,
   ) {
     super();
@@ -102,7 +103,7 @@ export class StockReportConsumer extends BaseConsumer {
       return;
     }
 
-    const { reason, score } = await this.ollamaService.scoreSummary(
+    const { reason, score } = await this.claudeService.scoreSummary(
       report.summary,
     );
     report.addScore({ reason, score: +score });

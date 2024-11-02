@@ -76,6 +76,9 @@ describe('aws claude', () => {
 
     const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
     const responseBody = JSON.parse(decodedResponseBody);
-    return responseBody.content[0].text;
+
+    const json = JSON.parse('{' + responseBody.content[0].text);
+
+    return json;
   });
 });
