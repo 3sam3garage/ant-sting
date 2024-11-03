@@ -69,7 +69,7 @@ export class DebentureReportCrawlerTask {
 
       const _id = debentureReport._id.toString();
       await this.queue.addBulk(
-        new Array(5).fill({
+        new Array(1).fill({
           data: { _id },
           opts: { removeOnComplete: true, removeOnFail: true },
         }),
