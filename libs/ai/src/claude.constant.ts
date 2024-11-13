@@ -18,3 +18,24 @@ reason field should be in korean.
 }
 </example>
 `;
+
+/**
+ * 글로벌 주식 시장, 경제, 채권에 대한 정보를 건네주면, 이 정보를 결합하고 3개의 간단한 요약을 추출해줘.
+ */
+export const COMBINE_AND_EXTRACT_KEYWORDS_PROMPT = `
+<information> {{INFORMATION}} </information>
+  
+I'll give you a information of global stock market, economy and debenture.
+Combine information I provide and extract 3 brief summaries.
+Here is example of how it should be done. 
+  
+<example>
+{ 
+  "summaries": [
+    "코스피의 단기 급락이 아닌 점전직인 하락장 전개", 
+    "트럼프발 강달러 지속", 
+    "Red Sweep과 함께 다가오는 고금리, 강달러 공포."
+  ] 
+}
+</example>   
+`;
