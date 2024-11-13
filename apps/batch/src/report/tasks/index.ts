@@ -1,2 +1,2 @@
-export * from './market-info-report.crawler.task';
+export * from './macro-environment.crawler.task';
 export * from './stock-report.crawler.task';

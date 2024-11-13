@@ -15,13 +15,20 @@ import { InjectQueue } from '@nestjs/bull';
 import { QUEUE_NAME } from '@libs/config';
 import { Queue } from 'bull';
 
+/**
+ * 매크로 환경
+ * - 시황
+ * - 투자정보
+ * - 경제분석
+ * - 채권분석
+ */
 @Injectable()
-export class MarketInfoReportCrawlerTask {
+export class MacroEnvironmentCrawlerTask {
   private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'market_info_list.naver');
 
   constructor(
     private readonly marketInfoReportRepo: MarketInfoReportRepository,
-    @InjectQueue(QUEUE_NAME.MARKET_INFO_REPORT_SCORE)
+    @InjectQueue(QUEUE_NAME.MACRO_ENVIRONMENT)
     private readonly queue: Queue,
   ) {}
 
