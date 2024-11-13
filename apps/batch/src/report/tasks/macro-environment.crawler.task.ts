@@ -7,10 +7,7 @@ import {
 import { N_PAY_RESEARCH_URL } from '../constants';
 import { MarketInfoReport } from '../interface';
 import { figureNid } from '../utils';
-import {
-  MarketInfoReport as MarketInfoReportEntity,
-  MarketInfoReportRepository,
-} from '@libs/domain';
+import { MacroEnvironmentRepository } from '@libs/domain';
 import { InjectQueue } from '@nestjs/bull';
 import { QUEUE_NAME } from '@libs/config';
 import { Queue } from 'bull';
@@ -27,7 +24,7 @@ export class MacroEnvironmentCrawlerTask {
   private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'market_info_list.naver');
 
   constructor(
-    private readonly marketInfoReportRepo: MarketInfoReportRepository,
+    private readonly marketInfoReportRepo: MacroEnvironmentRepository,
     @InjectQueue(QUEUE_NAME.MACRO_ENVIRONMENT)
     private readonly queue: Queue,
   ) {}
@@ -60,24 +57,24 @@ export class MacroEnvironmentCrawlerTask {
       });
     }
 
-    for (const report of marketInfoReports) {
-      let investReport = await this.marketInfoReportRepo.findOneByNid(
-        report.nid,
-      );
-      if (investReport) {
-        await this.marketInfoReportRepo.save({ ...investReport, ...report });
-      } else {
-        const entity = MarketInfoReportEntity.create(report);
-        investReport = await this.marketInfoReportRepo.save(entity);
-      }
-
-      const _id = investReport._id.toString();
-      await this.queue.addBulk(
-        new Array(1).fill({
-          data: { _id },
-          opts: { removeOnComplete: true, removeOnFail: true },
-        }),
-      );
-    }
+    // for (const report of marketInfoReports) {
+    //   let investReport = await this.marketInfoReportRepo.findOneByNid(
+    //     report.nid,
+    //   );
+    //   if (investReport) {
+    //     await this.marketInfoReportRepo.save({ ...investReport, ...report });
+    //   } else {
+    //     const entity = MarketInfoReportEntity.create(report);
+    //     investReport = await this.marketInfoReportRepo.save(entity);
+    //   }
+    //
+    //   const _id = investReport._id.toString();
+    //   await this.queue.addBulk(
+    //     new Array(1).fill({
+    //       data: { _id },
+    //       opts: { removeOnComplete: true, removeOnFail: true },
+    //     }),
+    //   );
+    // }
   }
 }

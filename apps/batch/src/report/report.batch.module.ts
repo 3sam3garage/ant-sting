@@ -1,11 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import {
-  DebentureReportDomainModule,
-  EconomyReportDomainModule,
-  IndustryReportDomainModule,
-  InvestReportDomainModule,
-  MarketInfoReportDomainModule,
+  MacroEnvironmentDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
@@ -14,11 +10,7 @@ import { MacroEnvironmentCrawlerTask, StockReportCrawlerTask } from './tasks';
 
 @Module({
   imports: [
-    InvestReportDomainModule,
-    MarketInfoReportDomainModule,
-    DebentureReportDomainModule,
-    EconomyReportDomainModule,
-    IndustryReportDomainModule,
+    MacroEnvironmentDomainModule,
     StockReportDomainModule,
     BullModule.registerQueueAsync(
       {

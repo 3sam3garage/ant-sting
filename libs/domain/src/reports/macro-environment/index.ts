@@ -1,3 +1,3 @@
-export * from './industry-report.domain.module';
+export * from './macro-environment.domain.module';
 export * from './repository';
 export * from './entity';
