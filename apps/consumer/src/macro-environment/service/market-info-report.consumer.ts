@@ -2,17 +2,11 @@ import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { MacroEnvironmentRepository } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { OllamaService } from '@libs/ai';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.MACRO_ENVIRONMENT)
 export class MarketInfoReportConsumer extends BaseConsumer {
-  private readonly BASE_URL = 'https://finance.naver.com/research';
-
-  constructor(
-    private readonly repo: MacroEnvironmentRepository,
-    private readonly ollamaService: OllamaService,
-  ) {
+  constructor(private readonly repo: MacroEnvironmentRepository) {
     super();
   }
 

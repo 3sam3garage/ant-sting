@@ -6,7 +6,7 @@ import {
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
-import { StockReportConsumer } from './service';
+import { MarketInfoReportConsumer } from './service';
 
 @Module({
   imports: [
@@ -14,13 +14,13 @@ import { StockReportConsumer } from './service';
     StockReportDomainModule,
     AiModule,
     BullModule.registerQueueAsync({
-      name: QUEUE_NAME.STOCK_REPORT_SCORE,
+      name: QUEUE_NAME.MACRO_ENVIRONMENT,
       inject: [RedisConfigService],
       useFactory: async (config: RedisConfigService) => {
         return { redis: config.getConfig() };
       },
     }),
   ],
-  providers: [StockReportConsumer],
+  providers: [MarketInfoReportConsumer],
 })
-export class ScoreReportModule {}
+export class MacroEnvironmentModule {}

@@ -14,6 +14,9 @@ import {
   OPINION_QUERY_POST_FIX,
 } from '../ollama.constants';
 
+/**
+ * @deprecated
+ */
 @Injectable()
 export class OllamaService {
   private readonly OLLAMA_URL: string;

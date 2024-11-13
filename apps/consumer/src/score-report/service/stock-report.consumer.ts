@@ -2,18 +2,16 @@ import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
+import { Logger } from '@nestjs/common';
 import { StockReportRepository } from '@libs/domain';
 import { ExternalApiConfigService, QUEUE_NAME } from '@libs/config';
 import { ClaudeService } from '@libs/ai';
 import { joinUrl, omitIsNil, requestAndParseEucKr, retry } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
-import { Logger } from '@nestjs/common';
+import { GOV_STOCK_INFO_URL, N_PAY_BASE_URL } from '../constants';
 
 @Processor(QUEUE_NAME.STOCK_REPORT_SCORE)
 export class StockReportConsumer extends BaseConsumer {
-  private readonly N_PAY_BASE_URL = 'https://finance.naver.com/research';
-  private readonly GOV_STOCK_INFO_URL =
-    'https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo';
   private FIRMS_TO_EXCLUDE = [
     '나이스디앤비',
     '한국기술신용평가(주)',
@@ -22,7 +20,6 @@ export class StockReportConsumer extends BaseConsumer {
 
   constructor(
     private readonly repo: StockReportRepository,
-    // private readonly ollamaService: OllamaService,
     private readonly claudeService: ClaudeService,
     private readonly externalApiConfigService: ExternalApiConfigService,
   ) {
@@ -64,7 +61,7 @@ export class StockReportConsumer extends BaseConsumer {
 
     if (!report.summary) {
       const html = await requestAndParseEucKr(
-        joinUrl(this.N_PAY_BASE_URL, report.detailUrl),
+        joinUrl(N_PAY_BASE_URL, report.detailUrl),
       );
 
       report.summary =
@@ -81,7 +78,7 @@ export class StockReportConsumer extends BaseConsumer {
         //   : report.date.replaceAll(/\-/g, ''),
       });
       const stockInfo = await retry(
-        () => axios.get(this.GOV_STOCK_INFO_URL, { params }),
+        () => axios.get(GOV_STOCK_INFO_URL, { params }),
         3,
       );
       const [item] = stockInfo.data.response.body.items.item;

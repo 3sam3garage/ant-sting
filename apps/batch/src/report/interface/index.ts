@@ -1,2 +1,2 @@
-export * from './market-info-report';
+export * from './macro-environment';
 export * from './stock-report';
