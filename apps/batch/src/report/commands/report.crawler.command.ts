@@ -2,16 +2,16 @@ import { Command, CommandRunner } from 'nest-commander';
 import { MacroEnvironmentCrawlerTask, StockReportCrawlerTask } from '../tasks';
 
 enum SUB_COMMAND {
-  // 거시 환경 정보
-  MARKET_INFO = 'macro-environment',
-  // 종목 분석 리포트
+  // 거시 환경 정보 수집
+  MACRO_ENVIRONMENT = 'macro-environment',
+  // 종목 분석 리포트 수집
   STOCK = 'stock',
 }
 
 @Command({ name: 'report' })
 export class ReportCrawlerCommand extends CommandRunner {
   constructor(
-    private readonly marketInfoReportCrawlerTask: MacroEnvironmentCrawlerTask,
+    private readonly macroEnvironmentCrawlerTask: MacroEnvironmentCrawlerTask,
     private readonly stockReportCrawlerTask: StockReportCrawlerTask,
   ) {
     super();
@@ -22,8 +22,8 @@ export class ReportCrawlerCommand extends CommandRunner {
     const [subcommand] = passedParam;
 
     switch (subcommand) {
-      case SUB_COMMAND.MARKET_INFO:
-        return await this.marketInfoReportCrawlerTask.exec();
+      case SUB_COMMAND.MACRO_ENVIRONMENT:
+        return await this.macroEnvironmentCrawlerTask.exec();
       case SUB_COMMAND.STOCK:
         return await this.stockReportCrawlerTask.exec();
       default:

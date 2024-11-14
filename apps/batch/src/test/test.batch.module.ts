@@ -5,11 +5,17 @@ import {
 } from '@libs/domain';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
+import { AiModule } from '@libs/ai';
 import { TestCommand } from './commands';
-import { ReportSummaryTask, TestTask } from './tasks';
+import {
+  ReportSummaryTask,
+  SummarizeMacroEnvironmentTask,
+  TestTask,
+} from './tasks';
 
 @Module({
   imports: [
+    AiModule,
     MacroEnvironmentDomainModule,
     StockReportDomainModule,
     BullModule.registerQueueAsync(
@@ -29,6 +35,11 @@ import { ReportSummaryTask, TestTask } from './tasks';
       },
     ),
   ],
-  providers: [TestCommand, TestTask, ReportSummaryTask],
+  providers: [
+    TestCommand,
+    TestTask,
+    ReportSummaryTask,
+    SummarizeMacroEnvironmentTask,
+  ],
 })
 export class TestBatchModule {}

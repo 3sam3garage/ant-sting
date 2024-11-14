@@ -23,9 +23,14 @@ reason field should be in korean.
  * 글로벌 주식 시장, 경제, 채권에 대한 정보를 건네주면, 이 정보를 결합하고 3개의 간단한 요약을 추출해줘.
  */
 export const COMBINE_AND_EXTRACT_KEYWORDS_PROMPT = `
-<information> {{INFORMATION}} </information>
+<information>
+  <debenture>{{DEBENTURE}}</debenture>
+  <economy>{{ECONOMY}}</economy>
+  <invest>{{INVEST}}</invest>
+  <marketInfo>{{MARKET_INFO}}</marketInfo>
+</information>
   
-I'll give you a information of global stock market, economy and debenture.
+I'll give you a information of global stock market, economy, debenture and investing.
 Combine information I provide and extract 5 brief summaries.
 Here is example of how it should be done. 
   
@@ -34,7 +39,9 @@ Here is example of how it should be done.
   "summaries": [
     "코스피의 단기 급락이 아닌 점전직인 하락장 전개", 
     "트럼프발 강달러 지속", 
-    "Red Sweep과 함께 다가오는 고금리, 강달러 공포."
+    "Red Sweep과 함께 다가오는 고금리, 강달러 공포.",
+    "주춤했던 미국의 인플레이션 둔화 추세 재개",
+    "원달러 환율 1400원 뉴노멀 가능성"
   ] 
 }
 </example>   
