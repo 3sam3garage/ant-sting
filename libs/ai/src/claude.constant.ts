@@ -26,7 +26,7 @@ export const COMBINE_AND_EXTRACT_KEYWORDS_PROMPT = `
 <information> {{INFORMATION}} </information>
   
 I'll give you a information of global stock market, economy and debenture.
-Combine information I provide and extract 3 brief summaries.
+Combine information I provide and extract 5 brief summaries.
 Here is example of how it should be done. 
   
 <example>
