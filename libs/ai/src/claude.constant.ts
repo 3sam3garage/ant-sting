@@ -44,5 +44,37 @@ Here is example of how it should be done.
     "원달러 환율 1400원 뉴노멀 가능성"
   ] 
 }
-</example>   
+</example>
+`;
+
+export const RECOMMEND_PORTFOLIO = `
+<information>
+  <debenture>{{DEBENTURE}}</debenture>
+  <economy>{{ECONOMY}}</economy>
+  <invest>{{INVEST}}</invest>
+  <marketInfo>{{MARKET_INFO}}</marketInfo>
+</information>
+  
+
+I'll give you a information of global financial market.
+Combine information I provide and make invest portfolio that may possibly yield highest profit. 
+Here is example of how it should be done. 
+
+<example>
+{ 
+  "portfolio": {
+    "금": "10%",
+    "비트코인": "5%",
+    "채권": "15%",
+    "예금": "15%",
+    "부동산" : "40",
+    "주식": "15%"
+  },
+  "reasons": [
+    "트럼프 대통령 당선으로 인해 비트코인 상방 열림",
+    "금리인하 기대감으로 주식 시장 기대, 채권 시장 냉각",
+    "은행 대출 규제로 부동산 거래 급감"
+  ] 
+}
+</example>
 `;

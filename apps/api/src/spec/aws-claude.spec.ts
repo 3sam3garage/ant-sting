@@ -7,7 +7,10 @@ import {
   BedrockClient,
   ListFoundationModelsCommand,
 } from '@aws-sdk/client-bedrock';
-import { COMBINE_AND_EXTRACT_KEYWORDS_PROMPT } from '@libs/ai/claude.constant';
+import {
+  COMBINE_AND_EXTRACT_KEYWORDS_PROMPT,
+  RECOMMEND_PORTFOLIO,
+} from '@libs/ai/claude.constant';
 import { macroEnvironment } from './constants';
 
 describe('aws claude', () => {
@@ -94,6 +97,46 @@ describe('aws claude', () => {
         <debenture>${macroEnvironment.debenture.summaries}</debenture>
       `,
     );
+    const client = new BedrockRuntimeClient({ region: 'us-east-1' });
+
+    // Prepare the payload for the model.
+    const payload = {
+      anthropic_version: 'bedrock-2023-05-31',
+      system: 'You are a veteran financial planner and analyst.',
+      max_tokens: 1000,
+      messages: [
+        { role: 'user', content: [{ type: 'text', text: query }] },
+        { role: 'assistant', content: [{ type: 'text', text: '{' }] },
+      ],
+    };
+
+    // Invoke Claude with the payload and wait for the response.
+    const command = new InvokeModelCommand({
+      contentType: 'application/json',
+      body: JSON.stringify(payload),
+      modelId,
+    });
+    const apiResponse = await client.send(command);
+
+    const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
+    const responseBody = JSON.parse(decodedResponseBody);
+
+    const json = JSON.parse('{' + responseBody.content[0].text);
+
+    return json;
+  });
+
+  it('recommend portfolio', async () => {
+    const { debenture, economy, marketInfo, invest } = macroEnvironment;
+
+    const query = RECOMMEND_PORTFOLIO.replace(
+      '{{DEBENTURE}}',
+      debenture.summaries.join('\n'),
+    )
+      .replace('{{ECONOMY}}', economy.summaries.join('\n'))
+      .replace('{{INVEST}}', invest.summaries.join('\n'))
+      .replace('{{MARKET_INFO}}', marketInfo.summaries.join('\n'));
+
     const client = new BedrockRuntimeClient({ region: 'us-east-1' });
 
     // Prepare the payload for the model.
