@@ -3,7 +3,7 @@ import {
   InvokeModelCommand,
 } from '@aws-sdk/client-bedrock-runtime';
 import { Injectable } from '@nestjs/common';
-import { BASE_SCORE_PROMPT } from '@libs/ai/claude.constant';
+import { BASE_SYSTEM_PROMPT } from '../claude.constant';
 
 @Injectable()
 export class ClaudeService {
@@ -14,15 +14,13 @@ export class ClaudeService {
     this.client = new BedrockRuntimeClient();
   }
 
-  async scoreSummary(summary: string) {
-    const prompt = BASE_SCORE_PROMPT.replace('{{INFORMATION}}', summary);
-    return await this.invoke(prompt);
-  }
-
-  async invoke(prompt: string): Promise<Record<string, any>> {
+  async invoke(
+    prompt: string,
+    system = BASE_SYSTEM_PROMPT,
+  ): Promise<Record<string, any>> {
     const payload = {
       anthropic_version: 'bedrock-2023-05-31',
-      system: 'You are a veteran financial planner and analyst.',
+      system,
       max_tokens: 1000,
       messages: [
         { role: 'user', content: [{ type: 'text', text: prompt }] },
@@ -30,7 +28,6 @@ export class ClaudeService {
       ],
     };
 
-    // Invoke Claude with the payload and wait for the response.
     const command = new InvokeModelCommand({
       contentType: 'application/json',
       body: JSON.stringify(payload),

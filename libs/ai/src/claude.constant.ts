@@ -47,7 +47,7 @@ Here is example of how it should be done.
 </example>
 `;
 
-export const RECOMMEND_PORTFOLIO = `
+export const RECOMMEND_PORTFOLIO_PROMPT = `
 <information>
   <debenture>{{DEBENTURE}}</debenture>
   <economy>{{ECONOMY}}</economy>
@@ -78,3 +78,15 @@ Here is example of how it should be done.
 }
 </example>
 `;
+
+export const BASE_SYSTEM_PROMPT =
+  'You are a veteran financial planner and analyst.';
+
+export const OPTIMISTIC_VIEWER_SYSTEM_PROMPT =
+  'You have optimistic view in stock market.';
+
+export const PESSIMISTIC_VIEWER_SYSTEM_PROMPT =
+  'You have pessimistic view in stock market.';
+
+export const CONSERVATIVE_VIEWER_SYSTEM_PROMPT =
+  'You are a conservative value investor.';

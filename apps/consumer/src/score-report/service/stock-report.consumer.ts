@@ -7,6 +7,13 @@ import { N_PAY_RESEARCH_URL, StockReportRepository } from '@libs/domain';
 import { ExternalApiConfigService, QUEUE_NAME } from '@libs/config';
 import { ClaudeService } from '@libs/ai';
 import { joinUrl, omitIsNil, requestAndParseEucKr, retry } from '@libs/common';
+import {
+  BASE_SCORE_PROMPT,
+  BASE_SYSTEM_PROMPT,
+  CONSERVATIVE_VIEWER_SYSTEM_PROMPT,
+  OPTIMISTIC_VIEWER_SYSTEM_PROMPT,
+  PESSIMISTIC_VIEWER_SYSTEM_PROMPT,
+} from '@libs/ai/claude.constant';
 import { BaseConsumer } from '../../base.consumer';
 import { GOV_STOCK_INFO_URL } from '../constants';
 
@@ -73,9 +80,6 @@ export class StockReportConsumer extends BaseConsumer {
         numOfRows: 1,
         itmsNm: report.stockName.trim(),
         basDt: null,
-        // format(new Date(), 'yyyy-MM-dd') === report.date
-        //   ? null
-        //   : report.date.replaceAll(/\-/g, ''),
       });
       const stockInfo = await retry(
         () => axios.get(GOV_STOCK_INFO_URL, { params }),
@@ -99,10 +103,25 @@ export class StockReportConsumer extends BaseConsumer {
       return;
     }
 
-    const { reason, score } = await this.claudeService.scoreSummary(
-      report.summary,
-    );
-    report.addScore({ reason, score: +score });
+    const tasks = await Promise.all([
+      this.claudeService.invoke(
+        BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
+        BASE_SYSTEM_PROMPT + OPTIMISTIC_VIEWER_SYSTEM_PROMPT,
+      ),
+      this.claudeService.invoke(
+        BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
+        BASE_SYSTEM_PROMPT + PESSIMISTIC_VIEWER_SYSTEM_PROMPT,
+      ),
+      this.claudeService.invoke(
+        BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
+        BASE_SYSTEM_PROMPT + CONSERVATIVE_VIEWER_SYSTEM_PROMPT,
+      ),
+    ]);
+
+    for (const { reason, score } of tasks) {
+      report.addScore({ reason, score: +score });
+    }
+
     await this.repo.save(report);
   }
 }

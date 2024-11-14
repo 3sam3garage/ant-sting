@@ -9,7 +9,7 @@ import {
 } from '@aws-sdk/client-bedrock';
 import {
   COMBINE_AND_EXTRACT_KEYWORDS_PROMPT,
-  RECOMMEND_PORTFOLIO,
+  RECOMMEND_PORTFOLIO_PROMPT,
 } from '@libs/ai/claude.constant';
 import { macroEnvironment } from './constants';
 
@@ -132,7 +132,7 @@ describe('aws claude', () => {
     it('recommend portfolio', async () => {
       const { debenture, economy, marketInfo, invest } = macroEnvironment;
 
-      const query = RECOMMEND_PORTFOLIO.replace(
+      const query = RECOMMEND_PORTFOLIO_PROMPT.replace(
         '{{DEBENTURE}}',
         debenture.summaries.join('\n'),
       )
