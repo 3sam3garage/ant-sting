@@ -22,6 +22,7 @@ export class ClaudeService {
   async invoke(prompt: string): Promise<Record<string, any>> {
     const payload = {
       anthropic_version: 'bedrock-2023-05-31',
+      system: 'You are a veteran financial planner and analyst.',
       max_tokens: 1000,
       messages: [
         { role: 'user', content: [{ type: 'text', text: prompt }] },
