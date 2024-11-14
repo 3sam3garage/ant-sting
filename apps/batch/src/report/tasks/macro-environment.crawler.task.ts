@@ -1,7 +1,11 @@
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
-import { joinUrl, requestAndParseEucKr } from '@libs/common';
+import {
+  formatSixDigitDate,
+  joinUrl,
+  requestAndParseEucKr,
+} from '@libs/common';
 import {
   MacroEnvironment,
   MacroEnvironmentRepository,
@@ -68,6 +72,12 @@ export class MacroEnvironmentCrawlerTask {
       const urls: string[] = [];
       for (const row of rows) {
         const cells = row.querySelectorAll('td:not(.file)');
+        const dateInfo = row.querySelector('td.date');
+        const currentDate = formatSixDigitDate(dateInfo.textContent);
+        if (currentDate !== date) {
+          continue;
+        }
+
         const titleAnchor = cells.shift().querySelector('a');
         const detailUrl = titleAnchor.getAttribute('href');
         urls.push(detailUrl);
