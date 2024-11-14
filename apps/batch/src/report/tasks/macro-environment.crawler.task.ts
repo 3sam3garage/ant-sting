@@ -55,6 +55,7 @@ export class MacroEnvironmentCrawlerTask {
         const anchor = row.querySelector('td.file > a');
         const detailUrl = titleAnchor.getAttribute('href');
 
+        // 행여 재사용할수도 있을지도 몰라 남겨둠.
         macroEnvironmentInfo.push({
           title: titleAnchor.innerHTML.trim(),
           nid: figureNid(detailUrl),

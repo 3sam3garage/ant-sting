@@ -1,4 +1,4 @@
-import { BaseReport } from './base';
+import { BaseReport } from '.';
 
 export interface StockReport extends BaseReport {
   stockName: string;

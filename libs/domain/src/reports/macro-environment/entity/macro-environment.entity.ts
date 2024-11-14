@@ -4,28 +4,28 @@ import { plainToInstance } from 'class-transformer';
 import { BaseEntity } from '../../../base.entity';
 
 class Item {
-  @Column()
+  @Column({ default: [] })
   @IsString()
-  summary: string = '';
+  summaries: string[];
 }
 
 @Entity({ name: 'macro-environments' })
 export class MacroEnvironment extends BaseEntity {
   @Column(() => Item)
   @ValidateNested()
-  marketInfo: Item;
+  marketInfo = new Item();
 
   @Column(() => Item)
   @ValidateNested()
-  invest: Item;
+  invest = new Item();
 
   @Column(() => Item)
   @ValidateNested()
-  economy: Item;
+  economy = new Item();
 
   @Column(() => Item)
   @ValidateNested()
-  debenture: Item;
+  debenture = new Item();
 
   @Column()
   @IsString()
