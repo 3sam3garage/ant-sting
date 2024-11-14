@@ -3,12 +3,12 @@ import { Job } from 'bull';
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
 import { Logger } from '@nestjs/common';
-import { StockReportRepository } from '@libs/domain';
+import { N_PAY_RESEARCH_URL, StockReportRepository } from '@libs/domain';
 import { ExternalApiConfigService, QUEUE_NAME } from '@libs/config';
 import { ClaudeService } from '@libs/ai';
 import { joinUrl, omitIsNil, requestAndParseEucKr, retry } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
-import { GOV_STOCK_INFO_URL, N_PAY_BASE_URL } from '../constants';
+import { GOV_STOCK_INFO_URL } from '../constants';
 
 @Processor(QUEUE_NAME.STOCK_REPORT_SCORE)
 export class StockReportConsumer extends BaseConsumer {
@@ -61,7 +61,7 @@ export class StockReportConsumer extends BaseConsumer {
 
     if (!report.summary) {
       const html = await requestAndParseEucKr(
-        joinUrl(N_PAY_BASE_URL, report.detailUrl),
+        joinUrl(N_PAY_RESEARCH_URL, report.detailUrl),
       );
 
       report.summary =

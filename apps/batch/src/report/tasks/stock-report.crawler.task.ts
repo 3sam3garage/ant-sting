@@ -8,10 +8,10 @@ import {
   requestAndParseEucKr,
 } from '@libs/common';
 import {
+  N_PAY_RESEARCH_URL,
   StockReport as StockReportEntity,
   StockReportRepository,
 } from '@libs/domain';
-import { N_PAY_RESEARCH_URL } from '../constants';
 import { StockReport } from '../interface';
 import { figureNid } from '../utils';
 

@@ -9,3 +9,5 @@ export enum REPORT_TYPE {
   // @deprecated - 현재 미사용
   INDUSTRY = 'INDUSTRY',
 }
+
+export const N_PAY_RESEARCH_URL = 'https://finance.naver.com/research';

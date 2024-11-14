@@ -1,16 +1,15 @@
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
+import { joinUrl, requestAndParseEucKr } from '@libs/common';
 import {
-  formatSixDigitDate,
-  joinUrl,
-  requestAndParseEucKr,
-} from '@libs/common';
-import { MacroEnvironmentRepository } from '@libs/domain';
+  MacroEnvironment,
+  MacroEnvironmentRepository,
+  N_PAY_RESEARCH_URL,
+  REPORT_TYPE,
+} from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { N_PAY_RESEARCH_URL } from '../constants';
-import { MacroEnvironment } from '../interface';
-import { figureNid } from '../utils';
+import { format } from 'date-fns';
 
 /**
  * 매크로 환경
@@ -29,14 +28,33 @@ export class MacroEnvironmentCrawlerTask {
   ];
 
   constructor(
-    private readonly marketInfoReportRepo: MacroEnvironmentRepository,
     @InjectQueue(QUEUE_NAME.MACRO_ENVIRONMENT)
     private readonly queue: Queue,
+    private readonly repo: MacroEnvironmentRepository,
   ) {}
 
-  private;
+  private figureTypeByDetailUrl(detailUrl: string): REPORT_TYPE {
+    switch (detailUrl) {
+      case 'market_info_list.naver':
+        return REPORT_TYPE.MARKET_INFO;
+      case 'invest_list.naver':
+        return REPORT_TYPE.INVEST;
+      case 'economy_list.naver':
+        return REPORT_TYPE.ECONOMY;
+      case 'debenture_list.naver':
+        return REPORT_TYPE.DEBENTURE;
+    }
+  }
 
   async exec() {
+    // make entity to store data
+    const date = format(new Date(), 'yyyy-MM-dd');
+    let entity = await this.repo.findOneByDate(date);
+    if (!entity) {
+      entity = await this.repo.createOne(MacroEnvironment.create({ date }));
+    }
+
+    // crawl data and add to queue
     for (const detailUrl of this.DETAIL_URLS) {
       const url = joinUrl(N_PAY_RESEARCH_URL, detailUrl);
 
@@ -47,36 +65,20 @@ export class MacroEnvironmentCrawlerTask {
         )
         .filter((row) => row.querySelector('td.file'));
 
-      const macroEnvironmentInfo: MacroEnvironment[] = [];
+      const urls: string[] = [];
       for (const row of rows) {
         const cells = row.querySelectorAll('td:not(.file)');
         const titleAnchor = cells.shift().querySelector('a');
         const detailUrl = titleAnchor.getAttribute('href');
-
-        console.log(detailUrl);
+        urls.push(detailUrl);
       }
-
-      console.log(1);
+      const reportType = this.figureTypeByDetailUrl(detailUrl);
+      await this.queue.addBulk(
+        urls.map((url) => ({
+          data: { url, reportType, documentId: entity._id },
+          opts: { removeOnComplete: true, removeOnFail: true },
+        })),
+      );
     }
-
-    // for (const report of marketInfoReports) {
-    //   let investReport = await this.marketInfoReportRepo.findOneByNid(
-    //     report.nid,
-    //   );
-    //   if (investReport) {
-    //     await this.marketInfoReportRepo.save({ ...investReport, ...report });
-    //   } else {
-    //     const entity = MarketInfoReportEntity.create(report);
-    //     investReport = await this.marketInfoReportRepo.save(entity);
-    //   }
-    //
-    //   const _id = investReport._id.toString();
-    //   await this.queue.addBulk(
-    //     new Array(1).fill({
-    //       data: { _id },
-    //       opts: { removeOnComplete: true, removeOnFail: true },
-    //     }),
-    //   );
-    // }
   }
 }

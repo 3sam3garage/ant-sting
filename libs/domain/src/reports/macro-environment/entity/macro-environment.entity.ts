@@ -5,8 +5,8 @@ import { BaseEntity } from '../../../base.entity';
 
 class Item {
   @Column({ default: [] })
-  @IsString()
-  summaries: string[];
+  @IsString({ each: true })
+  summaries: string[] = [];
 }
 
 @Entity({ name: 'macro-environments' })
