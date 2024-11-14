@@ -34,6 +34,8 @@ export class MacroEnvironmentCrawlerTask {
     private readonly queue: Queue,
   ) {}
 
+  private;
+
   async exec() {
     for (const detailUrl of this.DETAIL_URLS) {
       const url = joinUrl(N_PAY_RESEARCH_URL, detailUrl);
@@ -49,23 +51,12 @@ export class MacroEnvironmentCrawlerTask {
       for (const row of rows) {
         const cells = row.querySelectorAll('td:not(.file)');
         const titleAnchor = cells.shift().querySelector('a');
-        const [stockFirm, date, views] = cells.map((cell) =>
-          cell.innerText.trim(),
-        );
-        const anchor = row.querySelector('td.file > a');
         const detailUrl = titleAnchor.getAttribute('href');
 
-        // 행여 재사용할수도 있을지도 몰라 남겨둠.
-        macroEnvironmentInfo.push({
-          title: titleAnchor.innerHTML.trim(),
-          nid: figureNid(detailUrl),
-          detailUrl,
-          stockFirm,
-          date: formatSixDigitDate(date),
-          views,
-          file: anchor.getAttribute('href'),
-        });
+        console.log(detailUrl);
       }
+
+      console.log(1);
     }
 
     // for (const report of marketInfoReports) {
