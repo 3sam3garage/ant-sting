@@ -11,7 +11,7 @@ import {
   BASE_SCORE_PROMPT,
   BASE_SYSTEM_PROMPT,
   CONSERVATIVE_VIEWER_SYSTEM_PROMPT,
-  OPTIMISTIC_VIEWER_SYSTEM_PROMPT,
+  RISK_VIEWER_SYSTEM_PROMPT,
   PESSIMISTIC_VIEWER_SYSTEM_PROMPT,
 } from '@libs/ai/claude.constant';
 import { BaseConsumer } from '../../base.consumer';
@@ -106,7 +106,7 @@ export class StockReportConsumer extends BaseConsumer {
     const tasks = await Promise.all([
       this.claudeService.invoke(
         BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
-        BASE_SYSTEM_PROMPT + OPTIMISTIC_VIEWER_SYSTEM_PROMPT,
+        BASE_SYSTEM_PROMPT + RISK_VIEWER_SYSTEM_PROMPT,
       ),
       this.claudeService.invoke(
         BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),

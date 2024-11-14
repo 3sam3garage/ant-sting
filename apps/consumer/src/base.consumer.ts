@@ -15,8 +15,7 @@ export class BaseConsumer {
 
   @OnQueueFailed()
   async onQueueFailed(job: Job) {
-    const { data, failedReason } = job;
-    Logger.error(`data: ${data}  Failed : ${failedReason}`);
+    Logger.error(`data: ${job?.data}  Failed : ${job?.failedReason}`);
   }
 
   @OnQueueError()
