@@ -13,7 +13,7 @@ reason field should be in korean.
 
 <example>
 {
-  "reason": "주식 시장은 최근 주식 수요 증가로 인해 호황을 누리고 있습니다.",
+  "reason": "4Q 어닝쇼크, 전년 대비 영업이익 80% 상승. 원달러 환율 1400원대로 수출량 상승 여력 충분.",
   "score": 5
 }
 </example>

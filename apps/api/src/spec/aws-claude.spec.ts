@@ -23,146 +23,150 @@ describe('aws claude', () => {
     bedrockClient = new BedrockClient();
   });
 
-  it('get foundation model list', async () => {
-    const command = new ListFoundationModelsCommand({});
-    const res = await bedrockClient.send(command);
+  describe('native features', () => {
+    it('get foundation model list', async () => {
+      const command = new ListFoundationModelsCommand({});
+      const res = await bedrockClient.send(command);
 
-    const models = res?.modelSummaries || [];
+      const models = res?.modelSummaries || [];
 
-    for (const model of models) {
-      console.log(model.modelArn);
-    }
+      for (const model of models) {
+        console.log(model.modelArn);
+      }
 
-    console.log(1);
-  });
-
-  it('converse request', async () => {
-    const query =
-      'describe most important feature in korea stock market. answer in korean';
-    const conversation = [
-      { role: 'user', content: [{ text: query }] },
-    ] as never;
-
-    // Create a command with the model ID, the message, and a basic configuration.
-    const command = new ConverseCommand({
-      modelId,
-      messages: conversation,
-      inferenceConfig: { maxTokens: 512, temperature: 0.5, topP: 0.9 },
+      console.log(1);
     });
 
-    const res = await client.send(command);
-    const contents = res.output.message.content;
+    it('converse request', async () => {
+      const query =
+        'describe most important feature in korea stock market. answer in korean';
+      const conversation = [
+        { role: 'user', content: [{ text: query }] },
+      ] as never;
 
-    console.log(contents);
-  });
+      // Create a command with the model ID, the message, and a basic configuration.
+      const command = new ConverseCommand({
+        modelId,
+        messages: conversation,
+        inferenceConfig: { maxTokens: 512, temperature: 0.5, topP: 0.9 },
+      });
 
-  it('invoke request', async () => {
-    const query =
-      'describe most important feature in korea stock market. answer in korean. answer in json format. feature field is required.';
-    const client = new BedrockRuntimeClient({ region: 'us-east-1' });
+      const res = await client.send(command);
+      const contents = res.output.message.content;
 
-    // Prepare the payload for the model.
-    const payload = {
-      anthropic_version: 'bedrock-2023-05-31',
-      max_tokens: 1000,
-      messages: [
-        { role: 'user', content: [{ type: 'text', text: query }] },
-        { role: 'assistant', content: [{ type: 'text', text: '{' }] },
-      ],
-    };
-
-    // Invoke Claude with the payload and wait for the response.
-    const command = new InvokeModelCommand({
-      contentType: 'application/json',
-      body: JSON.stringify(payload),
-      modelId,
+      console.log(contents);
     });
-    const apiResponse = await client.send(command);
 
-    const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
-    const responseBody = JSON.parse(decodedResponseBody);
+    it('invoke request', async () => {
+      const query =
+        'describe most important feature in korea stock market. answer in korean. answer in json format. feature field is required.';
+      const client = new BedrockRuntimeClient({ region: 'us-east-1' });
 
-    const json = JSON.parse('{' + responseBody.content[0].text);
+      // Prepare the payload for the model.
+      const payload = {
+        anthropic_version: 'bedrock-2023-05-31',
+        max_tokens: 1000,
+        messages: [
+          { role: 'user', content: [{ type: 'text', text: query }] },
+          { role: 'assistant', content: [{ type: 'text', text: '{' }] },
+        ],
+      };
 
-    return json;
+      // Invoke Claude with the payload and wait for the response.
+      const command = new InvokeModelCommand({
+        contentType: 'application/json',
+        body: JSON.stringify(payload),
+        modelId,
+      });
+      const apiResponse = await client.send(command);
+
+      const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
+      const responseBody = JSON.parse(decodedResponseBody);
+
+      const json = JSON.parse('{' + responseBody.content[0].text);
+
+      return json;
+    });
   });
 
-  it('keyword extraction', async () => {
-    const query = COMBINE_AND_EXTRACT_KEYWORDS_PROMPT.replace(
-      '{{INFORMATION}}',
-      `
+  describe('service', () => {
+    it('keyword extraction', async () => {
+      const query = COMBINE_AND_EXTRACT_KEYWORDS_PROMPT.replace(
+        '{{INFORMATION}}',
+        `
         <market-info>${macroEnvironment.marketInfo.summaries}</market-info>
         <invest>${macroEnvironment.invest.summaries}</invest>
         <economy>${macroEnvironment.economy.summaries}</economy>
         <debenture>${macroEnvironment.debenture.summaries}</debenture>
       `,
-    );
-    const client = new BedrockRuntimeClient({ region: 'us-east-1' });
+      );
+      const client = new BedrockRuntimeClient({ region: 'us-east-1' });
 
-    // Prepare the payload for the model.
-    const payload = {
-      anthropic_version: 'bedrock-2023-05-31',
-      system: 'You are a veteran financial planner and analyst.',
-      max_tokens: 1000,
-      messages: [
-        { role: 'user', content: [{ type: 'text', text: query }] },
-        { role: 'assistant', content: [{ type: 'text', text: '{' }] },
-      ],
-    };
+      // Prepare the payload for the model.
+      const payload = {
+        anthropic_version: 'bedrock-2023-05-31',
+        system: 'You are a veteran financial planner and analyst.',
+        max_tokens: 1000,
+        messages: [
+          { role: 'user', content: [{ type: 'text', text: query }] },
+          { role: 'assistant', content: [{ type: 'text', text: '{' }] },
+        ],
+      };
 
-    // Invoke Claude with the payload and wait for the response.
-    const command = new InvokeModelCommand({
-      contentType: 'application/json',
-      body: JSON.stringify(payload),
-      modelId,
+      // Invoke Claude with the payload and wait for the response.
+      const command = new InvokeModelCommand({
+        contentType: 'application/json',
+        body: JSON.stringify(payload),
+        modelId,
+      });
+      const apiResponse = await client.send(command);
+
+      const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
+      const responseBody = JSON.parse(decodedResponseBody);
+
+      const json = JSON.parse('{' + responseBody.content[0].text);
+
+      return json;
     });
-    const apiResponse = await client.send(command);
 
-    const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
-    const responseBody = JSON.parse(decodedResponseBody);
+    it('recommend portfolio', async () => {
+      const { debenture, economy, marketInfo, invest } = macroEnvironment;
 
-    const json = JSON.parse('{' + responseBody.content[0].text);
+      const query = RECOMMEND_PORTFOLIO.replace(
+        '{{DEBENTURE}}',
+        debenture.summaries.join('\n'),
+      )
+        .replace('{{ECONOMY}}', economy.summaries.join('\n'))
+        .replace('{{INVEST}}', invest.summaries.join('\n'))
+        .replace('{{MARKET_INFO}}', marketInfo.summaries.join('\n'));
 
-    return json;
-  });
+      const client = new BedrockRuntimeClient({ region: 'us-east-1' });
 
-  it('recommend portfolio', async () => {
-    const { debenture, economy, marketInfo, invest } = macroEnvironment;
+      // Prepare the payload for the model.
+      const payload = {
+        anthropic_version: 'bedrock-2023-05-31',
+        system: 'You are a veteran financial planner and analyst.',
+        max_tokens: 1000,
+        messages: [
+          { role: 'user', content: [{ type: 'text', text: query }] },
+          { role: 'assistant', content: [{ type: 'text', text: '{' }] },
+        ],
+      };
 
-    const query = RECOMMEND_PORTFOLIO.replace(
-      '{{DEBENTURE}}',
-      debenture.summaries.join('\n'),
-    )
-      .replace('{{ECONOMY}}', economy.summaries.join('\n'))
-      .replace('{{INVEST}}', invest.summaries.join('\n'))
-      .replace('{{MARKET_INFO}}', marketInfo.summaries.join('\n'));
+      // Invoke Claude with the payload and wait for the response.
+      const command = new InvokeModelCommand({
+        contentType: 'application/json',
+        body: JSON.stringify(payload),
+        modelId,
+      });
+      const apiResponse = await client.send(command);
 
-    const client = new BedrockRuntimeClient({ region: 'us-east-1' });
+      const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
+      const responseBody = JSON.parse(decodedResponseBody);
 
-    // Prepare the payload for the model.
-    const payload = {
-      anthropic_version: 'bedrock-2023-05-31',
-      system: 'You are a veteran financial planner and analyst.',
-      max_tokens: 1000,
-      messages: [
-        { role: 'user', content: [{ type: 'text', text: query }] },
-        { role: 'assistant', content: [{ type: 'text', text: '{' }] },
-      ],
-    };
+      const json = JSON.parse('{' + responseBody.content[0].text);
 
-    // Invoke Claude with the payload and wait for the response.
-    const command = new InvokeModelCommand({
-      contentType: 'application/json',
-      body: JSON.stringify(payload),
-      modelId,
+      return json;
     });
-    const apiResponse = await client.send(command);
-
-    const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
-    const responseBody = JSON.parse(decodedResponseBody);
-
-    const json = JSON.parse('{' + responseBody.content[0].text);
-
-    return json;
   });
 });
