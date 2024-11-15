@@ -3,7 +3,7 @@ import {
   InvokeModelCommand,
 } from '@aws-sdk/client-bedrock-runtime';
 import { Injectable } from '@nestjs/common';
-import { BASE_SYSTEM_PROMPT } from '../claude.constant';
+import { BASE_SYSTEM_PROMPT } from '../constants';
 
 @Injectable()
 export class ClaudeService {

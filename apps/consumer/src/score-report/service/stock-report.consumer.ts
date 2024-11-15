@@ -13,7 +13,7 @@ import {
   CONSERVATIVE_VIEWER_SYSTEM_PROMPT,
   RISK_VIEWER_SYSTEM_PROMPT,
   PESSIMISTIC_VIEWER_SYSTEM_PROMPT,
-} from '@libs/ai/claude.constant';
+} from '@libs/ai';
 import { BaseConsumer } from '../../base.consumer';
 import { GOV_STOCK_INFO_URL } from '../constants';
 

@@ -10,7 +10,7 @@ import {
 import {
   COMBINE_AND_EXTRACT_KEYWORDS_PROMPT,
   RECOMMEND_PORTFOLIO_PROMPT,
-} from '@libs/ai/claude.constant';
+} from '@libs/ai';
 import { macroEnvironment } from './constants';
 
 describe('aws claude', () => {

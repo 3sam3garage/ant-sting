@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MacroEnvironmentRepository } from '@libs/domain';
 import { format } from 'date-fns';
 import { ClaudeService } from '@libs/ai';
-import { COMBINE_AND_EXTRACT_KEYWORDS_PROMPT } from '@libs/ai/claude.constant';
+import { COMBINE_AND_EXTRACT_KEYWORDS_PROMPT } from '@libs/ai';
 
 /**
  * @poc
