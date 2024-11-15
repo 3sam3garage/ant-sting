@@ -1,5 +1,10 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { MacroEnvironmentCrawlerTask, StockReportCrawlerTask } from '../tasks';
+import {
+  MacroEnvironmentCrawlerTask,
+  RecommendPortfolioTask,
+  StockReportCrawlerTask,
+  SummarizeMacroEnvironmentNewsTask,
+} from '../tasks';
 
 enum SUB_COMMAND {
   // 거시 환경 정보 수집
@@ -7,7 +12,7 @@ enum SUB_COMMAND {
   // 종목 분석 리포트 수집
   STOCK = 'stock',
   // 거시환경 경제 정보 요약
-  SUMMARIZE_MACRO_ENVIRONMENT = 'summarize-macro-environment',
+  SUMMARIZE_MACRO_ENVIRONMENT = 'summarize-macro-environment-news',
   // 포트폴리오 리포트 추천
   RECOMMEND_PORTFOLIO = 'recommend-portfolio',
 }
@@ -17,6 +22,8 @@ export class ReportCrawlerCommand extends CommandRunner {
   constructor(
     private readonly macroEnvironmentCrawlerTask: MacroEnvironmentCrawlerTask,
     private readonly stockReportCrawlerTask: StockReportCrawlerTask,
+    private readonly summarizeMacroEnvironmentTask: SummarizeMacroEnvironmentNewsTask,
+    private readonly recommendPortfolioTask: RecommendPortfolioTask,
   ) {
     super();
   }
@@ -26,6 +33,10 @@ export class ReportCrawlerCommand extends CommandRunner {
     const [subcommand] = passedParam;
 
     switch (subcommand) {
+      case SUB_COMMAND.SUMMARIZE_MACRO_ENVIRONMENT:
+        return await this.summarizeMacroEnvironmentTask.exec();
+      case SUB_COMMAND.RECOMMEND_PORTFOLIO:
+        return await this.recommendPortfolioTask.exec();
       case SUB_COMMAND.MACRO_ENVIRONMENT:
         return await this.macroEnvironmentCrawlerTask.exec();
       case SUB_COMMAND.STOCK:

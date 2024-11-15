@@ -8,7 +8,7 @@ import { COMBINE_AND_EXTRACT_KEYWORDS_PROMPT } from '@libs/ai';
  * @poc
  */
 @Injectable()
-export class SummarizeMacroEnvironmentTask {
+export class SummarizeMacroEnvironmentNewsTask {
   constructor(
     private readonly repo: MacroEnvironmentRepository,
     private readonly claudeService: ClaudeService,

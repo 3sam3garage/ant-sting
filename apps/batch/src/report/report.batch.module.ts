@@ -5,16 +5,18 @@ import {
   StockReportDomainModule,
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
+import { AiModule } from '@libs/ai';
 import { ReportCrawlerCommand } from './commands';
 import {
   MacroEnvironmentCrawlerTask,
   RecommendPortfolioTask,
   StockReportCrawlerTask,
-  SummarizeMacroEnvironmentTask,
+  SummarizeMacroEnvironmentNewsTask,
 } from './tasks';
 
 @Module({
   imports: [
+    AiModule,
     MacroEnvironmentDomainModule,
     StockReportDomainModule,
     BullModule.registerQueueAsync(
@@ -39,7 +41,7 @@ import {
     MacroEnvironmentCrawlerTask,
     StockReportCrawlerTask,
     RecommendPortfolioTask,
-    SummarizeMacroEnvironmentTask,
+    SummarizeMacroEnvironmentNewsTask,
   ],
 })
 export class ReportBatchModule {}
