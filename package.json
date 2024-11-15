@@ -13,6 +13,7 @@
     "start:batch:report:stock": "nest start batch -- report stock",
     "start:batch:report:macro-environment": "nest start batch -- report macro-environment",
     "start:batch:test:summarize-macro-environment": "nest start batch -- test summarize-macro-environment",
+    "start:batch:test:portfolio": "nest start batch -- test portfolio",
     "start:batch:corporation:udpate-id": "nest start batch -- corporation update-id",
     "start:batch:corporation:financial-statement": "nest start batch -- corporation financial-statement",
     "start:consumer": "nest start consumer",

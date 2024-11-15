@@ -8,6 +8,7 @@ import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { TestCommand } from './commands';
 import {
+  PortfolioTask,
   ReportSummaryTask,
   SummarizeMacroEnvironmentTask,
   TestTask,
@@ -40,6 +41,7 @@ import {
     TestTask,
     ReportSummaryTask,
     SummarizeMacroEnvironmentTask,
+    PortfolioTask,
   ],
 })
 export class TestBatchModule {}
