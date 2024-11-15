@@ -8,9 +8,9 @@ import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { ReportCrawlerCommand } from './commands';
 import {
-  MacroEnvironmentCrawlerTask,
+  ScrapeMacroEnvironmentCrawlerTask,
   RecommendPortfolioTask,
-  StockReportCrawlerTask,
+  ScrapeStockReportCrawlerTask,
   SummarizeMacroEnvironmentNewsTask,
 } from './tasks';
 
@@ -38,8 +38,8 @@ import {
   ],
   providers: [
     ReportCrawlerCommand,
-    MacroEnvironmentCrawlerTask,
-    StockReportCrawlerTask,
+    ScrapeMacroEnvironmentCrawlerTask,
+    ScrapeStockReportCrawlerTask,
     RecommendPortfolioTask,
     SummarizeMacroEnvironmentNewsTask,
   ],
