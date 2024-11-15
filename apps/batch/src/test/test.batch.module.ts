@@ -7,12 +7,7 @@ import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { TestCommand } from './commands';
-import {
-  PortfolioTask,
-  ReportSummaryTask,
-  SummarizeMacroEnvironmentTask,
-  TestTask,
-} from './tasks';
+import { TestTask } from './tasks';
 
 @Module({
   imports: [
@@ -36,12 +31,6 @@ import {
       },
     ),
   ],
-  providers: [
-    TestCommand,
-    TestTask,
-    ReportSummaryTask,
-    SummarizeMacroEnvironmentTask,
-    PortfolioTask,
-  ],
+  providers: [TestCommand, TestTask],
 })
 export class TestBatchModule {}

@@ -6,6 +6,10 @@ enum SUB_COMMAND {
   MACRO_ENVIRONMENT = 'macro-environment',
   // 종목 분석 리포트 수집
   STOCK = 'stock',
+  // 거시환경 경제 정보 요약
+  SUMMARIZE_MACRO_ENVIRONMENT = 'summarize-macro-environment',
+  // 포트폴리오 리포트 추천
+  RECOMMEND_PORTFOLIO = 'recommend-portfolio',
 }
 
 @Command({ name: 'report' })

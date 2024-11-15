@@ -6,7 +6,12 @@ import {
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { ReportCrawlerCommand } from './commands';
-import { MacroEnvironmentCrawlerTask, StockReportCrawlerTask } from './tasks';
+import {
+  MacroEnvironmentCrawlerTask,
+  RecommendPortfolioTask,
+  StockReportCrawlerTask,
+  SummarizeMacroEnvironmentTask,
+} from './tasks';
 
 @Module({
   imports: [
@@ -33,6 +38,8 @@ import { MacroEnvironmentCrawlerTask, StockReportCrawlerTask } from './tasks';
     ReportCrawlerCommand,
     MacroEnvironmentCrawlerTask,
     StockReportCrawlerTask,
+    RecommendPortfolioTask,
+    SummarizeMacroEnvironmentTask,
   ],
 })
 export class ReportBatchModule {}

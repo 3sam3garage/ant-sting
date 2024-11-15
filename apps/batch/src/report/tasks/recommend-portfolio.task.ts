@@ -7,7 +7,7 @@ import { ClaudeService, RECOMMEND_PORTFOLIO_PROMPT } from '@libs/ai';
  * @poc
  */
 @Injectable()
-export class PortfolioTask {
+export class RecommendPortfolioTask {
   constructor(
     private readonly repo: MacroEnvironmentRepository,
     private readonly claudeService: ClaudeService,
