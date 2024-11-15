@@ -19,6 +19,9 @@ describe('aws claude', () => {
   let bedrockClient: BedrockClient;
 
   beforeEach(() => {
+    process.env.AWS_PROFILE = 'dev';
+    process.env.AWS_PROFILEAWS_SDK_LOAD_CONFIG = '1';
+
     client = new BedrockRuntimeClient({ region: 'us-east-1' });
     bedrockClient = new BedrockClient();
   });

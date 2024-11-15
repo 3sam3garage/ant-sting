@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { REPORT_SUMMARY, QUERY, POST_FIX } from '@libs/domain';
 
 describe('ollama', () => {
   it(
@@ -10,7 +9,7 @@ describe('ollama', () => {
       for (let i = 0; i < 3; i++) {
         const res = await axios.post('http://localhost:11434/api/generate', {
           model: 'llama3.1',
-          prompt: `${REPORT_SUMMARY} \n\n ${QUERY} \n\n ${POST_FIX}`,
+          prompt: '',
           stream: false,
         });
 
