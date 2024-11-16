@@ -21,7 +21,8 @@ export class ClaudeService {
     const payload = {
       anthropic_version: 'bedrock-2023-05-31',
       system,
-      max_tokens: 1000,
+      temperature: 1,
+      max_tokens: 2000,
       messages: [
         { role: 'user', content: [{ type: 'text', text: prompt }] },
         { role: 'assistant', content: [{ type: 'text', text: '{' }] },

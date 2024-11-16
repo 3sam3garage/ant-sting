@@ -15,7 +15,7 @@ export class SummarizeMacroEnvironmentNewsTask {
   ) {}
 
   async exec() {
-    const date = format(new Date(), 'yyyy-MM-dd');
+    const date = format(new Date('2024-11-14'), 'yyyy-MM-dd');
     const macroEntity = await this.repo.findOneByDate(date);
     if (!macroEntity) {
       Logger.error('macro-environment Entity 가 존재하지 않습니다.');
