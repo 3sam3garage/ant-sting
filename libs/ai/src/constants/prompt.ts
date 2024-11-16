@@ -1,33 +1,9 @@
 /**
- * 개별 주식의 리포트 요약 정보를 건네 주면, 이 정보가 주식에 얼마나 호재일지에 대한 점수를 1 ~ 5점으로 표시하고 그 이유를 설명해줘.
- * 아래 예제를 참고해서 작성해줘.
- * 이유는 한국어로 작성해야 해.
+ * 경제 데이터 패키지화
  */
-export const BASE_SCORE_PROMPT = `
-<information> {{INFORMATION}} </information>
-
-I'll give you a report summary of a individual stock.
-Based on the information, please assign a score from 1 to 5 how favorable this is information is and explain the reasoning behind it. 
-Here is example of how it should be done. 
-reason field should be in korean.
-
-<example>
-{
-  "reason": "4Q 어닝쇼크, 전년 대비 영업이익 80% 상승. 원달러 환율 1400원대로 수출량 상승 여력 충분.",
-  "score": 5
-}
-</example>
-`;
-
-/**
- * 글로벌 주식 시장, 경제, 채권에 대한 정보를 건네주면, 이 정보를 결합하고 3개의 간단한 요약을 추출해줘.
- */
-export const COMBINE_AND_EXTRACT_KEYWORDS_PROMPT = `
+export const PACKAGE_ECONOMIC_INFORMATION_PROMPT = `
 <information>
-  <debenture>{{DEBENTURE}}</debenture>
-  <economy>{{ECONOMY}}</economy>
-  <invest>{{INVEST}}</invest>
-  <marketInfo>{{MARKET_INFO}}</marketInfo>
+  {{INFORMATION}}
 </information>
   
 I'll give you a information of global stock market, economy, debenture and investing.
@@ -97,6 +73,30 @@ Here is example of how it should be done.
 </example>
 `;
 
+/**
+ * 개별 주식의 리포트 요약 정보를 건네 주면, 이 정보가 주식에 얼마나 호재일지에 대한 점수를 1 ~ 5점으로 표시하고 그 이유를 설명해줘.
+ * 아래 예제를 참고해서 작성해줘.
+ * 이유는 한국어로 작성해야 해.
+ */
+export const BASE_SCORE_PROMPT = `
+<information> {{INFORMATION}} </information>
+
+I'll give you a report summary of a individual stock.
+Based on the information, please assign a score from 1 to 5 how favorable this is information is and explain the reasoning behind it. 
+Here is example of how it should be done. 
+reason field should be in korean.
+
+<example>
+{
+  "reason": "4Q 어닝쇼크, 전년 대비 영업이익 80% 상승. 원달러 환율 1400원대로 수출량 상승 여력 충분.",
+  "score": 5
+}
+</example>
+`;
+
+/**
+ * @deprecated
+ */
 export const RECOMMEND_PORTFOLIO_PROMPT = `
 <information>
   <debenture>{{DEBENTURE}}</debenture>

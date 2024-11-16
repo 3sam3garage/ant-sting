@@ -8,7 +8,7 @@ import {
   ListFoundationModelsCommand,
 } from '@aws-sdk/client-bedrock';
 import {
-  COMBINE_AND_EXTRACT_KEYWORDS_PROMPT,
+  PACKAGE_ECONOMIC_INFORMATION_PROMPT,
   RECOMMEND_PORTFOLIO_PROMPT,
 } from '@libs/ai';
 import { macroEnvironment } from './constants';
@@ -94,7 +94,7 @@ describe('aws claude', () => {
 
   describe('service', () => {
     it('keyword extraction', async () => {
-      const query = COMBINE_AND_EXTRACT_KEYWORDS_PROMPT.replace(
+      const query = PACKAGE_ECONOMIC_INFORMATION_PROMPT.replace(
         '{{INFORMATION}}',
         `
         <market-info>${macroEnvironment.marketInfo.summaries}</market-info>

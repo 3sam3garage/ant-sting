@@ -15,7 +15,7 @@ export class TestTask {
     const reports = await this.repo.find();
     for (const report of reports) {
       // await this.queue.add(
-      //   { _id: report._id.toString() },
+      //   { _id: stock._id.toString() },
       //   { removeOnFail: true, removeOnComplete: true, attempts: 3 },
       // );
 

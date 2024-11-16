@@ -1,15 +1,21 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '@libs/core';
 import { CorporationBatchModule } from './corporation';
-import { ReportBatchModule } from './report';
+import { StockBatchModule } from './stock';
 import { TestBatchModule } from './test';
+import { EconomicInformationBatchModule } from './economic-information';
 
 @Module({
   imports: [
     CoreModule,
+
+    // test
     TestBatchModule,
+
+    // actual running batches
     CorporationBatchModule,
-    ReportBatchModule,
+    StockBatchModule,
+    EconomicInformationBatchModule,
   ],
 })
 export class BatchModule {}

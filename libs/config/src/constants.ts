@@ -15,12 +15,9 @@ export enum DB_NAME {
 
 export enum QUEUE_NAME {
   /**
-   * 매크로 환경
-   * - 시황
-   * - 투자정보
-   * - 경제분석
-   * - 채권분석
+   * 네이버 증권 (시황, 투자, 경제, 채권)
+   * `investing.com` 분석 리포트
    */
-  MACRO_ENVIRONMENT = 'MACRO_ENVIRONMENT',
+  ECONOMIC_INFORMATION = 'ECONOMIC_INFORMATION',
   STOCK_REPORT_SCORE = 'STOCK_REPORT_SCORE',
 }

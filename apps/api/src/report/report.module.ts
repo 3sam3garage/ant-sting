@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import {
-  MacroEnvironmentDomainModule,
+  EconomicInformationDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
 import { StockReportController } from './controllers';
 import { StockReportService } from './services';
 
 @Module({
-  imports: [MacroEnvironmentDomainModule, StockReportDomainModule],
+  imports: [EconomicInformationDomainModule, StockReportDomainModule],
   controllers: [StockReportController],
   providers: [StockReportService],
 })

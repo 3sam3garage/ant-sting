@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import {
-  MacroEnvironmentDomainModule,
+  EconomicInformationDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
 import { BullModule } from '@nestjs/bull';
@@ -12,7 +12,7 @@ import { TestTask } from './tasks';
 @Module({
   imports: [
     AiModule,
-    MacroEnvironmentDomainModule,
+    EconomicInformationDomainModule,
     StockReportDomainModule,
     BullModule.registerQueueAsync(
       {
@@ -23,7 +23,7 @@ import { TestTask } from './tasks';
         },
       },
       {
-        name: QUEUE_NAME.MACRO_ENVIRONMENT,
+        name: QUEUE_NAME.ECONOMIC_INFORMATION,
         inject: [RedisConfigService],
         useFactory: async (config: RedisConfigService) => {
           return { redis: config.getConfig() };
