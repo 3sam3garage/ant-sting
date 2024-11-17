@@ -132,3 +132,53 @@ Here is example of how it should be done.
 }
 </example>
 `;
+
+export const ANALYZE_PORTFOLIO_PROMPT = `
+<information>
+  <cash-flow>{{CASH_FLOW}}</cash-flow>
+  <profit-and-loss>{{PROFIT_AND_LOSS}}</profit-and-loss>
+  <balance-sheet>{{BALANCE_SHEET}}</balance-sheet>
+</information>
+
+I'll give you a information of financial statement of a company.
+Based on the information, please provide a analysis of the company's financial statement.
+Try not to use exact number but use percentage or trend.
+Here are steps you should take.
+
+1. Provide a brief summary of the financial statement.
+When analyzing fields down below must be included.
+- Revenue 
+- Net Income 
+- Total Assets 
+- Debt Ratio 
+- Equity 
+- Current Ratio 
+- Return on Equity 
+- Return on Assets
+
+2. Provide 3 to 5 insights from information.
+
+Here is example of how it should be done. 
+
+<example>
+{
+  "basic-info" : {
+    "revenue": "2015년 이후 꾸준히 10% 이상 증가 추세, 2020년 20% 이상 증가, 평균 10% 성장",
+    "net-income": "평균 15% 이상 순이익율. 매출 상승분과 정비례하지는 않지만, 비슷한 흐름으로 성장 추세",
+    "total-assets": "단기적인 부채 증가로 인한 총자산 감소. (-2%)",
+    "debt-ratio": "2015년 50% 이상 부채비율, 2020년 40% 이하로 감소",
+    "equity": "2015년 이후 꾸준히 증가 추세",
+    "current-ratio": "유동부채 감소로 단기상황지급능력 상승",    
+    "return-on-equity": "2015년 50% 이상 부채비율, 2020년 40% 이하로 감소",
+    "return-on-assets": "2015년 15%, 2016년 16%, 2017년 17%, 2018년 18%, 2019년 19%, 2020년 20% 로 꾸준히 상승",
+  },
+  "insights": [
+    "매출과 순이익의 급격한 성장은 회사의 핵심 사업 분야에서의 경쟁력 강화와 시장 점유율 확대를 시사함",
+    "부채비율 감소로 안정적인 재무구조 유지 가능성.",
+    "꾸준한 매출 및 순이익 증가가 배당성향 증가로 이어지지 않음. (평균 배당률 4%)",
+    "매출과 순이익의 꾸준한 성장에도 불구하고 ROE와 ROA의 개선 속도가 상대적으로 더딘 것은 자산 효율성 측면에서 개선의 여지가 있음을 시사",
+    "꾸준한 매출과 순이익 증가로 보아 시장 개척 및 신규 사업에 대한 투자가 효과적으로 이루어지고 있음을 추정"
+  ]
+}
+</example>
+`;

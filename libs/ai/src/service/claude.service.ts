@@ -5,6 +5,12 @@ import {
 import { Injectable } from '@nestjs/common';
 import { BASE_SYSTEM_PROMPT } from '../constants';
 
+interface InvokeOptions {
+  temperature?: number;
+  system?: string;
+  max_tokens?: number;
+}
+
 @Injectable()
 export class ClaudeService {
   private modelId = 'anthropic.claude-3-5-sonnet-20240620-v1:0';
@@ -14,24 +20,10 @@ export class ClaudeService {
     this.client = new BedrockRuntimeClient();
   }
 
-  async invoke(
-    prompt: string,
-    system = BASE_SYSTEM_PROMPT,
-  ): Promise<Record<string, any>> {
-    const payload = {
-      anthropic_version: 'bedrock-2023-05-31',
-      system,
-      temperature: 1,
-      max_tokens: 2000,
-      messages: [
-        { role: 'user', content: [{ type: 'text', text: prompt }] },
-        { role: 'assistant', content: [{ type: 'text', text: '{' }] },
-      ],
-    };
-
+  private async send(payload: string) {
     const command = new InvokeModelCommand({
       contentType: 'application/json',
-      body: JSON.stringify(payload),
+      body: payload,
       modelId: this.modelId,
     });
     const apiResponse = await this.client.send(command);
@@ -41,5 +33,29 @@ export class ClaudeService {
     const json = JSON.parse('{' + responseBody.content[0].text);
 
     return json;
+  }
+
+  async invoke(
+    prompt: string,
+    options: InvokeOptions = {},
+  ): Promise<Record<string, any>> {
+    const {
+      system = BASE_SYSTEM_PROMPT,
+      temperature = 1,
+      max_tokens = 2000,
+    } = options;
+
+    const payload = {
+      anthropic_version: 'bedrock-2023-05-31',
+      system,
+      temperature,
+      max_tokens,
+      messages: [
+        { role: 'user', content: [{ type: 'text', text: prompt }] },
+        { role: 'assistant', content: [{ type: 'text', text: '{' }] },
+      ],
+    };
+
+    return this.send(JSON.stringify(payload));
   }
 }

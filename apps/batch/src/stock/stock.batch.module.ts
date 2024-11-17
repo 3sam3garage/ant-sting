@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import {
   EconomicInformationDomainModule,
+  FinancialStatementDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
@@ -10,6 +11,7 @@ import { ScrapeStockReportCrawler } from './tasks';
 
 @Module({
   imports: [
+    FinancialStatementDomainModule,
     EconomicInformationDomainModule,
     StockReportDomainModule,
     BullModule.registerQueueAsync({

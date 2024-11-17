@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import {
   EconomicInformationDomainModule,
+  FinancialStatementDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
 import { BullModule } from '@nestjs/bull';
@@ -12,6 +13,7 @@ import { TestTask } from './tasks';
 @Module({
   imports: [
     AiModule,
+    FinancialStatementDomainModule,
     EconomicInformationDomainModule,
     StockReportDomainModule,
     BullModule.registerQueueAsync(
