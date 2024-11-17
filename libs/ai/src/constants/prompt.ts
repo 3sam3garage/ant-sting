@@ -7,7 +7,7 @@ export const PACKAGE_ECONOMIC_INFORMATION_PROMPT = `
 </information>
   
 I'll give you a information of global stock market, economy, debenture and investing.
-Here are 3 things you need to do.
+Here are 5 things you need to do.
 1. Combine information I provide and extract into 5 to 10 brief summaries.
 2. Provide 2 to 5 strategies that can effectively respond to market condition. actions can be same, but it must have different reason.
 3. Provide 3 to 5 insights from those summary.
