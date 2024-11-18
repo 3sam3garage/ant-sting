@@ -52,7 +52,7 @@ export class ScrapeEconomicInformationCrawler {
 
   async exec() {
     // make entity to store data
-    const date = format(new Date('2024-11-15'), 'yyyy-MM-dd');
+    const date = format(new Date(), 'yyyy-MM-dd');
     let entity = await this.repo.findOneByDate(date);
     if (!entity) {
       entity = await this.repo.createOne(EconomicInformation.create({ date }));

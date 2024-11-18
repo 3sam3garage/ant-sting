@@ -15,7 +15,7 @@ export class PackageEconomicInformationTask {
   ) {}
 
   async exec() {
-    const date = format(new Date('2024-11-14'), 'yyyy-MM-dd');
+    const date = format(new Date(), 'yyyy-MM-dd');
     const economicInfoEntity = await this.repo.findOneByDate(date);
     if (!economicInfoEntity) {
       Logger.error('economic-information Entity 가 존재하지 않습니다.');

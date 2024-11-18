@@ -1,8 +1,8 @@
 import { Column, Entity } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
-import { BaseEntity } from '../../base.entity';
 import { IsString } from 'class-validator';
-import { FINANCIAL_STATEMENT_TYPE } from '@libs/domain/financial-statement';
+import { BaseEntity } from '../../base.entity';
+import { FINANCIAL_STATEMENT_TYPE } from '../constants';
 
 export class FinancialStatementField {
   @Column()
