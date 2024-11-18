@@ -106,15 +106,15 @@ export class StockReportConsumer extends BaseConsumer {
     const tasks = await Promise.all([
       this.claudeService.invoke(
         BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
-        BASE_SYSTEM_PROMPT + RISK_VIEWER_SYSTEM_PROMPT,
+        { system: BASE_SYSTEM_PROMPT + RISK_VIEWER_SYSTEM_PROMPT },
       ),
       this.claudeService.invoke(
         BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
-        BASE_SYSTEM_PROMPT + PESSIMISTIC_VIEWER_SYSTEM_PROMPT,
+        { system: BASE_SYSTEM_PROMPT + PESSIMISTIC_VIEWER_SYSTEM_PROMPT },
       ),
       this.claudeService.invoke(
         BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
-        BASE_SYSTEM_PROMPT + CONSERVATIVE_VIEWER_SYSTEM_PROMPT,
+        { system: BASE_SYSTEM_PROMPT + CONSERVATIVE_VIEWER_SYSTEM_PROMPT },
       ),
     ]);
 
