@@ -8,17 +8,12 @@ import {
   StockAnalysisRepository,
   StockReportRepository,
 } from '@libs/domain';
-import {
-  ExternalApiConfigService,
-  GOV_STOCK_INFO_URL,
-  QUEUE_NAME,
-} from '@libs/config';
+import { QUEUE_NAME } from '@libs/config';
 import { ANALYZE_STOCK_REPORT_PROMPT, ClaudeService } from '@libs/ai';
-import { BaseConsumer } from '../../base.consumer';
 import { groupBy } from 'lodash';
-import { omitIsNil, retry } from '@libs/common';
-import axios from 'axios';
 import { Logger } from '@nestjs/common';
+import { BaseConsumer } from '../../base.consumer';
+import { DataGovApiService } from '@libs/external-api/services';
 
 @Processor(QUEUE_NAME.ANALYZE_STOCK)
 export class AnalyzeStockConsumer extends BaseConsumer {
@@ -27,26 +22,9 @@ export class AnalyzeStockConsumer extends BaseConsumer {
     private readonly financialStatementRepo: FinancialStatementRepository,
     private readonly stockAnalysisRepo: StockAnalysisRepository,
     private readonly claudeService: ClaudeService,
-    private readonly externalApiConfigService: ExternalApiConfigService,
+    private readonly dataGovApiService: DataGovApiService,
   ) {
     super();
-  }
-
-  private async figureLatestStockPrice(stockName: string): Promise<number> {
-    const params = omitIsNil({
-      serviceKey: this.externalApiConfigService.dataGoServiceKey,
-      resultType: 'json',
-      numOfRows: 1,
-      itmsNm: stockName.trim(),
-      basDt: null,
-    });
-    const stockInfo = await retry(
-      () => axios.get(GOV_STOCK_INFO_URL, { params }),
-      3,
-    );
-    const [item] = stockInfo.data.response.body.items.item;
-
-    return +item?.mkp || 0;
   }
 
   private groupFinancialStatementsByType(
@@ -88,7 +66,8 @@ export class AnalyzeStockConsumer extends BaseConsumer {
     const financialStatements = await this.financialStatementRepo.find({
       where: { 종목코드: code },
     });
-    const stockPrice = await this.figureLatestStockPrice(stockName);
+    const stockPrice =
+      await this.dataGovApiService.getLatestStockPrice(stockName);
     const { 현금흐름표, 손익계산서, 재무상태표 } =
       this.groupFinancialStatementsByType(financialStatements);
 

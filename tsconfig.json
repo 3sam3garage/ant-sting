@@ -19,36 +19,18 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@libs/common": [
-        "libs/common/src"
-      ],
-      "@libs/common/*": [
-        "libs/common/src/*"
-      ],
-      "@libs/core": [
-        "libs/core/src"
-      ],
-      "@libs/core/*": [
-        "libs/core/src/*"
-      ],
-      "@libs/domain": [
-        "libs/domain/src"
-      ],
-      "@libs/domain/*": [
-        "libs/domain/src/*"
-      ],
-      "@libs/config": [
-        "libs/config/src"
-      ],
-      "@libs/config/*": [
-        "libs/config/src/*"
-      ],
-      "@libs/ai": [
-        "libs/ai/src"
-      ],
-      "@libs/ai/*": [
-        "libs/ai/src/*"
-      ]
+      "@libs/common": ["libs/common/src"],
+      "@libs/common/*": ["libs/common/src/*"],
+      "@libs/core": ["libs/core/src"],
+      "@libs/core/*": ["libs/core/src/*"],
+      "@libs/domain": ["libs/domain/src"],
+      "@libs/domain/*": ["libs/domain/src/*"],
+      "@libs/config": ["libs/config/src"],
+      "@libs/config/*": ["libs/config/src/*"],
+      "@libs/ai": ["libs/ai/src"],
+      "@libs/ai/*": ["libs/ai/src/*"],
+      "@libs/external-api": ["libs/external-api/src"],
+      "@libs/external-api/*": ["libs/external-api/src/*"]
     }
   }
 }

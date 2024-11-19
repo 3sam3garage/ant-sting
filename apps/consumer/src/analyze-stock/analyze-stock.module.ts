@@ -5,6 +5,7 @@ import {
   StockReportDomainModule,
 } from '@libs/domain';
 import { AiModule } from '@libs/ai';
+import { ExternalApiModule } from '@libs/external-api';
 import { AnalyzeStockConsumer } from './service';
 
 @Module({
@@ -13,6 +14,7 @@ import { AnalyzeStockConsumer } from './service';
     FinancialStatementDomainModule,
     StockReportDomainModule,
     AiModule,
+    ExternalApiModule,
   ],
   providers: [AnalyzeStockConsumer],
 })
