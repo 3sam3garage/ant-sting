@@ -15,7 +15,7 @@ import { ScrapeStockReportCrawler } from './tasks';
     EconomicInformationDomainModule,
     StockReportDomainModule,
     BullModule.registerQueueAsync({
-      name: QUEUE_NAME.STOCK_REPORT_SCORE,
+      name: QUEUE_NAME.STOCK_REPORT_SUMMARY,
       inject: [RedisConfigService],
       useFactory: async (config: RedisConfigService) => {
         return { redis: config.getConfig() };

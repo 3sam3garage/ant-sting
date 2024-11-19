@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '@libs/core';
-import { ScoreReportModule } from './score-report';
+import { ReportSummaryModule } from './report-summary';
 import { EconomicInformationModule } from './economic-information';
 
 @Module({
-  imports: [CoreModule, ScoreReportModule, EconomicInformationModule],
+  imports: [CoreModule, ReportSummaryModule, EconomicInformationModule],
 })
 export class ConsumerModule {}
