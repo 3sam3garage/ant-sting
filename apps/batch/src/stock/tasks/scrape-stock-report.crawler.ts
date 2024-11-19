@@ -21,7 +21,7 @@ export class ScrapeStockReportCrawler {
 
   constructor(
     private readonly stockReportRepo: StockReportRepository,
-    @InjectQueue(QUEUE_NAME.STOCK_REPORT_SUMMARY)
+    @InjectQueue(QUEUE_NAME.STOCK_REPORT_DETAIL)
     private readonly queue: Queue,
   ) {}
 

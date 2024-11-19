@@ -18,7 +18,7 @@ import { TestTask } from './tasks';
     StockReportDomainModule,
     BullModule.registerQueueAsync(
       {
-        name: QUEUE_NAME.STOCK_REPORT_SUMMARY,
+        name: QUEUE_NAME.STOCK_REPORT_DETAIL,
         inject: [RedisConfigService],
         useFactory: async (config: RedisConfigService) => {
           return { redis: config.getConfig() };
