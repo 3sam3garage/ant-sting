@@ -5,12 +5,7 @@ import {
   StockReportRepository,
 } from '@libs/domain';
 import { ANALYZE_STOCK_REPORT_PROMPT, ClaudeService } from '@libs/ai';
-import { omitIsNil, retry } from '@libs/common';
-import { ExternalApiConfigService } from '@libs/config';
-import axios from 'axios';
-
-const GOV_STOCK_INFO_URL =
-  'https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo';
+import { DataGovApiService } from '@libs/external-api';
 
 @Injectable()
 export class TestTask {
@@ -18,25 +13,8 @@ export class TestTask {
     private readonly stockReportRepo: StockReportRepository,
     private readonly financialStatementRepo: FinancialStatementRepository,
     private readonly claudeService: ClaudeService,
-    private readonly externalApiConfigService: ExternalApiConfigService,
+    private readonly dataGovApiService: DataGovApiService,
   ) {}
-
-  private async figureLatestStockPrice(stockName: string): Promise<number> {
-    const params = omitIsNil({
-      serviceKey: this.externalApiConfigService.dataGoServiceKey,
-      resultType: 'json',
-      numOfRows: 1,
-      itmsNm: stockName.trim(),
-      basDt: null,
-    });
-    const stockInfo = await retry(
-      () => axios.get(GOV_STOCK_INFO_URL, { params }),
-      3,
-    );
-    const [item] = stockInfo.data.response.body.items.item;
-
-    return +item?.mkp || 0;
-  }
 
   private async stockAnalysis() {
     const reports = await this.stockReportRepo.find();
@@ -49,7 +27,9 @@ export class TestTask {
         Logger.log('Financial Statements not found');
       }
 
-      const stockPrice = await this.figureLatestStockPrice(report.stockName);
+      const stockPrice = await this.dataGovApiService.getLatestStockPrice(
+        report.stockName,
+      );
 
       const mergedFinancialStatements = financialStatements.map((item) => {
         const { 유형, 결산기준일, 보고서종류 } = item;
@@ -86,6 +66,6 @@ export class TestTask {
   }
 
   async exec(): Promise<void> {
-    // await this.stockAnalysis();
+    await this.stockAnalysis();
   }
 }

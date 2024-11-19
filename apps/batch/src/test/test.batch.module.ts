@@ -9,6 +9,7 @@ import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { TestCommand } from './commands';
 import { TestTask } from './tasks';
+import { ExternalApiModule } from '@libs/external-api';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TestTask } from './tasks';
     FinancialStatementDomainModule,
     EconomicInformationDomainModule,
     StockReportDomainModule,
+    ExternalApiModule,
     BullModule.registerQueueAsync(
       {
         name: QUEUE_NAME.STOCK_REPORT_DETAIL,
