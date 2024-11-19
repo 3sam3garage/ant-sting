@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { IsEnum, IsString } from 'class-validator';
-import { MARKET_POSITION } from '@libs/core';
+import { MARKET_POSITION } from '../../../constants';
 import { BaseReportEntity } from '../../base.report.entity';
 
 @Entity({ name: 'stock-reports' })

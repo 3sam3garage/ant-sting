@@ -1,11 +1,14 @@
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import { Job, Queue } from 'bull';
 import { ObjectId } from 'mongodb';
-import { N_PAY_RESEARCH_URL, StockReportRepository } from '@libs/domain';
+import {
+  N_PAY_RESEARCH_URL,
+  StockReportRepository,
+  MARKET_POSITION,
+} from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { ClaudeService } from '@libs/ai';
 import { joinUrl, onlyNumber, requestAndParseEucKr } from '@libs/common';
-import { MARKET_POSITION } from '@libs/core';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.STOCK_REPORT_DETAIL)
