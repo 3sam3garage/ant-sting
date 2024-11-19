@@ -38,7 +38,7 @@ export class TestTask {
     return +item?.mkp || 0;
   }
 
-  async exec(): Promise<void> {
+  private async stockAnalysis() {
     const reports = await this.stockReportRepo.find();
     for (const report of reports) {
       const financialStatements = await this.financialStatementRepo.find({
@@ -83,5 +83,9 @@ export class TestTask {
       console.log(report.stockName);
       console.log(response);
     }
+  }
+
+  async exec(): Promise<void> {
+    // await this.stockAnalysis();
   }
 }
