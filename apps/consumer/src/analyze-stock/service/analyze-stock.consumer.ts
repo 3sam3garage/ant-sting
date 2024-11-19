@@ -78,7 +78,7 @@ export class AnalyzeStockConsumer extends BaseConsumer {
    */
   @Process({ concurrency: 1 })
   async run({ data }: Job<{ _id: string }>) {
-    const { code, stockName, nid, summary } =
+    const { code, stockName, nid, summary, targetPrice, position } =
       await this.stockReportRepo.findOneById(new ObjectId(data._id));
     const isDupe = await this.stockAnalysisRepo.findOne({ where: { nid } });
     if (isDupe) {
@@ -108,70 +108,12 @@ export class AnalyzeStockConsumer extends BaseConsumer {
 
     const entity = StockAnalysis.create({
       nid: nid,
-      stockCode: code,
       price: stockPrice,
+      stockCode: code,
+      reportAnalysis: { targetPrice, position },
       aiAnalysis: analysis,
       ...financialStatementInfo,
     });
-
-    // 개별 리포트 정보가 아닌 뭉태기로 묶어오는 리포트면 건너뛰기 - 특정 증권사들
-    // if (this.FIRMS_TO_EXCLUDE.includes(report.stockFirm)) {
-    //   return;
-    // }
-    // if (!report.summary) {
-    //   const html = await requestAndParseEucKr(
-    //     joinUrl(N_PAY_RESEARCH_URL, report.detailUrl),
-    //   );
-    //
-    //   report.summary =
-    //     html.querySelector('table.type_1 td.view_cnt')?.innerText || '';
-    //
-    //   // const params = omitIsNil({
-    //   //   serviceKey: this.externalApiConfigService.dataGoServiceKey,
-    //   //   resultType: 'json',
-    //   //   numOfRows: 1,
-    //   //   itmsNm: report.stockName.trim(),
-    //   //   basDt: null,
-    //   // });
-    //   // const stockInfo = await retry(
-    //   //   () => axios.get(GOV_STOCK_INFO_URL, { params }),
-    //   //   3,
-    //   // );
-    //   // const [item] = stockInfo.data.response.body.items.item;
-    //
-    //   // report.addRecommendation({
-    //   //   targetPrice: html.querySelector('em.money').innerText,
-    //   //   price: item?.mkp || 0,
-    //   //   position: this.parsePosition(
-    //   //     html.querySelector('em.coment')?.innerText || '',
-    //   //   ),
-    //   // });
-    //
-    //   await this.repo.save(report);
-    // }
-    // if (!report.summary) {
-    //   Logger.debug('no summary exists');
-    //   return;
-    // }
-    //
-    // const tasks = await Promise.all([
-    //   this.claudeService.invoke(
-    //     BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
-    //     { system: BASE_SYSTEM_PROMPT + RISK_VIEWER_SYSTEM_PROMPT },
-    //   ),
-    //   this.claudeService.invoke(
-    //     BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
-    //     { system: BASE_SYSTEM_PROMPT + PESSIMISTIC_VIEWER_SYSTEM_PROMPT },
-    //   ),
-    //   this.claudeService.invoke(
-    //     BASE_SCORE_PROMPT.replace('{{INFORMATION}}', report.summary),
-    //     { system: BASE_SYSTEM_PROMPT + CONSERVATIVE_VIEWER_SYSTEM_PROMPT },
-    //   ),
-    // ]);
-    //
-    // for (const { reason, score } of tasks) {
-    //   report.addScore({ reason, score: +score });
-    // }
-    // await this.repo.save(report);
+    await this.stockAnalysisRepo.save(entity);
   }
 }
