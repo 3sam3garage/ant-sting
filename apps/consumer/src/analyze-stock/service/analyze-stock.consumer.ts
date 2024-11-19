@@ -55,7 +55,7 @@ export class AnalyzeStockConsumer extends BaseConsumer {
    * scrape-stock-report consumer 에서 호출
    * @param data
    */
-  @Process({ concurrency: 1 })
+  @Process({ concurrency: 2 })
   async run({ data: { stockReportId } }: Job<{ stockReportId: string }>) {
     const { code, stockName, nid, summary, targetPrice, position } =
       await this.stockReportRepo.findOneById(new ObjectId(stockReportId));

@@ -90,7 +90,6 @@ export const ANALYZE_STOCK_REPORT_PROMPT = `
 I'll provide you with the current stock price, a summary of the analyst report, and financial statement information.
 Based on the information, please provide a analysis of the company's financial statement.
 Try not to use exact number but use percentage or trend.
-Try to be conservative when assessing.
 Here are steps you should take.
 
 1. Provide a brief summary of the financial statement.
@@ -106,10 +105,11 @@ When analyzing fields down below must be included.
 
 2. Provide 3 to 5 insights from information.
 
-3. Give expectation how the stock price will change in next 6 months. 
-  3.1. Provide a target price which will be the price you think the stock will reach in next 6 months. either up or down.
-  3.2. Provide a position (BUY, SELL, HOLD) based on the information. Feel free to rate position SELL.
-  3.3. Give score 1 to 5 how favorable this information is and explain the reasoning behind it.
+3. Give expectation how the stock price will change in next 6 months. Try to be conservative when assessing.
+  3.1. Provide a target price which will be the price you think the stock price will be in next 6 months. either up or down.
+  3.2. Provide a position(BUY, SELL, HOLD) based on the information. If you recommend to buy the stock, rate BUY, if you recommend to sell the stock, rate SELL, if you're not sure, rate HOLD.
+  3.3. Give score 1 to 5 how much would you recommend this stock.
+  3.4. Provide a reason why you rated 'position' and 'score'.
 
 Here is example of how it should be done. 
 

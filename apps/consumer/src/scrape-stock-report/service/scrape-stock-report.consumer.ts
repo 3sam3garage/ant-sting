@@ -77,6 +77,6 @@ export class ScrapeStockReportConsumer extends BaseConsumer {
       await this.repo.save({ ...report, ...valuesToUpdate });
     }
 
-    await this.queue.add({ stockReportId });
+    await this.queue.add({ stockReportId }, { removeOnComplete: true });
   }
 }
