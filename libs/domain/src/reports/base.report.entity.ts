@@ -1,29 +1,15 @@
 import { Column } from 'typeorm';
-import { IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsString } from 'class-validator';
 import { BaseEntity } from '../base.entity';
-import { figureAverageScore } from './utils';
 
-export class AIScore {
-  @Column()
-  @IsNumber()
-  score: number;
-
+/**
+ * naver report entity 타입
+ */
+export class BaseReportEntity extends BaseEntity {
   @Column()
   @IsString()
-  reason: string;
-}
+  nid: string;
 
-export class ScoreInfo {
-  @Column()
-  @IsNumber()
-  avgScore: number;
-
-  @Column(() => AIScore, { array: true })
-  @ValidateNested({ each: true })
-  items: AIScore[] = [];
-}
-
-export class BaseReportEntity extends BaseEntity {
   @Column()
   @IsString()
   title: string;
@@ -44,25 +30,12 @@ export class BaseReportEntity extends BaseEntity {
   @IsString()
   date: string;
 
+  // @deprecated 실제론 number 타입임
   @Column()
   @IsString()
-  // @deprecated 실제론 number 타입임
   views: string;
 
   @IsString()
   @Column()
   summary?: string;
-
-  @Column(() => ScoreInfo)
-  @ValidateNested()
-  scoreInfo?: ScoreInfo;
-
-  addScore(aiScore: AIScore): void {
-    if (!this.scoreInfo) {
-      this.scoreInfo = new ScoreInfo();
-    }
-
-    this.scoreInfo.items.push(aiScore);
-    this.scoreInfo.avgScore = figureAverageScore(this.scoreInfo.items);
-  }
 }

@@ -5,6 +5,7 @@ import {
   FinancialStatement,
   FinancialStatementRepository,
   StockAnalysis,
+  StockAnalysisRepository,
   StockReportRepository,
 } from '@libs/domain';
 import {
@@ -17,12 +18,14 @@ import { BaseConsumer } from '../../base.consumer';
 import { groupBy } from 'lodash';
 import { omitIsNil, retry } from '@libs/common';
 import axios from 'axios';
+import { Logger } from '@nestjs/common';
 
 @Processor(QUEUE_NAME.ANALYZE_STOCK)
 export class AnalyzeStockConsumer extends BaseConsumer {
   constructor(
     private readonly stockReportRepo: StockReportRepository,
     private readonly financialStatementRepo: FinancialStatementRepository,
+    private readonly stockAnalysisRepo: StockAnalysisRepository,
     private readonly claudeService: ClaudeService,
     private readonly externalApiConfigService: ExternalApiConfigService,
   ) {
@@ -75,13 +78,17 @@ export class AnalyzeStockConsumer extends BaseConsumer {
    */
   @Process({ concurrency: 1 })
   async run({ data }: Job<{ _id: string }>) {
-    const report = await this.stockReportRepo.findOneById(
-      new ObjectId(data._id),
-    );
+    const { code, stockName, nid, summary } =
+      await this.stockReportRepo.findOneById(new ObjectId(data._id));
+    const isDupe = await this.stockAnalysisRepo.findOne({ where: { nid } });
+    if (isDupe) {
+      Logger.error(`Duplicate action for ${nid}`);
+    }
+
     const financialStatements = await this.financialStatementRepo.find({
-      where: { 종목코드: report.code },
+      where: { 종목코드: code },
     });
-    const stockPrice = await this.figureLatestStockPrice(report.stockName);
+    const stockPrice = await this.figureLatestStockPrice(stockName);
     const { 현금흐름표, 손익계산서, 재무상태표 } =
       this.groupFinancialStatementsByType(financialStatements);
 
@@ -89,7 +96,7 @@ export class AnalyzeStockConsumer extends BaseConsumer {
       '{{CURRENT_PRICE}}',
       `${stockPrice}`,
     )
-      .replace('{{REPORT_SUMMARY}}', report.summary)
+      .replace('{{REPORT_SUMMARY}}', summary)
       .replace('{{CASH_FLOW}}', JSON.stringify(현금흐름표))
       .replace('{{PROFIT_AND_LOSS}}', JSON.stringify(손익계산서))
       .replace('{{BALANCE_SHEET}}', JSON.stringify(재무상태표));
@@ -100,7 +107,8 @@ export class AnalyzeStockConsumer extends BaseConsumer {
       });
 
     const entity = StockAnalysis.create({
-      stockCode: report.code,
+      nid: nid,
+      stockCode: code,
       price: stockPrice,
       aiAnalysis: analysis,
       ...financialStatementInfo,

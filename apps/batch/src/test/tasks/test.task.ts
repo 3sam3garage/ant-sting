@@ -42,7 +42,7 @@ export class TestTask {
     const reports = await this.stockReportRepo.find();
     for (const report of reports) {
       const financialStatements = await this.financialStatementRepo.find({
-        where: { 회사명: report.stockName },
+        where: { 종목코드: report.code },
       });
 
       if (financialStatements.length === 0) {
