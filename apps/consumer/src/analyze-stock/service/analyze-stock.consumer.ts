@@ -1,8 +1,9 @@
-import { ObjectId } from 'typeorm';
+import { ObjectId } from 'mongodb';
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import {
   FinancialStatement,
+  FinancialStatementAnalysis,
   FinancialStatementRepository,
   StockAnalysis,
   StockAnalysisRepository,
@@ -55,9 +56,9 @@ export class AnalyzeStockConsumer extends BaseConsumer {
    * @param data
    */
   @Process({ concurrency: 1 })
-  async run({ data }: Job<{ _id: string }>) {
+  async run({ data: { stockReportId } }: Job<{ stockReportId: string }>) {
     const { code, stockName, nid, summary, targetPrice, position } =
-      await this.stockReportRepo.findOneById(new ObjectId(data._id));
+      await this.stockReportRepo.findOneById(new ObjectId(stockReportId));
     const isDupe = await this.stockAnalysisRepo.findOne({ where: { nid } });
     if (isDupe) {
       Logger.error(`Duplicate action for ${nid}`);
@@ -91,7 +92,7 @@ export class AnalyzeStockConsumer extends BaseConsumer {
       stockCode: code,
       reportAnalysis: { targetPrice, position },
       aiAnalysis: analysis,
-      ...financialStatementInfo,
+      financialStatement: financialStatementInfo as FinancialStatementAnalysis,
     });
     await this.stockAnalysisRepo.save(entity);
   }

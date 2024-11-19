@@ -5,7 +5,7 @@ import { Logger } from '@nestjs/common';
 export class BaseConsumer {
   @OnQueueActive()
   async onQueueActive(job: Job) {
-    Logger.log(`name: ${job.queue.name}, jobId: ${job.id} start`);
+    Logger.log(`queue: ${job.queue.name}, jobId: ${job.id} start`);
   }
 
   // @OnQueueCompleted()
