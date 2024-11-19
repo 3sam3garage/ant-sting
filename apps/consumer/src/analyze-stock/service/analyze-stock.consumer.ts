@@ -4,6 +4,7 @@ import { Job } from 'bull';
 import {
   FinancialStatement,
   FinancialStatementRepository,
+  StockAnalysis,
   StockReportRepository,
 } from '@libs/domain';
 import {
@@ -78,25 +79,32 @@ export class AnalyzeStockConsumer extends BaseConsumer {
       new ObjectId(data._id),
     );
     const financialStatements = await this.financialStatementRepo.find({
-      where: { 회사명: report.stockName },
+      where: { 종목코드: report.code },
     });
     const stockPrice = await this.figureLatestStockPrice(report.stockName);
     const { 현금흐름표, 손익계산서, 재무상태표 } =
       this.groupFinancialStatementsByType(financialStatements);
 
     const prompt = ANALYZE_STOCK_REPORT_PROMPT.replace(
-      '{{CASH_FLOW}}',
-      JSON.stringify(현금흐름표),
+      '{{CURRENT_PRICE}}',
+      `${stockPrice}`,
     )
       .replace('{{REPORT_SUMMARY}}', report.summary)
-      .replace('{{CURRENT_PRICE}}', stockPrice.toString())
+      .replace('{{CASH_FLOW}}', JSON.stringify(현금흐름표))
       .replace('{{PROFIT_AND_LOSS}}', JSON.stringify(손익계산서))
       .replace('{{BALANCE_SHEET}}', JSON.stringify(재무상태표));
 
-    const response = await this.claudeService.invoke(prompt, {
-      temperature: 0.1,
+    const { analysis, ...financialStatementInfo } =
+      await this.claudeService.invoke(prompt, {
+        temperature: 0.1,
+      });
+
+    const entity = StockAnalysis.create({
+      stockCode: report.code,
+      price: stockPrice,
+      aiAnalysis: analysis,
+      ...financialStatementInfo,
     });
-    console.log(response);
 
     // 개별 리포트 정보가 아닌 뭉태기로 묶어오는 리포트면 건너뛰기 - 특정 증권사들
     // if (this.FIRMS_TO_EXCLUDE.includes(report.stockFirm)) {

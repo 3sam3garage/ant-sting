@@ -33,37 +33,37 @@ export class AiAnalysis {
 }
 
 export class FinancialStatementAnalysis {
-  @Column()
+  @Column({ comment: '매출' })
   @IsString()
   revenue: string;
 
-  @Column()
+  @Column({ comment: '순이익' })
   @IsString()
-  'net-income': string;
+  netIncome: string;
 
-  @Column()
+  @Column({ comment: '총자산' })
   @IsString()
-  'total-assets': string;
+  totalAssets: string;
 
-  @Column()
+  @Column({ comment: '부채비율' })
   @IsString()
-  'debt-ratio': string;
+  debtRatio: string;
 
-  @Column()
+  @Column({ comment: '자본' })
   @IsString()
   equity: string;
 
-  @Column()
+  @Column({ comment: '유동비율' })
   @IsString()
-  'current-ratio': string;
+  currentRatio: string;
 
-  @Column()
+  @Column({ comment: 'ROE' })
   @IsString()
-  'return-on-equity': string;
+  returnOnEquity: string;
 
-  @Column()
+  @Column({ comment: 'ROA' })
   @IsString()
-  'return-on-assets': string;
+  returnOnAssets: string;
 
   @Column()
   @IsString({ each: true })
@@ -74,7 +74,11 @@ export class FinancialStatementAnalysis {
 export class StockAnalysis extends BaseEntity {
   @Column()
   @IsNumber()
-  price: number;
+  price: number = 0;
+
+  @Column()
+  @IsString()
+  stockCode: string;
 
   @Column(() => ReportAnalysis)
   reportAnalysis: ReportAnalysis;

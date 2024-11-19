@@ -31,6 +31,13 @@ import { TestTask } from './tasks';
           return { redis: config.getConfig() };
         },
       },
+      {
+        name: QUEUE_NAME.ANALYZE_STOCK,
+        inject: [RedisConfigService],
+        useFactory: async (config: RedisConfigService) => {
+          return { redis: config.getConfig() };
+        },
+      },
     ),
   ],
   providers: [TestCommand, TestTask],

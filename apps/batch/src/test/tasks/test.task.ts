@@ -69,11 +69,11 @@ export class TestTask {
       );
 
       const prompt = ANALYZE_STOCK_REPORT_PROMPT.replace(
-        '{{CASH_FLOW}}',
-        JSON.stringify(현금흐름표),
+        '{{CURRENT_PRICE}}',
+        `${stockPrice}`,
       )
         .replace('{{REPORT_SUMMARY}}', report.summary)
-        .replace('{{CURRENT_PRICE}}', stockPrice.toString())
+        .replace('{{CASH_FLOW}}', JSON.stringify(현금흐름표))
         .replace('{{PROFIT_AND_LOSS}}', JSON.stringify(손익계산서))
         .replace('{{BALANCE_SHEET}}', JSON.stringify(재무상태표));
       const response = await this.claudeService.invoke(prompt, {
