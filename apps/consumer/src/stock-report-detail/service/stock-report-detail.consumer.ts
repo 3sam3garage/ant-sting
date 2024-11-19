@@ -1,14 +1,11 @@
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import { Job, Queue } from 'bull';
 import { ObjectId } from 'mongodb';
-import {
-  MARKET_POSITION,
-  N_PAY_RESEARCH_URL,
-  StockReportRepository,
-} from '@libs/domain';
+import { N_PAY_RESEARCH_URL, StockReportRepository } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { ClaudeService } from '@libs/ai';
-import { joinUrl, requestAndParseEucKr } from '@libs/common';
+import { joinUrl, onlyNumber, requestAndParseEucKr } from '@libs/common';
+import { MARKET_POSITION } from '@libs/core';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.STOCK_REPORT_DETAIL)
@@ -68,15 +65,15 @@ export class StockReportDetailConsumer extends BaseConsumer {
       const valuesToUpdate = {
         summary:
           html.querySelector('table.type_1 td.view_cnt')?.innerText || '',
-        targetPrice: +html.querySelector('em.money').innerText || 0,
+        targetPrice: onlyNumber(html.querySelector('em.money').innerText) || 0,
         position:
           this.parsePosition(html.querySelector('em.coment')?.innerText) ||
           MARKET_POSITION.HOLD,
       };
 
-      await this.repo.save({ report, ...valuesToUpdate });
+      await this.repo.save({ ...report, ...valuesToUpdate });
     }
 
-    await this.queue.add({ _id: data._id });
+    // await this.queue.add({ _id: data._id });
   }
 }

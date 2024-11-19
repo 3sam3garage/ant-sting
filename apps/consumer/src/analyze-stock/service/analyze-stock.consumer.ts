@@ -2,15 +2,22 @@ import { ObjectId } from 'typeorm';
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import {
+  FinancialStatement,
   FinancialStatementRepository,
   StockReportRepository,
 } from '@libs/domain';
-import { ExternalApiConfigService, QUEUE_NAME } from '@libs/config';
-import { ANALYZE_PORTFOLIO_PROMPT, ClaudeService } from '@libs/ai';
+import {
+  ExternalApiConfigService,
+  GOV_STOCK_INFO_URL,
+  QUEUE_NAME,
+} from '@libs/config';
+import { ANALYZE_STOCK_REPORT_PROMPT, ClaudeService } from '@libs/ai';
 import { BaseConsumer } from '../../base.consumer';
 import { groupBy } from 'lodash';
+import { omitIsNil, retry } from '@libs/common';
+import axios from 'axios';
 
-@Processor(QUEUE_NAME.STOCK_REPORT_DETAIL)
+@Processor(QUEUE_NAME.ANALYZE_STOCK)
 export class AnalyzeStockConsumer extends BaseConsumer {
   constructor(
     private readonly stockReportRepo: StockReportRepository,
@@ -21,19 +28,26 @@ export class AnalyzeStockConsumer extends BaseConsumer {
     super();
   }
 
-  /**
-   * stock-report-detail consumer 에서 호출
-   * @param data
-   */
-  @Process({ concurrency: 1 })
-  async run({ data }: Job<{ _id: string }>) {
-    const report = await this.stockReportRepo.findOneById(
-      new ObjectId(data._id),
-    );
-    const financialStatements = await this.financialStatementRepo.find({
-      where: { 회사명: report.stockName },
+  private async figureLatestStockPrice(stockName: string): Promise<number> {
+    const params = omitIsNil({
+      serviceKey: this.externalApiConfigService.dataGoServiceKey,
+      resultType: 'json',
+      numOfRows: 1,
+      itmsNm: stockName.trim(),
+      basDt: null,
     });
+    const stockInfo = await retry(
+      () => axios.get(GOV_STOCK_INFO_URL, { params }),
+      3,
+    );
+    const [item] = stockInfo.data.response.body.items.item;
 
+    return +item?.mkp || 0;
+  }
+
+  private groupFinancialStatementsByType(
+    financialStatements: FinancialStatement[],
+  ) {
     const mergedFinancialStatements = financialStatements.map((item) => {
       const { 유형, 결산기준일, 보고서종류 } = item;
       const record: Record<string, string> = { 유형, 결산기준일, 보고서종류 };
@@ -51,13 +65,37 @@ export class AnalyzeStockConsumer extends BaseConsumer {
       '유형',
     );
 
-    const prompt = ANALYZE_PORTFOLIO_PROMPT.replace(
+    return { 현금흐름표, 손익계산서, 재무상태표 };
+  }
+
+  /**
+   * stock-report-detail consumer 에서 호출
+   * @param data
+   */
+  @Process({ concurrency: 1 })
+  async run({ data }: Job<{ _id: string }>) {
+    const report = await this.stockReportRepo.findOneById(
+      new ObjectId(data._id),
+    );
+    const financialStatements = await this.financialStatementRepo.find({
+      where: { 회사명: report.stockName },
+    });
+    const stockPrice = await this.figureLatestStockPrice(report.stockName);
+    const { 현금흐름표, 손익계산서, 재무상태표 } =
+      this.groupFinancialStatementsByType(financialStatements);
+
+    const prompt = ANALYZE_STOCK_REPORT_PROMPT.replace(
       '{{CASH_FLOW}}',
       JSON.stringify(현금흐름표),
     )
+      .replace('{{REPORT_SUMMARY}}', report.summary)
+      .replace('{{CURRENT_PRICE}}', stockPrice.toString())
       .replace('{{PROFIT_AND_LOSS}}', JSON.stringify(손익계산서))
       .replace('{{BALANCE_SHEET}}', JSON.stringify(재무상태표));
-    const response = await this.claudeService.invoke(prompt);
+
+    const response = await this.claudeService.invoke(prompt, {
+      temperature: 0.1,
+    });
     console.log(response);
 
     // 개별 리포트 정보가 아닌 뭉태기로 묶어오는 리포트면 건너뛰기 - 특정 증권사들

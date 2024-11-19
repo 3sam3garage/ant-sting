@@ -22,3 +22,6 @@ export enum QUEUE_NAME {
   STOCK_REPORT_DETAIL = 'STOCK_REPORT_DETAIL',
   ANALYZE_STOCK = 'ANALYZE_STOCK',
 }
+
+export const GOV_STOCK_INFO_URL =
+  'https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo';

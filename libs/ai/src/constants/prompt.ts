@@ -133,14 +133,18 @@ Here is example of how it should be done.
 </example>
 `;
 
-export const ANALYZE_PORTFOLIO_PROMPT = `
+export const ANALYZE_STOCK_REPORT_PROMPT = `
 <information>
-  <cash-flow>{{CASH_FLOW}}</cash-flow>
-  <profit-and-loss>{{PROFIT_AND_LOSS}}</profit-and-loss>
-  <balance-sheet>{{BALANCE_SHEET}}</balance-sheet>
+  <price>{{CURRENT_PRICE}}</price>
+  <report-summary>{{REPORT_SUMMARY}}</report-summary>
+  <financial-statement>
+    <cash-flow>{{CASH_FLOW}}</cash-flow>
+    <profit-and-loss>{{PROFIT_AND_LOSS}}</profit-and-loss>
+    <balance-sheet>{{BALANCE_SHEET}}</balance-sheet>  
+  </financial-statement>
 </information>
 
-I'll give you a information of financial statement of a company.
+I'll provide you with the current stock price, a summary of the analyst report, and financial statement information.
 Based on the information, please provide a analysis of the company's financial statement.
 Try not to use exact number but use percentage or trend.
 Here are steps you should take.
@@ -158,10 +162,21 @@ When analyzing fields down below must be included.
 
 2. Provide 3 to 5 insights from information.
 
+3. Give expectation how the stock price will change in next 6 months.
+  3.1. Provide a target price which will be the price you think the stock will reach in next 6 months.
+  3.2. Provide a position (BUY, SELL, HOLD) based on the information
+  3.3. Give score 1 to 5 how favorable this information is and explain the reasoning behind it.
+
 Here is example of how it should be done. 
 
 <example>
 {
+  "analysis: {
+    "targetPrice": 20000,
+    "position: "BUY",
+    "score": 3,
+    "reason: "꾸준한 매출과 순이익 증가로 보아 시장 개척 및 신규 사업에 대한 투자가 효과적으로 이루어지고 있음을 추정. 점진적으로 부채비율 개선이 이루어지고 있으며, 안정적인 재무구조 유지 가능성이 높음."
+  },
   "revenue": "2015년 이후 꾸준히 10% 이상 증가 추세, 2020년 20% 이상 증가, 평균 10% 성장",
   "net-income": "평균 15% 이상 순이익율. 매출 상승분과 정비례하지는 않지만, 비슷한 흐름으로 성장 추세",
   "total-assets": "단기적인 부채 증가로 인한 총자산 감소. (-2%)",

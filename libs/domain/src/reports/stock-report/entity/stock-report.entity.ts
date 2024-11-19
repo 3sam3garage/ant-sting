@@ -1,8 +1,8 @@
+import { Column, Entity } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { IsEnum, IsString } from 'class-validator';
-import { Column, Entity } from 'typeorm';
+import { MARKET_POSITION } from '@libs/core';
 import { BaseReportEntity } from '../../base.report.entity';
-import { MARKET_POSITION } from '../constants';
 
 @Entity({ name: 'stock-reports' })
 export class StockReport extends BaseReportEntity {

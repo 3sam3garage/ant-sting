@@ -15,15 +15,15 @@ export class StockReportService {
   }
 
   async findReportWithHighestGap() {
-    const reports = await this.repo.find({ take: 4000 });
-    return reports
-      .filter((item) => item.recommendation?.disparateRatio)
-      .sort((pre, post) => {
-        return (
-          post.recommendation?.disparateRatio -
-          pre.recommendation?.disparateRatio
-        );
-      })
-      .splice(0, 50);
+    // const reports = await this.repo.find({ take: 4000 });
+    // return reports
+    //   .filter((item) => item.recommendation?.disparateRatio)
+    //   .sort((pre, post) => {
+    //     return (
+    //       post.recommendation?.disparateRatio -
+    //       pre.recommendation?.disparateRatio
+    //     );
+    //   })
+    //   .splice(0, 50);
   }
 }

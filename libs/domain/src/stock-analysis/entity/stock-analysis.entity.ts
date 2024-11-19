@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
-import { MARKET_POSITION } from '@libs/domain';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { MARKET_POSITION } from '@libs/core';
 import { BaseEntity } from '../../base.entity';
 
 export class ReportAnalysis {

@@ -20,6 +20,13 @@ import { StockReportDetailConsumer } from './service';
         return { redis: config.getConfig() };
       },
     }),
+    BullModule.registerQueueAsync({
+      name: QUEUE_NAME.ANALYZE_STOCK,
+      inject: [RedisConfigService],
+      useFactory: async (config: RedisConfigService) => {
+        return { redis: config.getConfig() };
+      },
+    }),
   ],
   providers: [StockReportDetailConsumer],
 })
