@@ -79,12 +79,9 @@ export class ScrapeStockReportCrawler {
           report = await this.stockReportRepo.save(entity);
         }
 
-        const _id = report._id.toString();
-        await this.queue.addBulk(
-          new Array(1).fill({
-            data: { _id },
-            opts: { removeOnComplete: true, removeOnFail: true },
-          }),
+        await this.queue.add(
+          { stockReportId: report._id.toString() },
+          { removeOnComplete: true, removeOnFail: true },
         );
       }
     }

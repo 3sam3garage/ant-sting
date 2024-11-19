@@ -6,7 +6,7 @@ import {
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
-import { StockReportDetailConsumer } from './service';
+import { ScrapeStockReportConsumer } from './service';
 
 @Module({
   imports: [
@@ -28,6 +28,6 @@ import { StockReportDetailConsumer } from './service';
       },
     }),
   ],
-  providers: [StockReportDetailConsumer],
+  providers: [ScrapeStockReportConsumer],
 })
-export class StockReportDetailModule {}
+export class ScrapeStockReportModule {}

@@ -51,7 +51,7 @@ export class AnalyzeStockConsumer extends BaseConsumer {
   }
 
   /**
-   * stock-report-detail consumer 에서 호출
+   * scrape-stock-report consumer 에서 호출
    * @param data
    */
   @Process({ concurrency: 1 })

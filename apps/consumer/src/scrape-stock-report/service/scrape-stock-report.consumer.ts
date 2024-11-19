@@ -9,7 +9,7 @@ import { MARKET_POSITION } from '@libs/core';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.STOCK_REPORT_DETAIL)
-export class StockReportDetailConsumer extends BaseConsumer {
+export class ScrapeStockReportConsumer extends BaseConsumer {
   private FIRMS_TO_EXCLUDE = [
     '나이스디앤비',
     '한국기술신용평가(주)',
@@ -50,8 +50,8 @@ export class StockReportDetailConsumer extends BaseConsumer {
   }
 
   @Process({ concurrency: 1 })
-  async run({ data }: Job<{ _id: string }>) {
-    const report = await this.repo.findOneById(new ObjectId(data._id));
+  async run({ data: { stockReportId } }: Job<{ stockReportId: string }>) {
+    const report = await this.repo.findOneById(new ObjectId(stockReportId));
     // 개별 리포트 정보가 아닌 뭉태기로 묶어오는 리포트면 건너뛰기 - 특정 증권사들
     if (this.FIRMS_TO_EXCLUDE.includes(report.stockFirm)) {
       return;
@@ -74,6 +74,6 @@ export class StockReportDetailConsumer extends BaseConsumer {
       await this.repo.save({ ...report, ...valuesToUpdate });
     }
 
-    // await this.queue.add({ _id: data._id });
+    await this.queue.add({ stockReportId });
   }
 }
