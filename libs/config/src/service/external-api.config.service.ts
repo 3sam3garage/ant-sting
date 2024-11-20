@@ -20,4 +20,12 @@ export class ExternalApiConfigService {
   get openDartApiKey(): string {
     return this.config.OPEN_DART_API_KEY;
   }
+
+  get slackWebhookUrl(): string {
+    return this.config.SLACK_WEBHOOK_URL;
+  }
+
+  get slackToken(): string {
+    return this.config.SLACK_TOKEN;
+  }
 }

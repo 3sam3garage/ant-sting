@@ -2,18 +2,29 @@ import { groupBy } from 'lodash';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   FinancialStatementRepository,
+  MARKET_POSITION,
+  StockAnalysis,
+  StockAnalysisRepository,
   StockReportRepository,
 } from '@libs/domain';
 import { ANALYZE_STOCK_REPORT_PROMPT, ClaudeService } from '@libs/ai';
-import { DataGovApiService } from '@libs/external-api';
+import {
+  DataGovApiService,
+  SlackMessage,
+  SlackMessageBlock,
+  SlackService,
+} from '@libs/external-api';
+import { news } from './constants';
 
 @Injectable()
 export class TestTask {
   constructor(
     private readonly stockReportRepo: StockReportRepository,
+    private readonly stockAnalysisRepo: StockAnalysisRepository,
     private readonly financialStatementRepo: FinancialStatementRepository,
     private readonly claudeService: ClaudeService,
     private readonly dataGovApiService: DataGovApiService,
+    private readonly slackService: SlackService,
   ) {}
 
   private async stockAnalysis() {
@@ -65,7 +76,136 @@ export class TestTask {
     }
   }
 
+  /**
+   * message builder 적극 이용하자
+   * https://app.slack.com/block-kit-builder
+   */
+  private async slackSendDailyDigest() {
+    const { questions, insights, terminologies, summaries, strategies } = news;
+
+    const summaryElements = summaries.map((summary) => {
+      return {
+        type: 'rich_text_section',
+        elements: [{ type: 'text', text: summary, style: { bold: true } }],
+      };
+    }) as SlackMessageBlock[];
+    const insightsElements = insights.map((summary) => {
+      return {
+        type: 'rich_text_section',
+        elements: [{ type: 'text', text: summary, style: { bold: true } }],
+      };
+    }) as SlackMessageBlock[];
+    const termsElements = terminologies.map((term) => {
+      return {
+        type: 'rich_text_section',
+        elements: [{ type: 'text', text: term }],
+      };
+    }) as SlackMessageBlock[];
+    const questionsElements = questions.map(({ question, answer }) => {
+      return {
+        type: 'rich_text_quote',
+        elements: [
+          { type: 'text', text: `Q. ${question}`, style: { bold: true } },
+          { type: 'text', text: '\n' },
+          { type: 'text', text: `A. ${answer}` },
+          { type: 'text', text: '\n\n' },
+        ],
+      };
+    }) as SlackMessageBlock[];
+    const strategyElements = strategies.map(({ action, reason }) => {
+      return {
+        type: 'rich_text_quote',
+        elements: [
+          { type: 'text', text: `- ${action}`, style: { bold: true } },
+          { type: 'text', text: '\n' },
+          { type: 'text', text: `${reason}` },
+          { type: 'text', text: '\n\n' },
+        ],
+      };
+    }) as SlackMessageBlock[];
+
+    const message: SlackMessage = {
+      blocks: [
+        {
+          type: 'header',
+          text: { type: 'plain_text', text: 'Daily digest' },
+        },
+        {
+          type: 'rich_text',
+          elements: [
+            {
+              type: 'rich_text_list',
+              style: 'bullet',
+              elements: summaryElements,
+            },
+          ],
+        },
+        { type: 'divider' },
+        {
+          type: 'header',
+          text: { type: 'plain_text', text: 'Insights' },
+        },
+        {
+          type: 'rich_text',
+          elements: [
+            {
+              type: 'rich_text_list',
+              style: 'bullet',
+              elements: insightsElements,
+            },
+          ],
+        },
+        { type: 'divider' },
+        {
+          type: 'header',
+          text: { type: 'plain_text', text: 'Questions you might have...' },
+        },
+        {
+          type: 'rich_text',
+          elements: questionsElements,
+        },
+        {
+          type: 'header',
+          text: { type: 'plain_text', text: 'Market Strategy' },
+        },
+        {
+          type: 'rich_text',
+          elements: strategyElements,
+        },
+        {
+          type: 'header',
+          text: { type: 'plain_text', text: 'Terminology' },
+        },
+        {
+          type: 'rich_text',
+          elements: [
+            {
+              type: 'rich_text_list',
+              style: 'bullet',
+              elements: termsElements,
+            },
+          ],
+        },
+      ],
+    };
+
+    const response = await this.slackService.sendMessage(message);
+
+    return response;
+  }
+
+  private async slackSendStockAnalysis() {
+    const anlaysis = await this.stockAnalysisRepo.find({
+      where: {
+        'reportAnalysis.position': MARKET_POSITION.BUY,
+        'aiAnalysis.position': MARKET_POSITION.BUY,
+      },
+    });
+
+    console.log(1);
+  }
+
   async exec(): Promise<void> {
-    await this.stockAnalysis();
+    await this.slackSendStockAnalysis();
   }
 }

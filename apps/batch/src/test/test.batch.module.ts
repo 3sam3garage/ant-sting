@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import {
   EconomicInformationDomainModule,
   FinancialStatementDomainModule,
+  StockAnalysisDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
 import { BullModule } from '@nestjs/bull';
@@ -14,6 +15,7 @@ import { ExternalApiModule } from '@libs/external-api';
 @Module({
   imports: [
     AiModule,
+    StockAnalysisDomainModule,
     FinancialStatementDomainModule,
     EconomicInformationDomainModule,
     StockReportDomainModule,
