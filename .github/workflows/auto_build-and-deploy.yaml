@@ -1,0 +1,34 @@
+name: 배포 파이프 라인
+on:
+  workflow_call:
+    inputs:
+      serviceName:
+        type: string
+        description: "서비스 이름"
+        required: true
+      deployEnv:
+        description: "배포 환경"
+        type: string
+        required: true
+        default: "test"
+      skipDeploy:
+        description: "배치 서비스 유무"
+        type: boolean
+        required: false
+        default: false
+      buildServiceName:
+        description: "빌드 서비스 이름(api, batch, consumer)"
+        type: string
+        required: true
+
+jobs:
+  call-workflow:
+    uses: "boostbrothers/.github-private/.github/workflows/build-and-deploy.yaml@main"
+    with:
+      serviceName: ${{ inputs.serviceName }}
+      deployEnv: ${{ inputs.deployEnv }}
+      skipDeploy: ${{ inputs.skipDeploy }}
+      buildServiceName: ${{ inputs.buildServiceName }}
+      nodeEnv: "node-18"
+      dockerPath: "./tools/Dockerfile"
+    secrets: inherit

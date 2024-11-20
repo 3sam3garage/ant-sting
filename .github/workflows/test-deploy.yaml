@@ -1,0 +1,43 @@
+name: 설정_개발환경 배포
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - test-server
+
+jobs:
+#  api:
+#    uses: "./.github/workflows/auto_build-and-deploy.yaml"
+#    with:
+#      serviceName: ant-sting
+#      deployEnv: test
+#      buildServiceName: api
+#    secrets: inherit
+
+  batch:
+    uses: "./.github/workflows/auto_build-and-deploy.yaml"
+    with:
+      serviceName: ant-sting-batch
+      deployEnv: test
+      buildServiceName: batch
+      skipDeploy: true
+    secrets: inherit
+
+  consumer:
+    uses: "./.github/workflows/auto_build-and-deploy.yaml"
+    with:
+      serviceName: ant-sting-consumer
+      deployEnv: test
+      buildServiceName: consumer
+      skipDeploy: true
+    secrets: inherit
+
+#  docs:
+#    uses: "boostbrothers/.github-private/.github/workflows/docs.yaml@main"
+#    with:
+#      serviceName: ant-sting
+#      buildDocCmd: "npm run build:doc"
+#      outputDir: "./dist/swagger.yaml"
+#      nodeEnv: "node-18"
+#      exposure: external
+#    secrets: inherit
