@@ -1,2 +1,2 @@
-export * from './scrape-economic-information.crawler';
-export * from './package-economic-information.task';
+export * from './economic-information.crawler';
+export * from './analyze-economic-information.task';

@@ -23,7 +23,7 @@ import { format } from 'date-fns';
  * - 채권분석
  */
 @Injectable()
-export class ScrapeEconomicInformationCrawler {
+export class EconomicInformationCrawler {
   private readonly DETAIL_URLS = [
     'market_info_list.naver',
     'invest_list.naver',

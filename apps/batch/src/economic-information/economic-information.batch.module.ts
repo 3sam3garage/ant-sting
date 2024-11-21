@@ -1,18 +1,22 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import { EconomicInformationDomainModule } from '@libs/domain';
+import {
+  EconomicInformationAnalysisDomainModule,
+  EconomicInformationDomainModule,
+} from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { EconomicInformationCommand } from './commands';
 import {
-  ScrapeEconomicInformationCrawler,
-  PackageEconomicInformationTask,
+  EconomicInformationCrawler,
+  AnalyzeEconomicInformationTask,
 } from './tasks';
 
 @Module({
   imports: [
     AiModule,
     EconomicInformationDomainModule,
+    EconomicInformationAnalysisDomainModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ECONOMIC_INFORMATION,
       inject: [RedisConfigService],
@@ -23,8 +27,8 @@ import {
   ],
   providers: [
     EconomicInformationCommand,
-    ScrapeEconomicInformationCrawler,
-    PackageEconomicInformationTask,
+    EconomicInformationCrawler,
+    AnalyzeEconomicInformationTask,
   ],
 })
 export class EconomicInformationBatchModule {}
