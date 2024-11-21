@@ -1,22 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AIScore {
-  @ApiProperty()
-  score: number;
-
-  @ApiProperty()
-  reason: string;
-}
-
-export class ScoreInfo {
-  @ApiProperty()
-  avgScore: number;
-
-  @ApiProperty({ type: AIScore, isArray: true })
-  items: AIScore[];
-}
-
 export class BaseReportResponse {
   @ApiProperty()
   _id: ObjectId;
@@ -41,7 +25,4 @@ export class BaseReportResponse {
 
   @ApiProperty({ required: false })
   summary?: string;
-
-  @ApiProperty({ required: false, type: ScoreInfo })
-  scoreInfo?: ScoreInfo;
 }

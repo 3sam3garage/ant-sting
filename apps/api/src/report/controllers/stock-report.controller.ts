@@ -15,12 +15,6 @@ export class StockReportController {
     return this.service.findByDate(date);
   }
 
-  @ApiOkResponse({ type: StockReportResponse, isArray: true })
-  @Get('highest-gap')
-  async findReportWithHighestGap() {
-    return this.service.findReportWithHighestGap();
-  }
-
   @ApiOkResponse({ type: StockReportResponse })
   @Get(':_id')
   async findOneById(@Param('_id') _id: string) {
