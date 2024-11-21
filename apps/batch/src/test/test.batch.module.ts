@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import {
+  EconomicInformationAnalysisDomainModule,
   EconomicInformationDomainModule,
   FinancialStatementDomainModule,
   StockAnalysisDomainModule,
@@ -18,6 +19,7 @@ import { ExternalApiModule } from '@libs/external-api';
     StockAnalysisDomainModule,
     FinancialStatementDomainModule,
     EconomicInformationDomainModule,
+    EconomicInformationAnalysisDomainModule,
     StockReportDomainModule,
     ExternalApiModule,
     BullModule.registerQueueAsync(

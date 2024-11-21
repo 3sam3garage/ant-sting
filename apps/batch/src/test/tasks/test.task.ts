@@ -1,6 +1,7 @@
 import { groupBy } from 'lodash';
 import { Injectable, Logger } from '@nestjs/common';
 import {
+  EconomicInformationAnalysisRepository,
   FinancialStatementRepository,
   MARKET_POSITION,
   StockAnalysisRepository,
@@ -13,7 +14,6 @@ import {
   SlackMessageBlock,
   SlackService,
 } from '@libs/external-api';
-import { news } from './constants';
 import { today } from '@libs/common';
 
 @Injectable()
@@ -22,6 +22,7 @@ export class TestTask {
     private readonly stockReportRepo: StockReportRepository,
     private readonly stockAnalysisRepo: StockAnalysisRepository,
     private readonly financialStatementRepo: FinancialStatementRepository,
+    private readonly economicInfoAnalysisRepo: EconomicInformationAnalysisRepository,
     private readonly claudeService: ClaudeService,
     private readonly dataGovApiService: DataGovApiService,
     private readonly slackService: SlackService,
@@ -81,7 +82,8 @@ export class TestTask {
    * https://app.slack.com/block-kit-builder
    */
   private async slackSendDailyDigest() {
-    const { questions, insights, terminologies, summaries, strategies } = news;
+    const { questions, insights, terminologies, summaries, strategies } =
+      await this.economicInfoAnalysisRepo.findOneByDate(today());
 
     const summaryElements = summaries.map((summary) => {
       return {
@@ -267,6 +269,7 @@ export class TestTask {
   }
 
   async exec(): Promise<void> {
+    // await this.slackSendDailyDigest();
     await this.slackSendStockAnalysis();
   }
 }
