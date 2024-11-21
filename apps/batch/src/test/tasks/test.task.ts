@@ -3,7 +3,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import {
   FinancialStatementRepository,
   MARKET_POSITION,
-  StockAnalysis,
   StockAnalysisRepository,
   StockReportRepository,
 } from '@libs/domain';
@@ -196,7 +195,7 @@ export class TestTask {
   }
 
   private async slackSendStockAnalysis() {
-    const anlaysis = await this.stockAnalysisRepo.find({
+    const analysis = await this.stockAnalysisRepo.find({
       where: {
         'reportAnalysis.position': MARKET_POSITION.BUY,
         'aiAnalysis.position': MARKET_POSITION.BUY,
@@ -204,7 +203,67 @@ export class TestTask {
       },
     });
 
-    console.log(1);
+    const stockBlocks = analysis.map((item) => {
+      const { stockName, aiAnalysis, reportAnalysis } = item;
+
+      return [
+        {
+          type: 'rich_text',
+          elements: [
+            {
+              type: 'rich_text_quote',
+              elements: [
+                {
+                  type: 'text',
+                  text: `🔥 ${stockName}`,
+                  style: { bold: true },
+                },
+                { type: 'text', text: '\n' },
+                {
+                  type: 'text',
+                  text: `Target Price: (AI: ${aiAnalysis.targetPrice} / Analyst: ${reportAnalysis.targetPrice})`,
+                  style: { bold: true },
+                },
+              ],
+            },
+            {
+              type: 'rich_text_preformatted',
+              elements: [{ type: 'text', text: aiAnalysis.reason }],
+            },
+          ],
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: ' ',
+          },
+          accessory: {
+            type: 'button',
+            text: {
+              type: 'plain_text',
+              text: '바로가기',
+            },
+            value: stockName,
+            url: `https://tossinvest.com/stocks/A${item.stockCode}`,
+            action_id: item.nid,
+          },
+        },
+      ];
+    }) as SlackMessageBlock[][];
+
+    const message: SlackMessage = {
+      blocks: [
+        {
+          type: 'header',
+          text: { type: 'plain_text', text: '📋 오늘의 종목', emoji: true },
+        },
+        ...stockBlocks.flatMap((item) => item),
+      ],
+    };
+
+    const response = await this.slackService.sendMessage(message);
+    return response;
   }
 
   async exec(): Promise<void> {

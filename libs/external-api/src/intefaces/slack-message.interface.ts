@@ -9,10 +9,12 @@
 interface Text {
   type: 'plain_text' | 'text' | 'mrkdwn';
   text: string;
+  emoji?: boolean;
 }
 
 export interface SlackMessageBlock {
   type:
+    | 'section'
     | 'text'
     | 'mrkdwn'
     | 'header'
@@ -24,9 +26,10 @@ export interface SlackMessageBlock {
     | 'rich_text_list'
     | 'rich_text_section';
 
-  style?: 'bullet';
+  style?: 'bullet' | Record<string, string | boolean>;
   text?: Text | string;
   elements?: SlackMessageBlock[] | Text[];
+  fields?: SlackMessageBlock[] | Text[];
 }
 
 export interface SlackMessage {
