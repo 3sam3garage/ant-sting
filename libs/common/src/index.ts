@@ -7,3 +7,4 @@ export * from './only-number';
 export * from './only-digits';
 export * from './request-and-parse-euc-kr';
 export * from './omit-is-nil';
+export * from './today';

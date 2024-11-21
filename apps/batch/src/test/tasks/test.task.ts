@@ -15,6 +15,7 @@ import {
   SlackService,
 } from '@libs/external-api';
 import { news } from './constants';
+import { today } from '@libs/common';
 
 @Injectable()
 export class TestTask {
@@ -199,6 +200,7 @@ export class TestTask {
       where: {
         'reportAnalysis.position': MARKET_POSITION.BUY,
         'aiAnalysis.position': MARKET_POSITION.BUY,
+        date: today(),
       },
     });
 

@@ -84,6 +84,14 @@ export class StockAnalysis extends BaseEntity {
   @IsString()
   stockCode: string;
 
+  @Column()
+  @IsString()
+  stockName: string;
+
+  @Column()
+  @IsString()
+  date: string;
+
   @Column(() => ReportAnalysis)
   reportAnalysis: ReportAnalysis;
 

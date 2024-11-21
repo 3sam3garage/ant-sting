@@ -14,7 +14,7 @@ import { ANALYZE_STOCK_REPORT_PROMPT, ClaudeService } from '@libs/ai';
 import { groupBy } from 'lodash';
 import { Logger } from '@nestjs/common';
 import { BaseConsumer } from '../../base.consumer';
-import { DataGovApiService } from '@libs/external-api/services';
+import { DataGovApiService } from '@libs/external-api';
 
 @Processor(QUEUE_NAME.ANALYZE_STOCK)
 export class AnalyzeStockConsumer extends BaseConsumer {
@@ -57,7 +57,7 @@ export class AnalyzeStockConsumer extends BaseConsumer {
    */
   @Process({ concurrency: 2 })
   async run({ data: { stockReportId } }: Job<{ stockReportId: string }>) {
-    const { code, stockName, nid, summary, targetPrice, position } =
+    const { code, stockName, nid, summary, targetPrice, position, date } =
       await this.stockReportRepo.findOneById(new ObjectId(stockReportId));
     const isDupe = await this.stockAnalysisRepo.findOne({ where: { nid } });
     if (isDupe) {
@@ -87,6 +87,8 @@ export class AnalyzeStockConsumer extends BaseConsumer {
       });
 
     const entity = StockAnalysis.create({
+      stockName,
+      date,
       nid: nid,
       price: stockPrice,
       stockCode: code,
