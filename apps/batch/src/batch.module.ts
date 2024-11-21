@@ -4,6 +4,7 @@ import { CorporationBatchModule } from './corporation';
 import { StockBatchModule } from './stock';
 import { TestBatchModule } from './test';
 import { EconomicInformationBatchModule } from './economic-information';
+import { NotificationBatchModule } from './notification';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { EconomicInformationBatchModule } from './economic-information';
     CorporationBatchModule,
     StockBatchModule,
     EconomicInformationBatchModule,
+    NotificationBatchModule,
   ],
 })
 export class BatchModule {}

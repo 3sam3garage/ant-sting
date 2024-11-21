@@ -17,6 +17,7 @@
     "start:batch:corporation:udpate-id": "nest start batch -- corporation update-id",
     "start:batch:corporation:financial-statement": "nest start batch -- corporation financial-statement",
     "start:batch:test": "nest start batch -- test test",
+    "start:batch:notification": "nest start batch -- notification send-slack",
     "start:consumer": "nest start consumer",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
