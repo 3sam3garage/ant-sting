@@ -1,5 +1,7 @@
+import { groupBy } from 'lodash';
 import { ObjectId } from 'mongodb';
 import { Process, Processor } from '@nestjs/bull';
+import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import {
   FinancialStatement,
@@ -10,11 +12,9 @@ import {
   StockReportRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { ANALYZE_STOCK_REPORT_PROMPT, ClaudeService } from '@libs/ai';
-import { groupBy } from 'lodash';
-import { Logger } from '@nestjs/common';
-import { BaseConsumer } from '../../base.consumer';
 import { DataGovApiService } from '@libs/external-api';
+import { ANALYZE_STOCK_REPORT_PROMPT, ClaudeService } from '@libs/ai';
+import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ANALYZE_STOCK)
 export class AnalyzeStockConsumer extends BaseConsumer {
