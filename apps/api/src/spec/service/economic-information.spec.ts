@@ -2,7 +2,7 @@ import {
   BedrockRuntimeClient,
   InvokeModelCommand,
 } from '@aws-sdk/client-bedrock-runtime';
-import { PACKAGE_ECONOMIC_INFORMATION_PROMPT } from '@libs/ai';
+import { ANALYZE_ECONOMIC_INFORMATION_PROMPT } from '@libs/ai';
 import { economicInformation } from '../constants';
 
 describe('batch: economic-news', () => {
@@ -15,7 +15,7 @@ describe('batch: economic-news', () => {
   });
 
   it('packaged news', async () => {
-    const query = PACKAGE_ECONOMIC_INFORMATION_PROMPT.replace(
+    const query = ANALYZE_ECONOMIC_INFORMATION_PROMPT.replace(
       '{{INFORMATION}}',
       economicInformation.items.join('\n'),
     );

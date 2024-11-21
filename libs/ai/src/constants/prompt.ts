@@ -1,7 +1,7 @@
 /**
  * 경제 데이터 패키지화
  */
-export const PACKAGE_ECONOMIC_INFORMATION_PROMPT = `
+export const ANALYZE_ECONOMIC_INFORMATION_PROMPT = `
 <information>
   {{INFORMATION}}
 </information>

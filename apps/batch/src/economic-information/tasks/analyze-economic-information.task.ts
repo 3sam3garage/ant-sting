@@ -5,7 +5,7 @@ import {
   EconomicInformationRepository,
 } from '@libs/domain';
 import { ClaudeService } from '@libs/ai';
-import { PACKAGE_ECONOMIC_INFORMATION_PROMPT } from '@libs/ai';
+import { ANALYZE_ECONOMIC_INFORMATION_PROMPT } from '@libs/ai';
 import { today } from '@libs/common';
 
 /**
@@ -33,7 +33,7 @@ export class AnalyzeEconomicInformationTask {
         throw new Error('economic-information-analysis Entity already exists.');
     }
 
-    const prompt = PACKAGE_ECONOMIC_INFORMATION_PROMPT.replace(
+    const prompt = ANALYZE_ECONOMIC_INFORMATION_PROMPT.replace(
       '{{INFORMATION}}',
       infoEntity.items.join('\n'),
     );
