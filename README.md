@@ -26,7 +26,10 @@ $ npm run start:consumer
 1. **scrape** economic-information. (consumer required)
 
 ```bash
-$ npm run start:batch:economic-inforamtion:scrape
+$ npm run start:batch:economic-inforamtion:scrape-naver
+```
+```bash
+$ npm run start:batch:economic-inforamtion:scrape-kcif
 ```
 
 2. **analyze** economic-information.

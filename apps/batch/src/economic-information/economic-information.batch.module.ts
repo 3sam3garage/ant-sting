@@ -8,8 +8,9 @@ import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { EconomicInformationCommand } from './commands';
 import {
-  EconomicInformationCrawler,
+  NaverEconomicInformationCrawler,
   AnalyzeEconomicInformationTask,
+  KcifEconomicInformationCrawler,
 } from './tasks';
 
 @Module({
@@ -27,8 +28,9 @@ import {
   ],
   providers: [
     EconomicInformationCommand,
-    EconomicInformationCrawler,
+    NaverEconomicInformationCrawler,
     AnalyzeEconomicInformationTask,
+    KcifEconomicInformationCrawler,
   ],
 })
 export class EconomicInformationBatchModule {}

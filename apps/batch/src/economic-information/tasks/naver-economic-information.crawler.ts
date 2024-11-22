@@ -10,7 +10,6 @@ import {
   EconomicInformation,
   EconomicInformationRepository,
   N_PAY_RESEARCH_URL,
-  REPORT_TYPE,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { format } from 'date-fns';
@@ -23,7 +22,7 @@ import { format } from 'date-fns';
  * - 채권분석
  */
 @Injectable()
-export class EconomicInformationCrawler {
+export class NaverEconomicInformationCrawler {
   private readonly DETAIL_URLS = [
     'market_info_list.naver',
     'invest_list.naver',
@@ -36,19 +35,6 @@ export class EconomicInformationCrawler {
     private readonly queue: Queue,
     private readonly repo: EconomicInformationRepository,
   ) {}
-
-  private figureTypeByDetailUrl(detailUrl: string): REPORT_TYPE {
-    switch (detailUrl) {
-      case 'market_info_list.naver':
-        return REPORT_TYPE.MARKET_INFO;
-      case 'invest_list.naver':
-        return REPORT_TYPE.INVEST;
-      case 'economy_list.naver':
-        return REPORT_TYPE.ECONOMY;
-      case 'debenture_list.naver':
-        return REPORT_TYPE.DEBENTURE;
-    }
-  }
 
   async exec() {
     // make entity to store data
