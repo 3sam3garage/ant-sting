@@ -66,6 +66,11 @@ export class ScrapeStockReportConsumer extends BaseConsumer {
       );
 
       const valuesToUpdate = {
+        /**
+         * @todo summary 를 직접 크롤링 하는 것이 아닌, pdf 내 데이터를 가져와서 처리하는 방식도 고려해야 할 것.
+         * - 더 양질의 데이터를 가져올 수 있음.
+         * - claude 3.5 에서 pdf 분석을 정식으로 지원하기 시작하면 알아보자.
+         */
         summary:
           html.querySelector('table.type_1 td.view_cnt')?.innerText || '',
         targetPrice: onlyNumber(html.querySelector('em.money').innerText) || 0,
