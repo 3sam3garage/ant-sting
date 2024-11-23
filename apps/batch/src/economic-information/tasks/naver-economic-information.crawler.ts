@@ -7,6 +7,7 @@ import {
   requestAndParseEucKr,
 } from '@libs/common';
 import {
+  ECONOMIC_INFO_SOURCE,
   EconomicInformation,
   EconomicInformationRepository,
   N_PAY_RESEARCH_URL,
@@ -70,7 +71,11 @@ export class NaverEconomicInformationCrawler {
       }
       await this.queue.addBulk(
         urls.map((url) => ({
-          data: { url, documentId: entity._id },
+          data: {
+            url,
+            documentId: entity._id,
+            source: ECONOMIC_INFO_SOURCE.KCIF,
+          },
           opts: { removeOnComplete: true, removeOnFail: true },
         })),
       );

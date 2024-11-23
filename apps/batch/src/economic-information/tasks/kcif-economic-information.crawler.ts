@@ -3,6 +3,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { joinUrl, today } from '@libs/common';
 import {
+  ECONOMIC_INFO_SOURCE,
   EconomicInformation,
   EconomicInformationRepository,
   KCIF_RESEARCH_URL,
@@ -58,7 +59,11 @@ export class KcifEconomicInformationCrawler {
 
       await this.queue.addBulk(
         urls.map((url) => ({
-          data: { url, documentId: entity._id },
+          data: {
+            url,
+            documentId: entity._id,
+            source: ECONOMIC_INFO_SOURCE.KCIF,
+          },
           opts: { removeOnComplete: true, removeOnFail: true },
         })),
       );
