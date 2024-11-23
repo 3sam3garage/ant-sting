@@ -1,4 +1,7 @@
 import { Queue } from 'bull';
+import axios from 'axios';
+import { parse as parseToHTML } from 'node-html-parser';
+import { format } from 'date-fns';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { joinUrl, today } from '@libs/common';
@@ -9,15 +12,12 @@ import {
   KCIF_RESEARCH_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import axios from 'axios';
-import { parse as parseToHTML } from 'node-html-parser';
 
 /**
- * 매크로 환경
- * - 시황
- * - 투자정보
- * - 경제분석
- * - 채권분석
+ * 매크로 환경 정보 - 국제금융센터(KCIF)
+ * - 국제금융속보
+ * - 주간보고서
+ * - 특별일보
  */
 @Injectable()
 export class KcifEconomicInformationCrawler {
@@ -52,9 +52,19 @@ export class KcifEconomicInformationCrawler {
       const urls: string[] = [];
       for (const row of rows) {
         const titleAnchor = row.querySelector('a');
+        const dateAnchor = row.querySelector(
+          'div.txt_bot > div.txt_wrap > span:nth-child(3)',
+        );
         const href = titleAnchor?.getAttribute('href');
 
-        urls.push(joinUrl(KCIF_RESEARCH_URL, href));
+        const reportDate = format(
+          new Date(dateAnchor?.innerText),
+          'yyyy-MM-dd',
+        );
+
+        if (date === reportDate) {
+          urls.push(joinUrl(KCIF_RESEARCH_URL, href));
+        }
       }
 
       await this.queue.addBulk(
