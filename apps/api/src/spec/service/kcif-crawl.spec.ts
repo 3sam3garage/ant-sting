@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
 import { joinUrl } from '@libs/common';
+import { KCIF_RESEARCH_URL } from '@libs/domain';
 
 describe('kcif-crawler', () => {
-  const BASE_URL = 'https://www.kcif.or.kr';
   const url = 'https://www.kcif.or.kr/annual/reportList';
 
   beforeEach(() => {
@@ -24,7 +24,7 @@ describe('kcif-crawler', () => {
       const titleAnchor = row.querySelector('a');
       const href = titleAnchor?.getAttribute('href');
 
-      const url = joinUrl(BASE_URL, href);
+      const url = joinUrl(KCIF_RESEARCH_URL, href);
 
       console.log(url);
     }
@@ -39,9 +39,11 @@ describe('kcif-crawler', () => {
     const response = await axios.get(url);
     const html = parseToHTML(response.data);
 
-    const content = html
-      .querySelector('div.cont_area')
-      .innerText.replaceAll(/&nbsp;/g, '')
+    const text = html.querySelector('div.cont_area').innerText;
+    const content = text
+      .replaceAll(/&middot;/g, '•')
+      .replaceAll(/&amp;/g, '&')
+      .replaceAll(/&nbsp;/g, ' ')
       .trim();
 
     console.log(content);
