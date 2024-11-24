@@ -60,7 +60,7 @@ export class ScrapeStockReportCrawler {
           stockName,
           code: this.figureStockCode(itemUrl),
           title: titleAnchor.innerText.trim(),
-          nid: figureNid(detailUrl),
+          uuid: figureNid(detailUrl),
           detailUrl,
           stockFirm,
           date: formatSixDigitDate(date),
@@ -70,7 +70,7 @@ export class ScrapeStockReportCrawler {
       }
 
       for (const stockReport of stockReports) {
-        let report = await this.stockReportRepo.findOneByNid(stockReport.nid);
+        let report = await this.stockReportRepo.findOneByUid(stockReport.uuid);
 
         if (report) {
           await this.stockReportRepo.save({ ...report, ...stockReport });

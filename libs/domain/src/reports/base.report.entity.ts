@@ -8,7 +8,7 @@ import { BaseEntity } from '../base.entity';
 export class BaseReportEntity extends BaseEntity {
   @Column()
   @IsString()
-  nid: string;
+  uuid: string;
 
   @Column()
   @IsString()

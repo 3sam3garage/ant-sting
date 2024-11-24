@@ -164,7 +164,7 @@ export const fromStockAnalysisToSlackMessage = (
           },
           value: stockName,
           url: `https://tossinvest.com/stocks/A${item.stockCode}`,
-          action_id: item.nid,
+          action_id: item.uuid,
         },
       },
     ];

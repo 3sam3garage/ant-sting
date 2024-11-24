@@ -2,7 +2,7 @@ export * from './stock-report';
 
 export interface BaseReport {
   // naver 증권내 pageId
-  nid: string;
+  uuid: string;
   // 제목
   title: string;
   // 상세 url

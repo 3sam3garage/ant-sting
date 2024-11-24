@@ -72,9 +72,9 @@ export class FinancialStatementAnalysis {
 
 @Entity({ name: 'stock-analysis' })
 export class StockAnalysis extends BaseEntity {
-  @Column({ comment: '동일 레포트인지 확인용(네이버 문서 id)' })
+  @Column({ comment: '동일 레포트인지 확인용' })
   @IsString()
-  nid: string;
+  uuid: string;
 
   @Column()
   @IsNumber()

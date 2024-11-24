@@ -6,19 +6,19 @@ import { BaseReportEntity } from '../../base.report.entity';
 
 @Entity({ name: 'stock-reports' })
 export class StockReport extends BaseReportEntity {
-  @Column()
+  @Column({ comment: '종목명' })
   @IsString()
   stockName: string;
 
-  @Column()
+  @Column({ comment: '종목코드' })
   @IsString()
   code: string;
 
-  @Column()
+  @Column({ comment: '목표가' })
   @IsString()
   targetPrice: number;
 
-  @Column()
+  @Column({ comment: '구매의견' })
   @IsEnum(MARKET_POSITION)
   position: MARKET_POSITION;
 

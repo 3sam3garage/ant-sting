@@ -1,4 +1,4 @@
-import { MongoRepository, ObjectId } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockReport } from '../entity';
@@ -12,11 +12,7 @@ export class StockReportRepository extends MongoRepository<StockReport> {
     super(StockReport, repo.manager);
   }
 
-  async findOneById(_id: ObjectId) {
-    return this.repo.findOne({ where: { _id } });
-  }
-
-  async findOneByNid(nid: string) {
-    return this.repo.findOne({ where: { nid } });
+  async findOneByUid(uuid: string) {
+    return this.repo.findOne({ where: { uuid } });
   }
 }

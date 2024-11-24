@@ -57,11 +57,11 @@ export class AnalyzeStockConsumer extends BaseConsumer {
    */
   @Process({ concurrency: 2 })
   async run({ data: { stockReportId } }: Job<{ stockReportId: string }>) {
-    const { code, stockName, nid, summary, targetPrice, position, date } =
+    const { code, stockName, uuid, summary, targetPrice, position, date } =
       await this.stockReportRepo.findOneById(new ObjectId(stockReportId));
-    const isDupe = await this.stockAnalysisRepo.findOne({ where: { nid } });
+    const isDupe = await this.stockAnalysisRepo.findOne({ where: { uuid } });
     if (isDupe) {
-      Logger.error(`Duplicate action for ${nid}`);
+      Logger.error(`Duplicate action for ${uuid}`);
     }
 
     const financialStatements = await this.financialStatementRepo.find({
@@ -89,7 +89,7 @@ export class AnalyzeStockConsumer extends BaseConsumer {
     const entity = StockAnalysis.create({
       stockName,
       date,
-      nid: nid,
+      uuid,
       price: stockPrice,
       stockCode: code,
       reportAnalysis: { targetPrice, position },
