@@ -28,7 +28,7 @@ export class AnalyzeEconomicInformationTask {
 
     switch (true) {
       case !infoEntity:
-        throw new Error('economic-information Entity not found.');
+        throw new Error(`economic-information Entity date ${date} not found.`);
       case !!analysisEntity:
         throw new Error('economic-information-analysis Entity already exists.');
     }
