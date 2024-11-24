@@ -1,6 +1,6 @@
 import { today } from '@libs/common';
 
-export const PDF_PARSING_PROMPT = `
+export const OLD_PDF_PARSING_PROMPT = `
 <information>
   <current_date>${today()}</current_date>
   <text>
@@ -38,7 +38,7 @@ instructions:
 </example>
 `;
 
-export const PDF_PARSING_PROMPT2 = `
+export const PDF_PARSING_PROMPT = `
 <information>
   <current_date>${today()}</current_date>
   <text>

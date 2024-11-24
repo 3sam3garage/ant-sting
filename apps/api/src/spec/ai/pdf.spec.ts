@@ -4,7 +4,7 @@ import {
   BedrockRuntimeClient,
   InvokeModelCommand,
 } from '@aws-sdk/client-bedrock-runtime';
-import { PDF_PARSING_PROMPT, PDF_PARSING_PROMPT2 } from '../constants';
+import { PDF_PARSING_PROMPT } from '../constants';
 
 describe('pdf', () => {
   const modelId = 'anthropic.claude-3-5-sonnet-20240620-v1:0';
@@ -18,9 +18,9 @@ describe('pdf', () => {
   });
 
   it('read pdf', async () => {
-    const dataBuffer = fs.readFileSync('./tmp/nvda.pdf');
+    const dataBuffer = fs.readFileSync('./tmp/wmt.pdf');
     const data = await pdf(dataBuffer, { max: 1 });
-    const query = PDF_PARSING_PROMPT2.replace(
+    const query = PDF_PARSING_PROMPT.replace(
       '{{PDF_EXTRACTED_TEXT}}',
       data.text,
     );
