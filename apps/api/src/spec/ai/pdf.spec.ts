@@ -4,7 +4,7 @@ import {
   BedrockRuntimeClient,
   InvokeModelCommand,
 } from '@aws-sdk/client-bedrock-runtime';
-import { TEST_PROMPT } from '../constants';
+import { PDF_PARSING_PROMPT, PDF_PARSING_PROMPT2 } from '../constants';
 
 describe('pdf', () => {
   const modelId = 'anthropic.claude-3-5-sonnet-20240620-v1:0';
@@ -18,9 +18,12 @@ describe('pdf', () => {
   });
 
   it('read pdf', async () => {
-    const dataBuffer = fs.readFileSync('./tmp/sksquare.pdf');
+    const dataBuffer = fs.readFileSync('./tmp/nvda.pdf');
     const data = await pdf(dataBuffer, { max: 1 });
-    const query = TEST_PROMPT.replace('{{DIRTY_TEXT}}', data.text);
+    const query = PDF_PARSING_PROMPT2.replace(
+      '{{PDF_EXTRACTED_TEXT}}',
+      data.text,
+    );
 
     const payload = {
       anthropic_version: 'bedrock-2023-05-31',
@@ -44,6 +47,7 @@ describe('pdf', () => {
 
     const json = JSON.parse('{' + responseBody.content[0].text);
 
+    console.log(json);
     return json;
   });
 });
