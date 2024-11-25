@@ -74,7 +74,7 @@ export class NaverEconomicInformationCrawler {
           data: {
             url,
             documentId: entity._id,
-            source: ECONOMIC_INFO_SOURCE.KCIF,
+            source: ECONOMIC_INFO_SOURCE.NAVER,
           },
           opts: { removeOnComplete: true, removeOnFail: true },
         })),
