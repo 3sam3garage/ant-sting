@@ -8,6 +8,10 @@ import { BaseReportEntity } from '../../base.report.entity';
 export class StockReport extends BaseReportEntity {
   @Column({ comment: '종목명' })
   @IsString()
+  market: string;
+
+  @Column({ comment: '종목명' })
+  @IsString()
   stockName: string;
 
   @Column({ comment: '종목코드' })
