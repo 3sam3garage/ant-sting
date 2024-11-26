@@ -67,23 +67,21 @@ export class ScrapeStockReportsCrawler {
           file: anchor?.getAttribute('href'),
         });
         stockReports.push(entity);
+      }
 
-        for (const stockReport of stockReports) {
-          let report = await this.stockReportRepo.findOneByUid(
-            stockReport.uuid,
-          );
+      for (const stockReport of stockReports) {
+        let report = await this.stockReportRepo.findOneByUid(stockReport.uuid);
 
-          if (report) {
-            await this.stockReportRepo.save({ ...report, ...stockReport });
-          } else {
-            report = await this.stockReportRepo.save(entity);
-          }
-
-          await this.queue.add(
-            { stockReportId: report._id.toString() },
-            { removeOnComplete: true, removeOnFail: true },
-          );
+        if (report) {
+          await this.stockReportRepo.save({ ...report, ...stockReport });
+        } else {
+          report = await this.stockReportRepo.save(stockReport);
         }
+
+        await this.queue.add(
+          { stockReportId: report._id.toString() },
+          { removeOnComplete: true, removeOnFail: true },
+        );
       }
     }
   }
