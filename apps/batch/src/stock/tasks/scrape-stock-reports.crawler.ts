@@ -8,7 +8,6 @@ import {
   requestAndParseEucKr,
 } from '@libs/common';
 import {
-  MARKET_TYPE,
   N_PAY_RESEARCH_URL,
   StockReport as StockReportEntity,
   StockReportRepository,
@@ -57,7 +56,6 @@ export class ScrapeStockReportsCrawler {
         const itemUrl = itemAnchor.getAttribute('href');
 
         const entity = StockReportEntity.create({
-          market: MARKET_TYPE.KR,
           stockName,
           code: this.figureStockCode(itemUrl),
           title: titleAnchor.innerText.trim(),
