@@ -18,7 +18,7 @@ describe('pdf', () => {
   });
 
   it('read pdf', async () => {
-    const dataBuffer = fs.readFileSync('./tmp/wmt.pdf');
+    const dataBuffer = fs.readFileSync('./tmp/nvda.pdf');
     const data = await pdf(dataBuffer, { max: 1 });
     const query = PDF_PARSING_PROMPT.replace(
       '{{PDF_EXTRACTED_TEXT}}',
