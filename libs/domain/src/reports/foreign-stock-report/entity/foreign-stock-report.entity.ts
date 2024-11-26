@@ -1,9 +1,10 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, Index } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { IsEnum, IsString } from 'class-validator';
 import { MARKET_TYPE } from '../../../constants';
 import { BaseEntity } from '../../../base.entity';
 
+@Index('file')
 @Entity({ name: 'foreign-stock-reports' })
 export class ForeignStockReport extends BaseEntity {
   @Column()

@@ -6,7 +6,7 @@ import { BaseEntity } from '../base.entity';
  * naver report entity 타입
  */
 export class NaverReportEntity extends BaseEntity {
-  @Column()
+  @Column({ comment: '네이버 nid' })
   @IsString()
   uuid: string;
 
