@@ -5,7 +5,7 @@ import { BaseEntity } from '../base.entity';
 /**
  * naver report entity 타입
  */
-export class BaseReportEntity extends BaseEntity {
+export class NaverReportEntity extends BaseEntity {
   @Column()
   @IsString()
   uuid: string;

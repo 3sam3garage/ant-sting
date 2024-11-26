@@ -1,15 +1,15 @@
 import { MongoRepository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StockReport } from '../entity';
+import { ForeignStockReport } from '../entity';
 
 @Injectable()
-export class ForeignStockReportRepository extends MongoRepository<StockReport> {
+export class ForeignStockReportRepository extends MongoRepository<ForeignStockReport> {
   constructor(
-    @InjectRepository(StockReport)
-    private readonly repo: MongoRepository<StockReport>,
+    @InjectRepository(ForeignStockReport)
+    private readonly repo: MongoRepository<ForeignStockReport>,
   ) {
-    super(StockReport, repo.manager);
+    super(ForeignStockReport, repo.manager);
   }
 
   async findOneByUid(uuid: string) {

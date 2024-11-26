@@ -3,6 +3,7 @@ import {
   EconomicInformationAnalysisDomainModule,
   EconomicInformationDomainModule,
   FinancialStatementDomainModule,
+  ForeignStockReportDomainModule,
   StockAnalysisDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
@@ -21,6 +22,7 @@ import { ExternalApiModule } from '@libs/external-api';
     EconomicInformationDomainModule,
     EconomicInformationAnalysisDomainModule,
     StockReportDomainModule,
+    ForeignStockReportDomainModule,
     ExternalApiModule,
     BullModule.registerQueueAsync(
       {

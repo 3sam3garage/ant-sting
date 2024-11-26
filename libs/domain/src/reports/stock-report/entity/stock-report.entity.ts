@@ -2,10 +2,10 @@ import { Column, Entity } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { IsEnum, IsString } from 'class-validator';
 import { MARKET_POSITION } from '../../../constants';
-import { BaseReportEntity } from '../../base.report.entity';
+import { NaverReportEntity } from '../../naver-report.entity';
 
 @Entity({ name: 'stock-reports' })
-export class StockReport extends BaseReportEntity {
+export class StockReport extends NaverReportEntity {
   @Column({ comment: '종목명' })
   @IsString()
   stockName: string;
