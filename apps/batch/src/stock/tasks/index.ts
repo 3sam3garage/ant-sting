@@ -1,1 +1,1 @@
-export * from './scrape-stock-report.crawler';
+export * from './scrape-stock-reports.crawler';

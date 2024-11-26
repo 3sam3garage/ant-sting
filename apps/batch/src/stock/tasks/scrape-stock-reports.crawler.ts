@@ -8,15 +8,15 @@ import {
   requestAndParseEucKr,
 } from '@libs/common';
 import {
+  MARKET_TYPE,
   N_PAY_RESEARCH_URL,
   StockReport as StockReportEntity,
   StockReportRepository,
 } from '@libs/domain';
-import { StockReport } from '../interface';
 import { figureNid } from '../utils';
 
 @Injectable()
-export class ScrapeStockReportCrawler {
+export class ScrapeStockReportsCrawler {
   private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'company_list.naver');
 
   constructor(
@@ -44,7 +44,7 @@ export class ScrapeStockReportCrawler {
         )
         .filter((row) => row.querySelector('td.file'));
 
-      const stockReports: StockReport[] = [];
+      const stockReports: StockReportEntity[] = [];
       for (const row of rows) {
         const cells = row.querySelectorAll('td:not(.file)');
         const [itemAnchor, titleAnchor] = row.querySelectorAll('td > a');
@@ -56,7 +56,8 @@ export class ScrapeStockReportCrawler {
         const detailUrl = titleAnchor.getAttribute('href');
         const itemUrl = itemAnchor.getAttribute('href');
 
-        stockReports.push({
+        const entity = StockReportEntity.create({
+          market: MARKET_TYPE.KR,
           stockName,
           code: this.figureStockCode(itemUrl),
           title: titleAnchor.innerText.trim(),
@@ -67,22 +68,24 @@ export class ScrapeStockReportCrawler {
           views,
           file: anchor?.getAttribute('href'),
         });
-      }
+        stockReports.push(entity);
 
-      for (const stockReport of stockReports) {
-        let report = await this.stockReportRepo.findOneByUid(stockReport.uuid);
+        for (const stockReport of stockReports) {
+          let report = await this.stockReportRepo.findOneByUid(
+            stockReport.uuid,
+          );
 
-        if (report) {
-          await this.stockReportRepo.save({ ...report, ...stockReport });
-        } else {
-          const entity = StockReportEntity.create(stockReport);
-          report = await this.stockReportRepo.save(entity);
+          if (report) {
+            await this.stockReportRepo.save({ ...report, ...stockReport });
+          } else {
+            report = await this.stockReportRepo.save(entity);
+          }
+
+          await this.queue.add(
+            { stockReportId: report._id.toString() },
+            { removeOnComplete: true, removeOnFail: true },
+          );
         }
-
-        await this.queue.add(
-          { stockReportId: report._id.toString() },
-          { removeOnComplete: true, removeOnFail: true },
-        );
       }
     }
   }

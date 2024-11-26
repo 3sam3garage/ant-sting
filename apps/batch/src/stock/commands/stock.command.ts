@@ -1,5 +1,5 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { ScrapeStockReportCrawler } from '../tasks';
+import { ScrapeStockReportsCrawler } from '../tasks';
 
 enum SUB_COMMAND {
   // 종목 분석 리포트 수집
@@ -9,7 +9,7 @@ enum SUB_COMMAND {
 @Command({ name: 'stock' })
 export class StockCommand extends CommandRunner {
   constructor(
-    private readonly scrapeStockReportCrawler: ScrapeStockReportCrawler,
+    private readonly scrapeStockReportCrawler: ScrapeStockReportsCrawler,
   ) {
     super();
   }

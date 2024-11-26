@@ -7,7 +7,7 @@ import {
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { StockCommand } from './commands';
-import { ScrapeStockReportCrawler } from './tasks';
+import { ScrapeStockReportsCrawler } from './tasks';
 
 @Module({
   imports: [
@@ -22,6 +22,6 @@ import { ScrapeStockReportCrawler } from './tasks';
       },
     }),
   ],
-  providers: [StockCommand, ScrapeStockReportCrawler],
+  providers: [StockCommand, ScrapeStockReportsCrawler],
 })
 export class StockBatchModule {}
