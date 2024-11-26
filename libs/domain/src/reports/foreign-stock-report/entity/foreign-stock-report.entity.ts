@@ -4,6 +4,7 @@ import { IsEnum, IsString } from 'class-validator';
 import { MARKET_TYPE } from '../../../constants';
 import { BaseEntity } from '../../../base.entity';
 
+@Index('uuid')
 @Index('file')
 @Entity({ name: 'foreign-stock-reports' })
 export class ForeignStockReport extends BaseEntity {

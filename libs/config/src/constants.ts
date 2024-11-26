@@ -14,11 +14,9 @@ export enum DB_NAME {
 }
 
 export enum QUEUE_NAME {
-  /**
-   * 네이버 증권 (시황, 투자, 경제, 채권)
-   * `investing.com` 분석 리포트
-   */
+  // 네이버 증권 (시황, 투자, 경제, 채권)
   ECONOMIC_INFORMATION = 'ECONOMIC_INFORMATION',
   STOCK_REPORT_DETAIL = 'STOCK_REPORT_DETAIL',
   ANALYZE_STOCK = 'ANALYZE_STOCK',
+  ANALYZE_STOCK_PDF = 'ANALYZE_STOCK_PDF',
 }

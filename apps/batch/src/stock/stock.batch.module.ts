@@ -8,7 +8,7 @@ import {
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { StockCommand } from './commands';
-import { ScrapeStockReportsCrawler } from './tasks';
+import { HanaStockReportsCrawler, NaverStockReportsCrawler } from './tasks';
 
 @Module({
   imports: [
@@ -23,7 +23,14 @@ import { ScrapeStockReportsCrawler } from './tasks';
         return { redis: config.getConfig() };
       },
     }),
+    BullModule.registerQueueAsync({
+      name: QUEUE_NAME.ANALYZE_STOCK_PDF,
+      inject: [RedisConfigService],
+      useFactory: async (config: RedisConfigService) => {
+        return { redis: config.getConfig() };
+      },
+    }),
   ],
-  providers: [StockCommand, ScrapeStockReportsCrawler],
+  providers: [StockCommand, NaverStockReportsCrawler, HanaStockReportsCrawler],
 })
 export class StockBatchModule {}

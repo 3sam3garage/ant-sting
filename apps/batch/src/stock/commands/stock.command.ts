@@ -1,15 +1,17 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { ScrapeStockReportsCrawler } from '../tasks';
+import { HanaStockReportsCrawler, NaverStockReportsCrawler } from '../tasks';
 
 enum SUB_COMMAND {
-  // 종목 분석 리포트 수집
-  SCRAPE = 'scrape',
+  SCRAPE_NAVER = 'scrape-naver',
+  SCRAPE_HANA = 'scrape-hana',
+  SCRAPE_SHINHAN = 'scrape-shinhan',
 }
 
 @Command({ name: 'stock' })
 export class StockCommand extends CommandRunner {
   constructor(
-    private readonly scrapeStockReportCrawler: ScrapeStockReportsCrawler,
+    private readonly naverStockReportsCrawler: NaverStockReportsCrawler,
+    private readonly hanaStockReportsCrawler: HanaStockReportsCrawler,
   ) {
     super();
   }
@@ -18,8 +20,10 @@ export class StockCommand extends CommandRunner {
     const [subcommand] = passedParam;
 
     switch (subcommand) {
-      case SUB_COMMAND.SCRAPE:
-        return await this.scrapeStockReportCrawler.exec();
+      case SUB_COMMAND.SCRAPE_NAVER:
+        return await this.naverStockReportsCrawler.exec();
+      case SUB_COMMAND.SCRAPE_HANA:
+        return await this.hanaStockReportsCrawler.exec();
       default:
         throw new Error('서브커맨드가 입력되지 않았습니다.');
     }

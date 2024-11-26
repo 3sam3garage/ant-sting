@@ -15,7 +15,7 @@ import {
 import { figureNid } from '../utils';
 
 @Injectable()
-export class ScrapeStockReportsCrawler {
+export class NaverStockReportsCrawler {
   private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'company_list.naver');
 
   constructor(

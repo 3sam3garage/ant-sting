@@ -1,7 +1,7 @@
 import axios from 'axios';
 import pdf from 'pdf-parse';
 import { parse as parseHTML } from 'node-html-parser';
-import { joinUrl } from '@libs/common';
+import { formatEightDigitDate, joinUrl } from '@libs/common';
 import {
   BedrockRuntimeClient,
   InvokeModelCommand,
@@ -14,13 +14,20 @@ const summary = {
 };
 
 it('figuring market', () => {
-  const [match] =
-    '시세이도(4911.JP): 3Q24 Review: 컨센서스 하회, 가이던스 하향'?.match(
-      /\.\w{2}/,
-    );
+  const regex = new RegExp(/\(.+\.\w{2}\)/);
 
-  const market = match?.replace('.', '')?.trim();
-  console.log(market);
+  const [marketInfo, ...rest] =
+    '시세이도(4911.JP): 3Q24 Review: 컨센서스 하회, 가이던스 하향'.split(':');
+  const title = rest.join(':');
+
+  const [match] = marketInfo?.match(regex);
+  const [code, market] = match?.replace('(', '')?.replace(')', '').split('.');
+  console.log(code, market);
+  console.log(title?.trim());
+  console.log(marketInfo);
+
+  const stockName = marketInfo.replace(regex, '')?.trim();
+  console.log(stockName);
 });
 
 describe('hana-crawler', () => {
@@ -52,8 +59,10 @@ describe('hana-crawler', () => {
       const title = titleAnchor?.innerText?.trim();
       const fileAnchor = row.querySelector('a.j_fileLink');
       const href = fileAnchor?.getAttribute('href');
+      const dateAnchor = row.querySelector('span.txtbasic');
+      const date = formatEightDigitDate(dateAnchor.innerText);
 
-      items.push({ title, href: joinUrl(HANA_BASE_URL, href) });
+      items.push({ title, href: joinUrl(HANA_BASE_URL, href, date) });
     }
 
     console.log(items);
