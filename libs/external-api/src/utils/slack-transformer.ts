@@ -182,3 +182,57 @@ export const fromStockAnalysisToSlackMessage = (
 
   return message;
 };
+
+export const fromForeignStockAnalysisToSlackMessage = (
+  stockAnalysis: StockAnalysis[],
+): SlackMessage => {
+  const stockBlocks = stockAnalysis.map((item) => {
+    const { stockName, aiAnalysis, reportAnalysis, currency, market } = item;
+
+    return [
+      {
+        type: 'rich_text',
+        elements: [
+          {
+            type: 'rich_text_quote',
+            elements: [
+              {
+                type: 'text',
+                text: `🔥 ${stockName} (${market})`,
+                style: { bold: true },
+              },
+              { type: 'text', text: '\n' },
+              {
+                type: 'text',
+                text: `AI Target Price: ${aiAnalysis.targetPrice} ${currency}`,
+                style: { bold: true },
+              },
+              { type: 'text', text: '\n' },
+              {
+                type: 'text',
+                text: `Analyst Target Price: ${reportAnalysis.targetPrice} ${currency}`,
+                style: { bold: true },
+              },
+            ],
+          },
+          {
+            type: 'rich_text_preformatted',
+            elements: [{ type: 'text', text: aiAnalysis.reason }],
+          },
+        ],
+      },
+    ];
+  }) as SlackMessageBlock[][];
+
+  const message: SlackMessage = {
+    blocks: [
+      {
+        type: 'header',
+        text: { type: 'plain_text', text: '📋 오늘의 종목', emoji: true },
+      },
+      ...stockBlocks.flatMap((item) => item),
+    ],
+  };
+
+  return message;
+};

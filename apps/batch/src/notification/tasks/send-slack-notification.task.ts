@@ -5,6 +5,7 @@ import {
 } from '@libs/domain';
 import {
   fromEconomicInfoToSlackMessage,
+  fromForeignStockAnalysisToSlackMessage,
   fromStockAnalysisToSlackMessage,
   SlackService,
 } from '@libs/external-api';
@@ -25,11 +26,12 @@ export class SendSlackNotificationTask {
       this.economicInfoAnalysisRepo.findOneByDate(date),
     ]);
 
-    const economicInformationMessage =
-      fromEconomicInfoToSlackMessage(economicInfoAnalysis);
-    const stockAnalysisMessage = fromStockAnalysisToSlackMessage(stockAnalysis);
+    // const economicInformationMessage =
+    //   fromEconomicInfoToSlackMessage(economicInfoAnalysis);
+    const stockAnalysisMessage =
+      fromForeignStockAnalysisToSlackMessage(stockAnalysis);
 
-    await this.slackService.sendMessage(economicInformationMessage);
+    // await this.slackService.sendMessage(economicInformationMessage);
     await this.slackService.sendMessage(stockAnalysisMessage);
   }
 }

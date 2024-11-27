@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { MARKET_POSITION } from '../../constants';
+import { CURRENCY_TYPE, MARKET_POSITION, MARKET_TYPE } from '../../constants';
 import { BaseEntity } from '../../base.entity';
 
 export class ReportAnalysis {
@@ -25,7 +25,7 @@ export class AiAnalysis {
 
   @Column()
   @IsNumber()
-  score: number;
+  score?: number;
 
   @Column()
   @IsString()
@@ -72,6 +72,14 @@ export class FinancialStatementAnalysis {
 
 @Entity({ name: 'stock-analysis' })
 export class StockAnalysis extends BaseEntity {
+  @Column({ comment: '시장 타입' })
+  @IsEnum(MARKET_TYPE)
+  market: MARKET_TYPE;
+
+  @Column({ comment: '화폐 종류' })
+  @IsEnum(CURRENCY_TYPE)
+  currency: CURRENCY_TYPE;
+
   @Column({ comment: '동일 레포트인지 확인용' })
   @IsString()
   uuid: string;
@@ -99,7 +107,7 @@ export class StockAnalysis extends BaseEntity {
   aiAnalysis: AiAnalysis;
 
   @Column(() => FinancialStatementAnalysis)
-  financialStatement: FinancialStatementAnalysis;
+  financialStatement?: FinancialStatementAnalysis;
 
   static create(data: Partial<StockAnalysis>) {
     return plainToInstance(StockAnalysis, data);

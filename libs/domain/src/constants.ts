@@ -22,3 +22,14 @@ export enum MARKET_TYPE {
   // 대만
   TT = 'TT',
 }
+
+export enum CURRENCY_TYPE {
+  KRW = 'KRW',
+  JPY = 'JPY',
+  USD = 'USD',
+  CNY = 'CNY',
+  HKD = 'HKD',
+  TWD = 'TWD',
+  EUR = 'EUR',
+  GBP = 'GBP',
+}

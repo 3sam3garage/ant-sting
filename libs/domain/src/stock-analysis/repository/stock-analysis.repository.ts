@@ -18,7 +18,8 @@ export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
       where: {
         'reportAnalysis.position': MARKET_POSITION.BUY,
         'aiAnalysis.position': MARKET_POSITION.BUY,
-        date,
+        market: { $ne: 'KR' },
+        // date,
       },
     });
   }

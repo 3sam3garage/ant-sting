@@ -7,6 +7,7 @@ import {
   FinancialStatement,
   FinancialStatementAnalysis,
   FinancialStatementRepository,
+  MARKET_TYPE,
   StockAnalysis,
   StockAnalysisRepository,
   StockReportRepository,
@@ -95,6 +96,7 @@ export class AnalyzeStockConsumer extends BaseConsumer {
       reportAnalysis: { targetPrice, position },
       aiAnalysis: analysis,
       financialStatement: financialStatementInfo as FinancialStatementAnalysis,
+      market: MARKET_TYPE.KR,
     });
     await this.stockAnalysisRepo.save(entity);
   }
