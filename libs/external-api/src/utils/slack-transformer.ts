@@ -228,7 +228,7 @@ export const fromForeignStockAnalysisToSlackMessage = (
     blocks: [
       {
         type: 'header',
-        text: { type: 'plain_text', text: '📋 오늘의 종목', emoji: true },
+        text: { type: 'plain_text', text: '📋 오늘의 해외 종목', emoji: true },
       },
       ...stockBlocks.flatMap((item) => item),
     ],

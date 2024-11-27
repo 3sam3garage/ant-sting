@@ -21,17 +21,22 @@ export class SendSlackNotificationTask {
 
   async exec(): Promise<void> {
     const date = today();
-    const [stockAnalysis, economicInfoAnalysis] = await Promise.all([
-      this.stockAnalysisRepo.findRecommendAnalysisByDate(date),
-      this.economicInfoAnalysisRepo.findOneByDate(date),
-    ]);
+    const [korStockAnalysis, foreignStockAnalysis, economicInfoAnalysis] =
+      await Promise.all([
+        this.stockAnalysisRepo.findRecommendAnalysisByDate(date),
+        this.stockAnalysisRepo.findForeignRecommendAnalysisByDate(date),
+        this.economicInfoAnalysisRepo.findOneByDate(date),
+      ]);
 
-    // const economicInformationMessage =
-    //   fromEconomicInfoToSlackMessage(economicInfoAnalysis);
+    const economicInformationMessage =
+      fromEconomicInfoToSlackMessage(economicInfoAnalysis);
     const stockAnalysisMessage =
-      fromForeignStockAnalysisToSlackMessage(stockAnalysis);
+      fromStockAnalysisToSlackMessage(korStockAnalysis);
+    const foreignStockAnalysisMessage =
+      fromForeignStockAnalysisToSlackMessage(foreignStockAnalysis);
 
-    // await this.slackService.sendMessage(economicInformationMessage);
+    await this.slackService.sendMessage(economicInformationMessage);
     await this.slackService.sendMessage(stockAnalysisMessage);
+    await this.slackService.sendMessage(foreignStockAnalysisMessage);
   }
 }

@@ -18,8 +18,18 @@ export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
       where: {
         'reportAnalysis.position': MARKET_POSITION.BUY,
         'aiAnalysis.position': MARKET_POSITION.BUY,
+        date,
+      },
+    });
+  }
+
+  findForeignRecommendAnalysisByDate(date: string): Promise<StockAnalysis[]> {
+    return this.find({
+      where: {
+        'reportAnalysis.position': MARKET_POSITION.BUY,
+        'aiAnalysis.position': MARKET_POSITION.BUY,
         market: { $ne: 'KR' },
-        // date,
+        date,
       },
     });
   }
