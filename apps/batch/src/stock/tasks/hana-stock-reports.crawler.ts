@@ -65,7 +65,7 @@ export class HanaStockReportsCrawler {
 
       const entity = await this.foreignStockReport.findOneByUid(report.uuid);
       if (entity) {
-        return;
+        continue;
       }
 
       const result = await this.foreignStockReport.save(report);

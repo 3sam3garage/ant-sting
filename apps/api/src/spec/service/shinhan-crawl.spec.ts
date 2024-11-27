@@ -97,4 +97,14 @@ describe('shinhan-crawler', () => {
     console.log(json);
     return json;
   });
+
+  it('parsing stockName, ticker, market', () => {
+    const text = 'Crowdstrike(CRWD.US)';
+
+    const [match] = text.match(/\(.+(\.|\s)\w{2}\)/);
+    const stockName = text.replace(/\(.+(\.|\s)\w{2}\)/, '');
+    const [code, market] = match.replaceAll(/\(|\)/g, '').split(/\.|\s/);
+
+    console.log(stockName, code, market);
+  });
 });

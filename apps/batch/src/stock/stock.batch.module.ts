@@ -8,7 +8,11 @@ import {
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { StockCommand } from './commands';
-import { HanaStockReportsCrawler, NaverStockReportsCrawler } from './tasks';
+import {
+  HanaStockReportsCrawler,
+  NaverStockReportsCrawler,
+  ShinhanStockReportsCrawler,
+} from './tasks';
 
 @Module({
   imports: [
@@ -31,6 +35,11 @@ import { HanaStockReportsCrawler, NaverStockReportsCrawler } from './tasks';
       },
     }),
   ],
-  providers: [StockCommand, NaverStockReportsCrawler, HanaStockReportsCrawler],
+  providers: [
+    StockCommand,
+    NaverStockReportsCrawler,
+    HanaStockReportsCrawler,
+    ShinhanStockReportsCrawler,
+  ],
 })
 export class StockBatchModule {}
