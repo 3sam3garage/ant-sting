@@ -5,19 +5,3 @@ services:
     image: grafana/grafana
     ports:
       - '9111:3000'
-
-  postgres:
-    image: postgres
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - '5432:5432'
-
-  adminer:
-    image: adminer
-    depends_on:
-      - postgres
-    ports:
-      - '8082:8080'
