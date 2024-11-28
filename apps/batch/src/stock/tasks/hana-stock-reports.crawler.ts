@@ -4,10 +4,10 @@ import { Queue } from 'bull';
 import axios from 'axios';
 import { parse as parseHTML } from 'node-html-parser';
 import {
-  ForeignStockReport,
-  ForeignStockReportRepository,
   HANA_BASE_URL,
   MARKET_TYPE,
+  StockReport,
+  StockReportRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { formatEightDigitDate, joinUrl } from '@libs/common';
@@ -21,9 +21,9 @@ export class HanaStockReportsCrawler {
   );
 
   constructor(
-    @InjectQueue(QUEUE_NAME.ANALYZE_STOCK_PDF)
+    @InjectQueue(QUEUE_NAME.ANALYZE_STOCK)
     private readonly queue: Queue,
-    private readonly foreignStockReport: ForeignStockReportRepository,
+    private readonly stockReportRepo: StockReportRepository,
   ) {}
 
   async exec() {
@@ -52,7 +52,7 @@ export class HanaStockReportsCrawler {
         ?.replace(')', '')
         ?.split(/\.|\s/);
 
-      const report = ForeignStockReport.create({
+      const report = StockReport.create({
         stockName,
         code,
         title,
@@ -63,12 +63,12 @@ export class HanaStockReportsCrawler {
         uuid: `hana:${new URL(file).searchParams.get('bbsSeq')}`,
       });
 
-      const entity = await this.foreignStockReport.findOneByUid(report.uuid);
+      const entity = await this.stockReportRepo.findOneByUid(report.uuid);
       if (entity) {
         continue;
       }
 
-      const result = await this.foreignStockReport.save(report);
+      const result = await this.stockReportRepo.save(report);
       await this.queue.add(
         { stockReportId: result._id.toString() },
         { removeOnComplete: true, removeOnFail: true },

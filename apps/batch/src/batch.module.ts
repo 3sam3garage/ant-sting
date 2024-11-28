@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '@libs/core';
-import { CorporationBatchModule } from './corporation';
+import { CorporationBatchModule } from './x-production/corporation';
 import { StockBatchModule } from './stock';
-import { TestBatchModule } from './test';
+import { TestBatchModule } from './x-production/test';
 import { EconomicInformationBatchModule } from './economic-information';
-import { NotificationBatchModule } from './notification';
+import { NotificationBatchModule } from './x-production/notification';
 
 @Module({
   imports: [

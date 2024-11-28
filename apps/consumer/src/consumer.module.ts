@@ -1,15 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '@libs/core';
-import { ScrapeStockReportModule } from './scrape-stock-report';
 import { EconomicInformationModule } from './economic-information';
-import { AnalyzeStockModule } from './analyze-stock';
+import { StockReportModule } from './stock-report';
 
 @Module({
-  imports: [
-    CoreModule,
-    ScrapeStockReportModule,
-    EconomicInformationModule,
-    AnalyzeStockModule,
-  ],
+  imports: [CoreModule, EconomicInformationModule, StockReportModule],
 })
 export class ConsumerModule {}

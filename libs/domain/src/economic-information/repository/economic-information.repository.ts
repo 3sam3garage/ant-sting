@@ -17,10 +17,6 @@ export class EconomicInformationRepository extends MongoRepository<EconomicInfor
     return this.repo.save(entity);
   }
 
-  async findOneById(_id: ObjectId): Promise<EconomicInformation> {
-    return this.repo.findOne({ where: { _id } });
-  }
-
   async updateOne(
     entity: EconomicInformation,
     data: Partial<EconomicInformation>,
@@ -31,13 +27,5 @@ export class EconomicInformationRepository extends MongoRepository<EconomicInfor
 
   async findOneByDate(date: string): Promise<EconomicInformation> {
     return this.repo.findOne({ where: { date } });
-  }
-
-  async upsertByDate(
-    date: string,
-    entity: EconomicInformation,
-  ): Promise<EconomicInformation> {
-    entity.date = date;
-    return this.repo.save(entity);
   }
 }

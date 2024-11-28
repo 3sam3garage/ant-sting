@@ -2,11 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import axios from 'axios';
-import {
-  ForeignStockReport,
-  ForeignStockReportRepository,
-  MARKET_TYPE,
-} from '@libs/domain';
+import { MARKET_TYPE, StockReport, StockReportRepository } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { eucKR2utf8, formatEightDigitDate } from '@libs/common';
 import { ShinhanReportItem } from '../interface';
@@ -18,9 +14,9 @@ export class ShinhanStockReportsCrawler {
     'https://bbs2.shinhansec.com/mobile/json.list.do?boardName=foreignstock&curPage=1';
 
   constructor(
-    @InjectQueue(QUEUE_NAME.ANALYZE_STOCK_PDF)
+    @InjectQueue(QUEUE_NAME.ANALYZE_STOCK)
     private readonly queue: Queue,
-    private readonly foreignStockReport: ForeignStockReportRepository,
+    private readonly stockReportRepo: StockReportRepository,
   ) {}
 
   async exec() {
@@ -55,7 +51,7 @@ export class ShinhanStockReportsCrawler {
         ?.replace(')', '')
         ?.split(/\.|\s/);
 
-      const report = ForeignStockReport.create({
+      const report = StockReport.create({
         uuid: `shinhan:${new URL(파일명).searchParams.get('attachmentId')}`,
         title: 제목,
         file: 파일명,
@@ -66,12 +62,12 @@ export class ShinhanStockReportsCrawler {
         date: formatEightDigitDate(등록일),
       });
 
-      const entity = await this.foreignStockReport.findOneByUid(report.uuid);
+      const entity = await this.stockReportRepo.findOneByUid(report.uuid);
       if (entity) {
         continue;
       }
 
-      const result = await this.foreignStockReport.save(report);
+      const result = await this.stockReportRepo.save(report);
       await this.queue.add(
         { stockReportId: result._id.toString() },
         { removeOnComplete: true, removeOnFail: true },

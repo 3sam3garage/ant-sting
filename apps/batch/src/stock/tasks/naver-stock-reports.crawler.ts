@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { QUEUE_NAME } from '@libs/config';
@@ -8,7 +8,8 @@ import {
   requestAndParseEucKr,
 } from '@libs/common';
 import {
-  N_PAY_RESEARCH_URL,
+  MARKET_TYPE,
+  N_PAY_BASE_URL,
   StockReport as StockReportEntity,
   StockReportRepository,
 } from '@libs/domain';
@@ -16,11 +17,16 @@ import { figureNid } from '../utils';
 
 @Injectable()
 export class NaverStockReportsCrawler {
-  private readonly URL = joinUrl(N_PAY_RESEARCH_URL, 'company_list.naver');
+  private readonly URL = joinUrl(N_PAY_BASE_URL, 'research/company_list.naver');
+  private FIRMS_TO_EXCLUDE = [
+    '나이스디앤비',
+    '한국기술신용평가(주)',
+    '한국IR협의회',
+  ];
 
   constructor(
     private readonly stockReportRepo: StockReportRepository,
-    @InjectQueue(QUEUE_NAME.STOCK_REPORT_DETAIL)
+    @InjectQueue(QUEUE_NAME.ANALYZE_STOCK)
     private readonly queue: Queue,
   ) {}
 
@@ -48,23 +54,29 @@ export class NaverStockReportsCrawler {
         const cells = row.querySelectorAll('td:not(.file)');
         const [itemAnchor, titleAnchor] = row.querySelectorAll('td > a');
 
-        const [stockName, , stockFirm, date, views] = cells.map((cell) =>
+        const [stockName, , stockFirm, date] = cells.map((cell) =>
           cell.innerText.trim(),
         );
         const anchor = row.querySelector('td.file > a');
         const detailUrl = titleAnchor.getAttribute('href');
         const itemUrl = itemAnchor.getAttribute('href');
 
+        if (this.FIRMS_TO_EXCLUDE.includes(stockFirm)) {
+          Logger.debug('Excluding stock firm:', stockFirm);
+          continue;
+        }
+
         const entity = StockReportEntity.create({
           stockName,
           code: this.figureStockCode(itemUrl),
           title: titleAnchor.innerText.trim(),
-          uuid: figureNid(detailUrl),
-          detailUrl,
+          uuid: `naver:${figureNid(detailUrl)}`,
+          // detailUrl,
           stockFirm,
           date: formatSixDigitDate(date),
-          views,
+          // views,
           file: anchor?.getAttribute('href'),
+          market: MARKET_TYPE.KR,
         });
         stockReports.push(entity);
       }

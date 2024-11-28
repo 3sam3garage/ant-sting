@@ -10,7 +10,7 @@ import {
   ECONOMIC_INFO_SOURCE,
   EconomicInformation,
   EconomicInformationRepository,
-  N_PAY_RESEARCH_URL,
+  N_PAY_BASE_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { format } from 'date-fns';
@@ -47,7 +47,7 @@ export class NaverEconomicInformationCrawler {
 
     // crawl data and add to queue
     for (const detailUrl of this.DETAIL_URLS) {
-      const url = joinUrl(N_PAY_RESEARCH_URL, detailUrl);
+      const url = joinUrl(N_PAY_BASE_URL, detailUrl);
 
       const html = await requestAndParseEucKr(url);
       const rows = html

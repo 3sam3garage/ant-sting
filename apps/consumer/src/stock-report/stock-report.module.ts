@@ -1,23 +1,18 @@
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bull';
 import {
-  EconomicInformationDomainModule,
   FinancialStatementDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
+import { AiModule } from '@libs/ai';
+import { StockReportConsumer } from './service';
+import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
-import { StockCommand } from './commands';
-import {
-  HanaStockReportsCrawler,
-  NaverStockReportsCrawler,
-  ShinhanStockReportsCrawler,
-} from './tasks';
 
 @Module({
   imports: [
     FinancialStatementDomainModule,
-    EconomicInformationDomainModule,
     StockReportDomainModule,
+    AiModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ANALYZE_STOCK,
       inject: [RedisConfigService],
@@ -26,11 +21,6 @@ import {
       },
     }),
   ],
-  providers: [
-    StockCommand,
-    NaverStockReportsCrawler,
-    HanaStockReportsCrawler,
-    ShinhanStockReportsCrawler,
-  ],
+  providers: [StockReportConsumer],
 })
-export class StockBatchModule {}
+export class StockReportModule {}
