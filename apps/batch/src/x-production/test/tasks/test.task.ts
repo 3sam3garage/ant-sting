@@ -25,12 +25,12 @@ export class TestTask {
   async exec(): Promise<void> {
     // const stockReports = await this.stockReportRepo.find();
     //
-    // for (const report of stockReports) {
-    //   const nid = new URL(joinUrl(HANA_BASE_URL, report.detailUrl)).searchParams
+    // for (const stock-report of stockReports) {
+    //   const nid = new URL(joinUrl(HANA_BASE_URL, stock-report.detailUrl)).searchParams
     //     .get('nid')
     //     ?.trim();
     //
-    //   await this.stockReportRepo.save({ ...report, uuid: `naver:${nid}` });
+    //   await this.stockReportRepo.save({ ...stock-report, uuid: `naver:${nid}` });
     // }
   }
 }

@@ -1,11 +1,11 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { ScheduleModule } from '@nestjs/schedule';
 import { CoreModule } from '@libs/core';
-import { ReportModule } from './report';
 import { RequestLoggerMiddleware } from './middlewares';
+import { StockReportModule } from './stock-report';
+import { StockAnalysisModule } from './stock-analysis';
 
 @Module({
-  imports: [CoreModule, ReportModule, ScheduleModule.forRoot()],
+  imports: [CoreModule, StockReportModule, StockAnalysisModule],
   providers: [],
 })
 export class AppModule {

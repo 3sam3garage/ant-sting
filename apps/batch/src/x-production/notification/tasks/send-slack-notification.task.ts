@@ -5,8 +5,6 @@ import {
 } from '@libs/domain';
 import {
   fromEconomicInfoToSlackMessage,
-  fromForeignStockAnalysisToSlackMessage,
-  fromStockAnalysisToSlackMessage,
   SlackService,
 } from '@libs/external-api';
 import { today } from '@libs/common';
@@ -21,22 +19,19 @@ export class SendSlackNotificationTask {
 
   async exec(): Promise<void> {
     const date = today();
-    const [korStockAnalysis, foreignStockAnalysis, economicInfoAnalysis] =
-      await Promise.all([
-        this.stockAnalysisRepo.findRecommendAnalysisByDate(date),
-        this.stockAnalysisRepo.findForeignRecommendAnalysisByDate(date),
-        this.economicInfoAnalysisRepo.findOneByDate(date),
-      ]);
+    const [economicInfoAnalysis] = await Promise.all([
+      this.economicInfoAnalysisRepo.findOneByDate(date),
+    ]);
 
     const economicInformationMessage =
       fromEconomicInfoToSlackMessage(economicInfoAnalysis);
-    const stockAnalysisMessage =
-      fromStockAnalysisToSlackMessage(korStockAnalysis);
-    const foreignStockAnalysisMessage =
-      fromForeignStockAnalysisToSlackMessage(foreignStockAnalysis);
+    // const stockAnalysisMessage =
+    //   fromStockAnalysisToSlackMessage(korStockAnalysis);
+    // const foreignStockAnalysisMessage =
+    //   fromForeignStockAnalysisToSlackMessage(foreignStockAnalysis);
 
     await this.slackService.sendMessage(economicInformationMessage);
-    await this.slackService.sendMessage(stockAnalysisMessage);
-    await this.slackService.sendMessage(foreignStockAnalysisMessage);
+    // await this.slackService.sendMessage(stockAnalysisMessage);
+    // await this.slackService.sendMessage(foreignStockAnalysisMessage);
   }
 }

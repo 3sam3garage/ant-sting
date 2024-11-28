@@ -1,15 +1,25 @@
 import { ObjectId } from 'mongodb';
 import { ApiProperty } from '@nestjs/swagger';
+import { MARKET_TYPE } from '@libs/domain';
 
-export class BaseReportResponse {
+export class StockReportResponse {
   @ApiProperty()
   _id: ObjectId;
 
   @ApiProperty()
-  title: string;
+  uuid: string;
 
   @ApiProperty()
-  detailUrl: string;
+  market: MARKET_TYPE;
+
+  @ApiProperty()
+  stockName: string;
+
+  @ApiProperty()
+  code: string;
+
+  @ApiProperty()
+  title: string;
 
   @ApiProperty()
   stockFirm: string;
@@ -19,10 +29,4 @@ export class BaseReportResponse {
 
   @ApiProperty({ example: '2024-08-08' })
   date: string;
-
-  @ApiProperty()
-  views: string;
-
-  @ApiProperty({ required: false })
-  summary?: string;
 }

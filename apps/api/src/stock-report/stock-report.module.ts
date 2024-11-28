@@ -11,4 +11,4 @@ import { StockReportService } from './services';
   controllers: [StockReportController],
   providers: [StockReportService],
 })
-export class ReportModule {}
+export class StockReportModule {}

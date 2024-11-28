@@ -2,7 +2,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { StockReportService } from '../services';
-import { FindReportQuery, StockReportResponse } from '../dto';
+import { FindByDateQuery, StockReportResponse } from '../dto';
 
 @ApiTags('stock-reports')
 @Controller('stock-reports')
@@ -11,7 +11,7 @@ export class StockReportController {
 
   @ApiOkResponse({ type: StockReportResponse, isArray: true })
   @Get()
-  async findByDate(@Query() { date }: FindReportQuery) {
+  async findByDate(@Query() { date }: FindByDateQuery) {
     return this.service.findByDate(date);
   }
 
