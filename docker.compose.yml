@@ -1,0 +1,7 @@
+version: '3.9'
+
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - '9111:3000'
