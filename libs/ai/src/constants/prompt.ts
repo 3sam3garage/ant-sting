@@ -89,9 +89,15 @@ export const ANALYZE_STOCK_REPORT_PROMPT = `
 
 I'll provide you with the current stock price, a summary of the analyst report, and financial statement information.
 Based on the information, please provide a analysis of the company's financial statement.
-Try not to use exact number but use percentage or trend.
-Here are steps you should take.
+Follow the policy and instruction.
 
+policy:
+- Try not to use exact number but use percentage or trend.
+- Take time to understand the context. 
+- Consider whether this information could be helpful for investment before summarizing it.
+- Answer in korean.
+
+instructions:
 1. Provide a brief summary of the financial statement.
 When analyzing fields down below must be included.
 - Revenue 
