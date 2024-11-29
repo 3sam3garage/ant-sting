@@ -1,6 +1,6 @@
 import { Column, Entity } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
 import { CURRENCY_TYPE, MARKET_POSITION, MARKET_TYPE } from '../../constants';
 import { BaseEntity } from '../../base.entity';
 
@@ -54,9 +54,9 @@ export class StockAnalysis extends BaseEntity {
   @IsString()
   stockName: string;
 
-  @Column()
-  @IsString()
-  date: string;
+  @Column({ type: 'datetime' })
+  @IsDate()
+  date: Date;
 
   @Column(() => ReportAnalysis)
   reportAnalysis: ReportAnalysis;

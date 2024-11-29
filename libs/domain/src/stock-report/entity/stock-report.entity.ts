@@ -1,6 +1,6 @@
 import { Column, Entity, Index } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsString } from 'class-validator';
 import { MARKET_TYPE } from '../../constants';
 import { BaseEntity } from '../../base.entity';
 
@@ -36,9 +36,9 @@ export class StockReport extends BaseEntity {
   @IsString()
   file: string;
 
-  @Column()
-  @IsString()
-  date: string;
+  @Column({ type: 'datetime' })
+  @IsDate()
+  date: Date;
 
   static create(data: Partial<StockReport>) {
     return plainToInstance(StockReport, data);

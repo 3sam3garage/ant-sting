@@ -6,7 +6,7 @@ import {
 } from '@libs/domain';
 import { ClaudeService } from '@libs/ai';
 import { ANALYZE_ECONOMIC_INFORMATION_PROMPT } from '@libs/ai';
-import { today } from '@libs/common';
+import { figureDateInfo } from '@libs/common/figure-date-info';
 
 /**
  * @poc
@@ -20,10 +20,10 @@ export class AnalyzeEconomicInformationTask {
   ) {}
 
   async exec() {
-    const date = today();
+    const { startOfDay, endOfDay, date } = figureDateInfo();
     const [infoEntity, analysisEntity] = await Promise.all([
-      this.infoRepo.findOneByDate(date),
-      this.analysisRepo.findOneByDate(date),
+      this.infoRepo.findOneByDate(startOfDay, endOfDay),
+      this.analysisRepo.findOneByDate(startOfDay, endOfDay),
     ]);
 
     switch (true) {
@@ -39,7 +39,10 @@ export class AnalyzeEconomicInformationTask {
     );
     const response = await this.claudeService.invoke(prompt);
 
-    const analysis = EconomicInformationAnalysis.create({ ...response, date });
+    const analysis = EconomicInformationAnalysis.create({
+      ...response,
+      date: new Date(date),
+    });
     await this.analysisRepo.save(analysis);
   }
 }

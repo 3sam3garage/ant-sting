@@ -59,7 +59,8 @@ export class HanaStockReportsCrawler {
         stockFirm: '하나증권',
         file,
         market: market as MARKET_TYPE,
-        date: formatEightDigitDate(dateAnchor.innerText),
+        date:
+          new Date(formatEightDigitDate(dateAnchor.innerText)) || new Date(),
         uuid: `hana:${new URL(file).searchParams.get('bbsSeq')}`,
       });
 

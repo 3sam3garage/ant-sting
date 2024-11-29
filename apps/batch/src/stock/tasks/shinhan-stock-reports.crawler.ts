@@ -59,7 +59,7 @@ export class ShinhanStockReportsCrawler {
         stockFirm: '신한투자증권',
         code,
         market: market as MARKET_TYPE,
-        date: formatEightDigitDate(등록일),
+        date: new Date(formatEightDigitDate(등록일)) || new Date(),
       });
 
       const entity = await this.stockReportRepo.findOneByUid(report.uuid);

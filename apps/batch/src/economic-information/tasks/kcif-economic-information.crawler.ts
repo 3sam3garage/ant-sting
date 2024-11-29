@@ -4,7 +4,7 @@ import { parse as parseToHTML } from 'node-html-parser';
 import { format } from 'date-fns';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
-import { joinUrl, today } from '@libs/common';
+import { joinUrl } from '@libs/common';
 import {
   ECONOMIC_INFO_SOURCE,
   EconomicInformation,
@@ -12,6 +12,7 @@ import {
   KCIF_RESEARCH_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
+import { figureDateInfo } from '@libs/common/figure-date-info';
 
 /**
  * 매크로 환경 정보 - 국제금융센터(KCIF)
@@ -34,10 +35,12 @@ export class KcifEconomicInformationCrawler {
   ) {}
 
   async exec() {
-    const date = today();
-    let entity = await this.repo.findOneByDate(date);
+    const { date, startOfDay, endOfDay } = figureDateInfo();
+    let entity = await this.repo.findOneByDate(startOfDay, endOfDay);
     if (!entity) {
-      entity = await this.repo.createOne(EconomicInformation.create({ date }));
+      entity = await this.repo.createOne(
+        EconomicInformation.create({ date: new Date(date) }),
+      );
     }
 
     for (const detailUrl of this.DETAIL_URLS) {

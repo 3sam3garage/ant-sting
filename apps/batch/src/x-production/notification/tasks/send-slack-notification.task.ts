@@ -7,7 +7,7 @@ import {
   fromEconomicInfoToSlackMessage,
   SlackService,
 } from '@libs/external-api';
-import { today } from '@libs/common';
+import { figureDateInfo } from '@libs/common/figure-date-info';
 
 @Injectable()
 export class SendSlackNotificationTask {
@@ -18,19 +18,19 @@ export class SendSlackNotificationTask {
   ) {}
 
   async exec(): Promise<void> {
-    const date = today();
-    const [economicInfoAnalysis] = await Promise.all([
-      this.economicInfoAnalysisRepo.findOneByDate(date),
-    ]);
+    const { startOfDay, endOfDay } = figureDateInfo();
+    const economicInfoAnalysis =
+      await this.economicInfoAnalysisRepo.findOneByDate(startOfDay, endOfDay);
 
     const economicInformationMessage =
       fromEconomicInfoToSlackMessage(economicInfoAnalysis);
+
+    await this.slackService.sendMessage(economicInformationMessage);
+
     // const stockAnalysisMessage =
     //   fromStockAnalysisToSlackMessage(korStockAnalysis);
     // const foreignStockAnalysisMessage =
     //   fromForeignStockAnalysisToSlackMessage(foreignStockAnalysis);
-
-    await this.slackService.sendMessage(economicInformationMessage);
     // await this.slackService.sendMessage(stockAnalysisMessage);
     // await this.slackService.sendMessage(foreignStockAnalysisMessage);
   }

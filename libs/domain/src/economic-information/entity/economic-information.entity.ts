@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsDate, IsString } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { BaseEntity } from '../../base.entity';
@@ -12,9 +12,9 @@ export class EconomicInformation extends BaseEntity {
   @IsString({ each: true })
   items: string[] = [];
 
-  @Column()
-  @IsString()
-  date: string;
+  @Column({ type: 'datetime' })
+  @IsDate()
+  date: Date;
 
   static create(data: Partial<EconomicInformation>) {
     return plainToInstance(EconomicInformation, data);

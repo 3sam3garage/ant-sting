@@ -33,4 +33,18 @@ export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
       },
     });
   }
+
+  async findByDate(from: Date, to: Date) {
+    return this.repo.find({
+      where: {
+        date: { $gte: from, $lte: to },
+      },
+    });
+  }
+
+  async countByDate(from: Date, to: Date) {
+    return this.repo.count({
+      date: { $gte: from, $lte: to },
+    });
+  }
 }

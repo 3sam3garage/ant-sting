@@ -73,7 +73,7 @@ export class NaverStockReportsCrawler {
           uuid: `naver:${figureNid(detailUrl)}`,
           // detailUrl,
           stockFirm,
-          date: formatSixDigitDate(date),
+          date: new Date(formatSixDigitDate(date)) || new Date(),
           // views,
           file: anchor?.getAttribute('href'),
           market: MARKET_TYPE.KR,

@@ -1,4 +1,4 @@
-import { Index, MongoRepository, ObjectId } from 'typeorm';
+import { Index, MongoRepository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EconomicInformation } from '../entity';
@@ -25,7 +25,11 @@ export class EconomicInformationRepository extends MongoRepository<EconomicInfor
     return this.repo.save(entity);
   }
 
-  async findOneByDate(date: string): Promise<EconomicInformation> {
-    return this.repo.findOne({ where: { date } });
+  async findOneByDate(from: Date, to: Date): Promise<EconomicInformation> {
+    return this.repo.findOne({
+      where: {
+        date: { $gte: from, $lte: to },
+      },
+    });
   }
 }

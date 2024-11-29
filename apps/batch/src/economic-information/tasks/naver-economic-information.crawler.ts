@@ -13,7 +13,7 @@ import {
   N_PAY_BASE_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { format } from 'date-fns';
+import { figureDateInfo } from '@libs/common/figure-date-info';
 
 /**
  * 매크로 환경
@@ -38,11 +38,12 @@ export class NaverEconomicInformationCrawler {
   ) {}
 
   async exec() {
-    // make entity to store data
-    const date = format(new Date(), 'yyyy-MM-dd');
-    let entity = await this.repo.findOneByDate(date);
+    const { date, startOfDay, endOfDay } = figureDateInfo();
+    let entity = await this.repo.findOneByDate(startOfDay, endOfDay);
     if (!entity) {
-      entity = await this.repo.createOne(EconomicInformation.create({ date }));
+      entity = await this.repo.createOne(
+        EconomicInformation.create({ date: new Date(date) }),
+      );
     }
 
     // crawl data and add to queue
