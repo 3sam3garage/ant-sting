@@ -5,7 +5,7 @@ import {
   ECONOMIC_INFO_SOURCE,
   EconomicInformationMessage,
   EconomicInformationRepository,
-  N_PAY_BASE_URL,
+  N_PAY_RESEARCH_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { joinUrl, requestAndParseEucKr } from '@libs/common';
@@ -20,7 +20,7 @@ export class EconomicInformationConsumer extends BaseConsumer {
   }
 
   private async scrapeNaver(url: string): Promise<string> {
-    const html = await requestAndParseEucKr(joinUrl(N_PAY_BASE_URL, url));
+    const html = await requestAndParseEucKr(joinUrl(N_PAY_RESEARCH_URL, url));
     const content = html
       .querySelectorAll('table td.view_cnt p')
       .map((item) => item?.innerText?.trim())

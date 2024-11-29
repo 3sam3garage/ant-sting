@@ -1,6 +1,6 @@
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   formatSixDigitDate,
   joinUrl,
@@ -25,10 +25,10 @@ import { format } from 'date-fns';
 @Injectable()
 export class NaverEconomicInformationCrawler {
   private readonly DETAIL_URLS = [
-    'market_info_list.naver',
-    'invest_list.naver',
-    'economy_list.naver',
-    'debenture_list.naver',
+    'research/market_info_list.naver',
+    'research/invest_list.naver',
+    'research/economy_list.naver',
+    'research/debenture_list.naver',
   ];
 
   constructor(
@@ -62,6 +62,7 @@ export class NaverEconomicInformationCrawler {
         const dateInfo = row.querySelector('td.date');
         const currentDate = formatSixDigitDate(dateInfo.textContent);
         if (currentDate !== date) {
+          Logger.debug('Skipping previous data');
           continue;
         }
 

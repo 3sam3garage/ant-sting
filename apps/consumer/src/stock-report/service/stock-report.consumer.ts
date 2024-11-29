@@ -84,10 +84,14 @@ export class StockReportConsumer extends BaseConsumer {
         market === MARKET_TYPE.KR
           ? CURRENCY_TYPE.KRW
           : (currency as CURRENCY_TYPE),
-      price: currentPrice,
-      reportAnalysis: { targetPrice, position: this.parsePosition(position) },
+      price: typeof currentPrice === 'number' ? currentPrice : 0,
+      reportAnalysis: {
+        targetPrice: typeof targetPrice === 'number' ? targetPrice : 0,
+        position: this.parsePosition(position),
+      },
       aiAnalysis: {
-        targetPrice: analysis.targetPrice,
+        targetPrice:
+          typeof analysis.targetPrice === 'number' ? analysis.targetPrice : 0,
         position: this.parsePosition(analysis.position),
         reason: analysis.reason,
       },
