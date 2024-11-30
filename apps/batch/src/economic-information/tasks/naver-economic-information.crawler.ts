@@ -5,6 +5,7 @@ import {
   formatSixDigitDate,
   joinUrl,
   requestAndParseEucKr,
+  today,
 } from '@libs/common';
 import {
   ECONOMIC_INFO_SOURCE,
@@ -13,7 +14,6 @@ import {
   N_PAY_BASE_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { figureDateInfo } from '@libs/common/figure-date-info';
 
 /**
  * 매크로 환경
@@ -38,12 +38,10 @@ export class NaverEconomicInformationCrawler {
   ) {}
 
   async exec() {
-    const { date, startOfDay, endOfDay } = figureDateInfo();
-    let entity = await this.repo.findOneByDate(startOfDay, endOfDay);
+    const date = today();
+    let entity = await this.repo.findOneByDate(date);
     if (!entity) {
-      entity = await this.repo.createOne(
-        EconomicInformation.create({ date: new Date(date) }),
-      );
+      entity = await this.repo.createOne(EconomicInformation.create({ date }));
     }
 
     // crawl data and add to queue

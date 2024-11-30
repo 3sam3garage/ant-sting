@@ -25,11 +25,7 @@ export class EconomicInformationRepository extends MongoRepository<EconomicInfor
     return this.repo.save(entity);
   }
 
-  async findOneByDate(from: Date, to: Date): Promise<EconomicInformation> {
-    return this.repo.findOne({
-      where: {
-        date: { $gte: from, $lte: to },
-      },
-    });
+  async findOneByDate(date: string): Promise<EconomicInformation> {
+    return this.repo.findOne({ where: { date } });
   }
 }
