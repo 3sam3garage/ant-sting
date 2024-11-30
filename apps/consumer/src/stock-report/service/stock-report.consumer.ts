@@ -95,6 +95,7 @@ export class StockReportConsumer extends BaseConsumer {
         position: this.parsePosition(analysis.position),
         reason: analysis.reason,
       },
+      stockReportId: new ObjectId(stockReportId),
     });
 
     await this.stockAnalysisRepo.save(entity);

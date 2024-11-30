@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { CURRENCY_TYPE, MARKET_POSITION, MARKET_TYPE } from '../../constants';
@@ -63,6 +63,9 @@ export class StockAnalysis extends BaseEntity {
 
   @Column(() => AiAnalysis)
   aiAnalysis: AiAnalysis;
+
+  @ObjectIdColumn()
+  stockReportId: ObjectId;
 
   static create(data: Partial<StockAnalysis>) {
     return plainToInstance(StockAnalysis, data);

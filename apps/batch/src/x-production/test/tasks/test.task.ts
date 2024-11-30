@@ -2,13 +2,11 @@ import { Injectable } from '@nestjs/common';
 import {
   EconomicInformationAnalysisRepository,
   FinancialStatementRepository,
-  HANA_BASE_URL,
   StockAnalysisRepository,
   StockReportRepository,
 } from '@libs/domain';
 import { ClaudeService } from '@libs/ai';
 import { DataGovApiService, SlackService } from '@libs/external-api';
-import { joinUrl } from '@libs/common';
 
 @Injectable()
 export class TestTask {
@@ -22,15 +20,5 @@ export class TestTask {
     private readonly slackService: SlackService,
   ) {}
 
-  async exec(): Promise<void> {
-    // const stockReports = await this.stockReportRepo.find();
-    //
-    // for (const stock-report of stockReports) {
-    //   const nid = new URL(joinUrl(HANA_BASE_URL, stock-report.detailUrl)).searchParams
-    //     .get('nid')
-    //     ?.trim();
-    //
-    //   await this.stockReportRepo.save({ ...stock-report, uuid: `naver:${nid}` });
-    // }
-  }
+  async exec(): Promise<void> {}
 }
