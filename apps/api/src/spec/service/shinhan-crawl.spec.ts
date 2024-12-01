@@ -2,22 +2,22 @@ import { eucKR2utf8 } from '@libs/common';
 import axios from 'axios';
 import pdf from 'pdf-parse';
 import { PDF_PARSING_PROMPT } from '../constants';
-import {
-  BedrockRuntimeClient,
-  InvokeModelCommand,
-} from '@aws-sdk/client-bedrock-runtime';
+import { ClaudeService } from '@libs/ai';
+import { Test, TestingModule } from '@nestjs/testing';
 
 describe('shinhan-crawler', () => {
-  const modelId = 'anthropic.claude-3-5-sonnet-20240620-v1:0';
-  let client: BedrockRuntimeClient;
-
+  let claudeService: ClaudeService;
   const file =
     'https://bbs2.shinhansec.com/board/message/file.do?attachmentId=330309';
 
-  beforeEach(() => {
+  beforeAll(async () => {
     process.env.AWS_PROFILE = 'dev';
     process.env.AWS_PROFILEAWS_SDK_LOAD_CONFIG = '1';
-    client = new BedrockRuntimeClient({ region: 'us-east-1' });
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [ClaudeService],
+    }).compile();
+
+    claudeService = module.get(ClaudeService);
   });
 
   it('list', async () => {
@@ -72,30 +72,7 @@ describe('shinhan-crawler', () => {
       data.text,
     );
 
-    const payload = {
-      anthropic_version: 'bedrock-2023-05-31',
-      max_tokens: 1000,
-      messages: [
-        { role: 'user', content: [{ type: 'text', text: query }] },
-        { role: 'assistant', content: [{ type: 'text', text: '{' }] },
-      ],
-    };
-
-    const command = new InvokeModelCommand({
-      contentType: 'application/json',
-      body: JSON.stringify(payload),
-      modelId,
-    });
-
-    const apiResponse = await client.send(command);
-
-    const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
-    const responseBody = JSON.parse(decodedResponseBody);
-
-    const json = JSON.parse('{' + responseBody.content[0].text);
-
-    console.log(json);
-    return json;
+    await claudeService.invoke(query);
   });
 
   it('parsing stockName, ticker, market', () => {
