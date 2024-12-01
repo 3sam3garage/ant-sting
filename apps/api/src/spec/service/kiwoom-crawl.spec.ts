@@ -3,7 +3,7 @@ import pdf from 'pdf-parse';
 import { PDF_PARSING_PROMPT } from '../constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClaudeService } from '@libs/ai';
-import { format } from 'date-fns';
+import { format, subMonths } from 'date-fns';
 
 const item = {
   pageNo: null,
@@ -90,12 +90,18 @@ describe('kiwoom-crawler', () => {
 
     const date = format(new Date(makeDt), 'yyyy-MM-dd');
     console.log(date);
+
+    const now = new Date();
+    const edDate = format(now, 'yyyyMMdd');
+    const stDate = format(subMonths(now, 6), 'yyyyMMdd');
+
+    console.log(stDate, edDate);
   });
 
   it('list', async () => {
     const form = new FormData();
     form.append('pageNo', '1');
-    form.append('pageSize', '30');
+    form.append('pageSize', '100');
     form.append('stdate', '20240601');
     form.append('eddate', '20241201');
     form.append('f_keyField', '');

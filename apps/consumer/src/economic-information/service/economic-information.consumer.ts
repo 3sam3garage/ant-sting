@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { parse as parseToHTML } from 'node-html-parser';
 import { ObjectId } from 'mongodb';
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
@@ -5,22 +7,22 @@ import {
   ECONOMIC_INFO_SOURCE,
   EconomicInformationMessage,
   EconomicInformationRepository,
-  N_PAY_RESEARCH_URL,
+  N_PAY_BASE_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { joinUrl, requestAndParseEucKr } from '@libs/common';
 import { BaseConsumer } from '../../base.consumer';
-import axios from 'axios';
-import { parse as parseToHTML } from 'node-html-parser';
 
 @Processor(QUEUE_NAME.ECONOMIC_INFORMATION)
 export class EconomicInformationConsumer extends BaseConsumer {
+  private N_PAY_RESEARCH_URL = joinUrl(N_PAY_BASE_URL, '/research');
+
   constructor(private readonly repo: EconomicInformationRepository) {
     super();
   }
 
   private async scrapeNaver(url: string): Promise<string> {
-    const html = await requestAndParseEucKr(joinUrl(N_PAY_RESEARCH_URL, url));
+    const html = await requestAndParseEucKr(joinUrl(N_PAY_BASE_URL, url));
     const content = html
       .querySelectorAll('table td.view_cnt p')
       .map((item) => item?.innerText?.trim())

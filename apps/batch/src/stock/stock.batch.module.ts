@@ -9,6 +9,7 @@ import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { StockCommand } from './commands';
 import {
   HanaStockReportsCrawler,
+  KiwoomStockReportsCrawler,
   NaverStockReportsCrawler,
   ShinhanStockReportsCrawler,
 } from './tasks';
@@ -31,6 +32,7 @@ import {
     NaverStockReportsCrawler,
     HanaStockReportsCrawler,
     ShinhanStockReportsCrawler,
+    KiwoomStockReportsCrawler,
   ],
 })
 export class StockBatchModule {}
