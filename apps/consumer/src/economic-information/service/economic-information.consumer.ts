@@ -22,7 +22,9 @@ export class EconomicInformationConsumer extends BaseConsumer {
   }
 
   private async scrapeNaver(url: string): Promise<string> {
-    const html = await requestAndParseEucKr(joinUrl(N_PAY_BASE_URL, url));
+    const html = await requestAndParseEucKr(
+      joinUrl(this.N_PAY_RESEARCH_URL, url),
+    );
     const content = html
       .querySelectorAll('table td.view_cnt p')
       .map((item) => item?.innerText?.trim())
