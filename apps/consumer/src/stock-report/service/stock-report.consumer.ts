@@ -61,6 +61,7 @@ export class StockReportConsumer extends BaseConsumer {
     const isDupe = await this.stockAnalysisRepo.findOne({ where: { uuid } });
     if (isDupe) {
       Logger.error(`Duplicate action for ${uuid}`);
+      return;
     }
 
     const pdfFile = await axios.get(file, { responseType: 'arraybuffer' });

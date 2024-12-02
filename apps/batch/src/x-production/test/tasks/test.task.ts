@@ -7,6 +7,7 @@ import {
 } from '@libs/domain';
 import { ClaudeService } from '@libs/ai';
 import { DataGovApiService, SlackService } from '@libs/external-api';
+import { countBy } from 'lodash';
 
 @Injectable()
 export class TestTask {
@@ -20,5 +21,16 @@ export class TestTask {
     private readonly slackService: SlackService,
   ) {}
 
-  async exec(): Promise<void> {}
+  async exec(): Promise<void> {
+    const analysis = await this.stockAnalysisRepo.find({ date: '2024-11-29' });
+
+    const group = countBy(analysis, 'uuid');
+
+    console.log(group);
+    for (const [uuid, count] of Object.entries(group)) {
+      if (count >= 2) {
+        await this.stockAnalysisRepo.deleteOne({ uuid });
+      }
+    }
+  }
 }
