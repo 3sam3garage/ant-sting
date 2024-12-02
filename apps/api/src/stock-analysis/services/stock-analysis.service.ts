@@ -2,7 +2,6 @@ import { ObjectId } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { StockAnalysisRepository } from '@libs/domain';
 import { FindAnalysisQuery, StockAnalysisResponse } from '../dto';
-import { FindByDateQuery } from '../../common';
 import { countBy } from 'lodash';
 
 @Injectable()
@@ -19,16 +18,17 @@ export class StockAnalysisService {
     return entities.map((entity) => StockAnalysisResponse.fromEntity(entity));
   }
 
-  async countByDate(query: FindByDateQuery) {
-    const { from, to } = query;
-    const count = await this.repo.countByDate(from, to);
+  async countByDate(query: FindAnalysisQuery) {
+    const count = await this.repo.countByDate({ ...query });
 
     return { count };
   }
 
-  async figureShare(query: FindByDateQuery) {
-    const reports = await this.repo.findByDate(query);
-    const share = countBy(reports, 'market');
+  async figureShare(query: FindAnalysisQuery) {
+    const reports = await this.repo.findByDate({ ...query });
+    const share = countBy(reports, ({ aiAnalysis, reportAnalysis }) => {
+      return `${reportAnalysis.position} : ${aiAnalysis.position}`;
+    });
 
     return { share };
   }

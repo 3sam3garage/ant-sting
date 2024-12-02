@@ -1,9 +1,8 @@
 import { FilterOperators, MongoRepository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FindAnalysisByDate } from '@libs/domain/stock-report';
 import { StockAnalysis } from '../entity';
-import { MARKET_POSITION } from '@libs/domain/constants';
-import { FindAnalysisByDate } from '@libs/domain/stock-report/interfaces';
 
 @Injectable()
 export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
@@ -34,19 +33,21 @@ export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
     return this.repo.find(filterQuery);
   }
 
-  async findRecommendedStocksByDate(from: Date, to: Date) {
-    return this.repo.find({
-      where: {
-        'reportAnalysis.position': MARKET_POSITION.BUY,
-        'aiAnalysis.position': MARKET_POSITION.BUY,
-        date: { $gte: from, $lte: to },
-      },
-    });
-  }
+  async countByDate(query: FindAnalysisByDate) {
+    const { from, to, aiSuggestion, reportSuggestion } = query;
 
-  async countByDate(from: Date, to: Date) {
-    return this.repo.count({
+    const filterQuery: FilterOperators<StockAnalysis> = {
       date: { $gte: from, $lte: to },
-    });
+    };
+
+    if (aiSuggestion) {
+      filterQuery['aiAnalysis.position'] = aiSuggestion;
+    }
+
+    if (reportSuggestion) {
+      filterQuery['reportAnalysis.position'] = reportSuggestion;
+    }
+
+    return this.repo.count(filterQuery);
   }
 }
