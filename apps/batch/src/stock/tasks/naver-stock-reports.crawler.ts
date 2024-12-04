@@ -82,16 +82,17 @@ export class NaverStockReportsCrawler {
       }
 
       for (const stockReport of stockReports) {
-        let report = await this.stockReportRepo.findOneByUid(stockReport.uuid);
-
-        if (report) {
-          await this.stockReportRepo.save({ ...report, ...stockReport });
-        } else {
-          report = await this.stockReportRepo.save(stockReport);
+        const foundReport = await this.stockReportRepo.findOneByUid(
+          stockReport.uuid,
+        );
+        if (foundReport) {
+          Logger.debug('Report Already exists:', stockReport.uuid);
+          continue;
         }
 
+        const result = await this.stockReportRepo.save(stockReport);
         await this.queue.add(
-          { stockReportId: report._id.toString() },
+          { stockReportId: result._id.toString() },
           { removeOnComplete: true, removeOnFail: true },
         );
       }

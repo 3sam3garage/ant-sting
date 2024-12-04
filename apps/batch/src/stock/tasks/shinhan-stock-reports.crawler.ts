@@ -64,6 +64,7 @@ export class ShinhanStockReportsCrawler {
 
       const entity = await this.stockReportRepo.findOneByUid(report.uuid);
       if (entity) {
+        Logger.debug('Report Already exists:', report.uuid);
         continue;
       }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import axios from 'axios';
@@ -63,8 +63,9 @@ export class HanaStockReportsCrawler {
         uuid: `hana:${new URL(file).searchParams.get('bbsSeq')}`,
       });
 
-      const entity = await this.stockReportRepo.findOneByUid(report.uuid);
-      if (entity) {
+      const foundReport = await this.stockReportRepo.findOneByUid(report.uuid);
+      if (foundReport) {
+        Logger.debug('Report Already exists:', report.uuid);
         continue;
       }
 

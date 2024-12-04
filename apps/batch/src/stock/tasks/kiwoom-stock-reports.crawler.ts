@@ -91,6 +91,7 @@ export class KiwoomStockReportsCrawler {
         stockReport.uuid,
       );
       if (foundReport) {
+        Logger.debug('Report Already exists:', stockReport.uuid);
         continue;
       }
 
