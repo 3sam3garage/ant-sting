@@ -3,7 +3,11 @@ import { ObjectId } from 'mongodb';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { StockReportService } from '../services';
 import { StockReportResponse } from '../dto';
-import { FigureShareResponse, FindByDateQuery } from '../../common';
+import {
+  CountByItemResponse,
+  FigureShareResponse,
+  FindByDateQuery,
+} from '../../common';
 
 @ApiTags('stock-reports')
 @Controller('stock-reports')
@@ -28,7 +32,7 @@ export class StockReportController {
     return this.service.figureShare(query);
   }
 
-  @ApiOkResponse({ type: String })
+  @ApiOkResponse({ type: CountByItemResponse })
   @Get('count-by-item')
   async countByReports(@Query() query: FindByDateQuery) {
     return this.service.countByReport(query);

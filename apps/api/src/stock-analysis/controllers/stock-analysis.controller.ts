@@ -7,7 +7,7 @@ import {
   FindAnalysisQuery,
   StockAnalysisResponse,
 } from '../dto';
-import { FigureShareResponse } from '../../common';
+import { CountByItemResponse, FigureShareResponse } from '../../common';
 
 @ApiTags('stock-analysis')
 @Controller('stock-analysis')
@@ -30,6 +30,12 @@ export class StockAnalysisController {
   @Get('share')
   async share(@Query() query: FindAnalysisQuery) {
     return this.service.figureShare(query);
+  }
+
+  @ApiOkResponse({ type: CountByItemResponse })
+  @Get('count-by-item')
+  async countByReports(@Query() query: FindAnalysisQuery) {
+    return this.service.countByAnalysis(query);
   }
 
   @ApiOkResponse({ type: StockAnalysisResponse })

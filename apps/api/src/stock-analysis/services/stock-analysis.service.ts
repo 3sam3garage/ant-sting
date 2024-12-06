@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { StockAnalysisRepository } from '@libs/domain';
 import { FindAnalysisQuery, StockAnalysisResponse } from '../dto';
 import { countBy } from 'lodash';
+import { FindByDateQuery } from '../../common';
 
 @Injectable()
 export class StockAnalysisService {
@@ -31,5 +32,23 @@ export class StockAnalysisService {
     });
 
     return { share };
+  }
+
+  async countByAnalysis(query: FindByDateQuery) {
+    const analysis = await this.repo.findByDate(query);
+    const share = countBy(analysis, 'stockCode');
+
+    const map = new Map();
+    for (const item of analysis) {
+      map.set(item.stockCode, item.stockName);
+    }
+
+    const items = [];
+    for (const [key, value] of Object.entries(share)) {
+      const name = map.get(key);
+      items.push({ name: `${name} (${key})`, value });
+    }
+
+    return { items };
   }
 }
