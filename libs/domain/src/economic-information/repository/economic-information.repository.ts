@@ -17,6 +17,14 @@ export class EconomicInformationRepository extends MongoRepository<EconomicInfor
     return this.repo.save(entity);
   }
 
+  async updateOne(
+    entity: EconomicInformation,
+    data: Partial<EconomicInformation>,
+  ) {
+    Object.assign(entity, data);
+    return this.repo.save(entity);
+  }
+
   async findOneByDate(date: string): Promise<EconomicInformation> {
     return this.repo.findOne({ where: { date } });
   }
