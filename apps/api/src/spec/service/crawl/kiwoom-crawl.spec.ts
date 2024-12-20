@@ -1,6 +1,6 @@
 import axios from 'axios';
 import pdf from 'pdf-parse';
-import { PDF_PARSING_PROMPT } from '../constants';
+import { PDF_PARSING_PROMPT } from '../../constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClaudeService } from '@libs/ai';
 import { format, subMonths } from 'date-fns';

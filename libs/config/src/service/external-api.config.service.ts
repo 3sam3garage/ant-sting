@@ -28,4 +28,12 @@ export class ExternalApiConfigService {
   get slackToken(): string {
     return this.config.SLACK_TOKEN;
   }
+
+  get ecosApiKey(): string {
+    return this.config.ECOS_API_KEY;
+  }
+
+  get fredApiKey(): string {
+    return this.config.FRED_API_KEY;
+  }
 }

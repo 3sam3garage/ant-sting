@@ -2,7 +2,7 @@ import axios from 'axios';
 import pdf from 'pdf-parse';
 import { parse as parseHTML } from 'node-html-parser';
 import { formatEightDigitDate, joinUrl } from '@libs/common';
-import { PDF_PARSING_PROMPT } from '../constants';
+import { PDF_PARSING_PROMPT } from '../../constants';
 import { ClaudeService } from '@libs/ai';
 import { Test, TestingModule } from '@nestjs/testing';
 
