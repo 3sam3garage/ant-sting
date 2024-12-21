@@ -4,6 +4,8 @@ import { RequestLoggerMiddleware } from './middlewares';
 import { StockReportModule } from './stock-report';
 import { StockAnalysisModule } from './stock-analysis';
 import { EconomicInformationAnalysisModule } from './economic-information-analysis';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './common';
 
 @Module({
   imports: [
@@ -12,7 +14,12 @@ import { EconomicInformationAnalysisModule } from './economic-information-analys
     StockAnalysisModule,
     EconomicInformationAnalysisModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
