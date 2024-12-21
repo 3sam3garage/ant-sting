@@ -18,7 +18,8 @@ describe('korea-bank', () => {
     apiKey = externalConfigService.ecosApiKey;
   });
 
-  it('원/외환 환율', async () => {
+  // currency-exchange-rate
+  describe('환율', () => {
     const serviceType = 'StatisticSearch';
     const code = '731Y001';
     const interval = 'D';
@@ -26,15 +27,40 @@ describe('korea-bank', () => {
     const endDate = '20241201';
     const skip = 0;
     const limit = 100;
-    const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}`;
 
-    const res = await axios.get(url);
-    const { row, list_total_count } = res?.data?.[serviceType];
+    it('원/달러 환율', async () => {
+      const subCode = '0000001';
+      const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
 
-    console.log(row, list_total_count);
+      const res = await axios.get(url);
+      const { row, list_total_count } = res?.data?.[serviceType];
 
-    const group = groupBy(row, 'TIME');
-    console.log(group);
+      console.log(row, list_total_count);
+    });
+
+    describe('달러 기준', () => {
+      const code = '731Y002';
+
+      it('원/일본엔 환율', async () => {
+        const subCode = '0000002';
+        const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
+
+        const res = await axios.get(url);
+        const { row, list_total_count } = res?.data?.[serviceType];
+
+        console.log(row, list_total_count);
+      });
+
+      it('원/유로 환율', async () => {
+        const subCode = '0000003';
+        const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
+
+        const res = await axios.get(url);
+        const { row, list_total_count } = res?.data?.[serviceType];
+
+        console.log(row, list_total_count);
+      });
+    });
   });
 
   it('주요국제 장단기 금리', async () => {
