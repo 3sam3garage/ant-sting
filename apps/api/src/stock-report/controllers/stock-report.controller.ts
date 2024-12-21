@@ -7,7 +7,7 @@ import {
   CountByItemResponse,
   FigureShareResponse,
   FindByDateQuery,
-} from '../../common';
+} from '../../components';
 
 @ApiTags('stock-reports')
 @Controller('stock-reports')

@@ -1,7 +1,7 @@
 import { ObjectId } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { EconomicInformationAnalysisRepository } from '@libs/domain';
-import { FindByDateQuery } from '../../common';
+import { FindByDateQuery } from '../../components';
 
 @Injectable()
 export class EconomicInformationAnalysisService {

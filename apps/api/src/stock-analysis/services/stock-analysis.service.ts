@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { StockAnalysisRepository } from '@libs/domain';
 import { FindAnalysisQuery, StockAnalysisResponse } from '../dto';
 import { countBy } from 'lodash';
-import { FindByDateQuery } from '../../common';
+import { FindByDateQuery } from '../../components';
 
 @Injectable()
 export class StockAnalysisService {

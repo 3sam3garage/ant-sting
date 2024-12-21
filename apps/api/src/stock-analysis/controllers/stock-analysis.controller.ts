@@ -7,7 +7,7 @@ import {
   FindAnalysisQuery,
   StockAnalysisResponse,
 } from '../dto';
-import { CountByItemResponse, FigureShareResponse } from '../../common';
+import { CountByItemResponse, FigureShareResponse } from '../../components';
 
 @ApiTags('stock-analysis')
 @Controller('stock-analysis')

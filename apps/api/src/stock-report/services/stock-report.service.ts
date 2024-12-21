@@ -1,7 +1,7 @@
 import { ObjectId } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { StockReportRepository } from '@libs/domain';
-import { FindByDateQuery } from '../../common';
+import { FindByDateQuery } from '../../components';
 import { countBy } from 'lodash';
 
 @Injectable()

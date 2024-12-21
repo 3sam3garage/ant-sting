@@ -2,7 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { EconomicInformationAnalysisService } from '../services';
 import { EconomicInformationAnalysisResponse } from '../dto';
-import { FindByDateQuery } from '../../common';
+import { FindByDateQuery } from '../../components';
 
 @ApiTags('economic-information-analysis')
 @Controller('economic-information-analysis')

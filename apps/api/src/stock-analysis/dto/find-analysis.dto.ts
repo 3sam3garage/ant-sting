@@ -1,4 +1,4 @@
-import { FindByDateQuery } from '../../common';
+import { FindByDateQuery } from '../../components';
 import { IsEnum, IsOptional } from 'class-validator';
 import { MARKET_POSITION, MARKET_TYPE } from '@libs/domain';
 import { ApiProperty } from '@nestjs/swagger';
