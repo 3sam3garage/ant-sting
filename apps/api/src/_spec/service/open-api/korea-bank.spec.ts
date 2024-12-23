@@ -23,10 +23,10 @@ describe('korea-bank', () => {
     const serviceType = 'StatisticSearch';
     const code = '731Y001';
     const interval = 'D';
-    const startDate = '20240101';
+    const startDate = '20200101';
     const endDate = '20241201';
     const skip = 0;
-    const limit = 100;
+    const limit = 10000;
 
     it('원/달러 환율', async () => {
       const subCode = '0000001';

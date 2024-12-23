@@ -4,7 +4,7 @@ import { CURRENCY_TYPE } from '../../constants';
 import { BaseEntity } from '../../base.entity';
 
 @Entity({
-  name: 'currency-exchange-rates',
+  name: 'exchange-rates',
   comment: '환율 (달러 기준)',
 })
 @Index(['baseCurrency', 'targetCurrency', 'date'], { unique: true })

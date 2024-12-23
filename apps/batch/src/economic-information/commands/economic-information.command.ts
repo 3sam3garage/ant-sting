@@ -3,7 +3,7 @@ import {
   NaverEconomicInformationCrawler,
   AnalyzeEconomicInformationTask,
   KcifEconomicInformationCrawler,
-  ExchangeRateCrawler,
+  ExchangeRateFetcher,
 } from '../tasks';
 
 enum SUB_COMMAND {
@@ -24,7 +24,7 @@ export class EconomicInformationCommand extends CommandRunner {
     private readonly naverEconomicInformationCrawler: NaverEconomicInformationCrawler,
     private readonly kcifEconomicInformationCrawler: KcifEconomicInformationCrawler,
     private readonly analyzeEconomicInformationTask: AnalyzeEconomicInformationTask,
-    private readonly exchangeRateCrawler: ExchangeRateCrawler,
+    private readonly exchangeRateFetcher: ExchangeRateFetcher,
   ) {
     super();
   }
@@ -40,7 +40,7 @@ export class EconomicInformationCommand extends CommandRunner {
       case SUB_COMMAND.SCRAPE_KCIF:
         return await this.kcifEconomicInformationCrawler.exec();
       case SUB_COMMAND.EXCHANGE_RATE:
-        return await this.exchangeRateCrawler.exec();
+        return await this.exchangeRateFetcher.exec();
       default:
         throw new Error('서브커맨드가 입력되지 않았습니다.');
     }

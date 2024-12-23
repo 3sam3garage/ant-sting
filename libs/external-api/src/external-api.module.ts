@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
-import { DataGovApiService, SlackService } from './services';
+import {
+  DataGovApiService,
+  KoreaBankApiService,
+  SlackService,
+} from './services';
 
 @Module({
-  providers: [DataGovApiService, SlackService],
-  exports: [DataGovApiService, SlackService],
+  providers: [DataGovApiService, SlackService, KoreaBankApiService],
+  exports: [DataGovApiService, SlackService, KoreaBankApiService],
 })
 export class ExternalApiModule {}
