@@ -4,6 +4,7 @@ import {
   AnalyzeEconomicInformationTask,
   KcifEconomicInformationCrawler,
   ExchangeRateFetcher,
+  BondYieldFetcher,
 } from '../tasks';
 
 enum SUB_COMMAND {
@@ -16,6 +17,8 @@ enum SUB_COMMAND {
 
   // 주요국 환율
   EXCHANGE_RATE = 'exchange-rate',
+  // 채권 금리(수익률)
+  BOND_YIELD = 'bond-yield',
 }
 
 @Command({ name: 'economic-information' })
@@ -25,6 +28,7 @@ export class EconomicInformationCommand extends CommandRunner {
     private readonly kcifEconomicInformationCrawler: KcifEconomicInformationCrawler,
     private readonly analyzeEconomicInformationTask: AnalyzeEconomicInformationTask,
     private readonly exchangeRateFetcher: ExchangeRateFetcher,
+    private readonly bondYieldFetcher: BondYieldFetcher,
   ) {
     super();
   }
@@ -41,6 +45,8 @@ export class EconomicInformationCommand extends CommandRunner {
         return await this.kcifEconomicInformationCrawler.exec();
       case SUB_COMMAND.EXCHANGE_RATE:
         return await this.exchangeRateFetcher.exec();
+      case SUB_COMMAND.BOND_YIELD:
+        return await this.bondYieldFetcher.exec();
       default:
         throw new Error('서브커맨드가 입력되지 않았습니다.');
     }

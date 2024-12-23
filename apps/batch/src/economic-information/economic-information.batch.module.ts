@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import {
+  BondYieldDomainModule,
   EconomicInformationDomainModule,
   ExchangeRateDomainModule,
 } from '@libs/domain';
@@ -12,6 +13,7 @@ import {
   AnalyzeEconomicInformationTask,
   KcifEconomicInformationCrawler,
   ExchangeRateFetcher,
+  BondYieldFetcher,
 } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 
@@ -21,6 +23,7 @@ import { ExternalApiModule } from '@libs/external-api';
     ExternalApiModule,
     EconomicInformationDomainModule,
     ExchangeRateDomainModule,
+    BondYieldDomainModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ECONOMIC_INFORMATION,
       inject: [RedisConfigService],
@@ -35,6 +38,7 @@ import { ExternalApiModule } from '@libs/external-api';
     AnalyzeEconomicInformationTask,
     KcifEconomicInformationCrawler,
     ExchangeRateFetcher,
+    BondYieldFetcher,
   ],
 })
 export class EconomicInformationBatchModule {}

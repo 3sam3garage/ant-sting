@@ -63,6 +63,7 @@ describe('korea-bank', () => {
     });
   });
 
+  // bond-yield
   it('주요국제 장단기 금리', async () => {
     const serviceType = 'StatisticSearch';
     const code = '902Y023';
@@ -82,16 +83,16 @@ describe('korea-bank', () => {
     console.log(group);
   });
 
-  describe('기준금리 / 정책금리', () => {
+  describe('기준금리', () => {
     const serviceType = 'StatisticSearch';
+    const code = '722Y001';
     const interval = 'M';
     const startDate = '202301';
-    const endDate = '202401';
+    const endDate = '202412';
     const skip = 0;
     const limit = 100;
 
-    it('기준금리', async () => {
-      const code = '722Y001';
+    it('한국', async () => {
       const subCode = '0101000'; // 한국은행 기준금리
       const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
 
@@ -103,10 +104,49 @@ describe('korea-bank', () => {
       const group = groupBy(row, 'ITEM_CODE2');
       console.log(group);
     });
+  });
 
-    it('정책금리', async () => {
-      const code = '902Y006';
+  describe('정책금리', () => {
+    const serviceType = 'StatisticSearch';
+    const code = '902Y006';
+    const interval = 'M';
+    const startDate = '202301';
+    const endDate = '202412';
+    const skip = 0;
+    const limit = 100;
+
+    it('한국', async () => {
       const subCode = 'KR'; // 한국 ( US, JP, CN )
+      const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
+
+      const res = await axios.get(url);
+      const { row, list_total_count } = res?.data?.[serviceType];
+
+      console.log(row, list_total_count);
+    });
+
+    it('미국', async () => {
+      const subCode = 'US'; // 한국 ( US, JP, CN )
+      const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
+
+      const res = await axios.get(url);
+      const { row, list_total_count } = res?.data?.[serviceType];
+
+      console.log(row, list_total_count);
+    });
+
+    it('일본', async () => {
+      const subCode = 'JP'; // 한국 ( US, JP, CN )
+      const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
+
+      const res = await axios.get(url);
+      const { row, list_total_count } = res?.data?.[serviceType];
+
+      console.log(row, list_total_count);
+    });
+
+    it('중국', async () => {
+      const subCode = 'CN'; // 한국 ( US, JP, CN )
       const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
 
       const res = await axios.get(url);

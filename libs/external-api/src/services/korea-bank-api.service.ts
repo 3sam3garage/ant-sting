@@ -28,4 +28,19 @@ export class KoreaBankApiService {
     const response = await axios.get<EcosSearchResponse>(url);
     return response?.data;
   }
+
+  async getBondYieldInTerms(param: EcosSearchInterface) {
+    const {
+      code = '902Y023',
+      interval = 'M',
+      startDate,
+      endDate,
+      skip = 0,
+      limit = 100,
+    } = param;
+
+    const url = `https://ecos.bok.or.kr/api/StatisticSearch/${this.apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}`;
+    const response = await axios.get<EcosSearchResponse>(url);
+    return response?.data;
+  }
 }

@@ -18,6 +18,7 @@
     "start:batch:economic-inforamtion:scrape-kcif": "nest start batch -- economic-information scrape-kcif",
     "start:batch:economic-inforamtion:analyze": "nest start batch -- economic-information analyze",
     "start:batch:economic-inforamtion:exchange-rate": "nest start batch -- economic-information exchange-rate",
+    "start:batch:economic-inforamtion:bond-yield": "nest start batch -- economic-information bond-yield",
     "start:batch:notification": "nest start batch -- notification send-slack",
     "start:batch:test": "nest start batch -- test test",
     "start:consumer": "nest start consumer",
