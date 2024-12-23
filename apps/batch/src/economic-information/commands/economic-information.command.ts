@@ -3,6 +3,7 @@ import {
   NaverEconomicInformationCrawler,
   AnalyzeEconomicInformationTask,
   KcifEconomicInformationCrawler,
+  ExchangeRateCrawler,
 } from '../tasks';
 
 enum SUB_COMMAND {
@@ -12,6 +13,9 @@ enum SUB_COMMAND {
   SCRAPE_KCIF = 'scrape-kcif',
   // 경제 정보 요약 및 패키지화하여 전달
   ANALYZE = 'analyze',
+
+  // 주요국 환율
+  EXCHANGE_RATE = 'exchange-rate',
 }
 
 @Command({ name: 'economic-information' })
@@ -20,6 +24,7 @@ export class EconomicInformationCommand extends CommandRunner {
     private readonly naverEconomicInformationCrawler: NaverEconomicInformationCrawler,
     private readonly kcifEconomicInformationCrawler: KcifEconomicInformationCrawler,
     private readonly analyzeEconomicInformationTask: AnalyzeEconomicInformationTask,
+    private readonly exchangeRateCrawler: ExchangeRateCrawler,
   ) {
     super();
   }
@@ -34,6 +39,8 @@ export class EconomicInformationCommand extends CommandRunner {
         return await this.naverEconomicInformationCrawler.exec();
       case SUB_COMMAND.SCRAPE_KCIF:
         return await this.kcifEconomicInformationCrawler.exec();
+      case SUB_COMMAND.EXCHANGE_RATE:
+        return await this.exchangeRateCrawler.exec();
       default:
         throw new Error('서브커맨드가 입력되지 않았습니다.');
     }

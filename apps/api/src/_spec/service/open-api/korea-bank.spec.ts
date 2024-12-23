@@ -18,7 +18,7 @@ describe('korea-bank', () => {
     apiKey = externalConfigService.ecosApiKey;
   });
 
-  // currency-exchange-rate
+  // exchange-rate
   describe('환율', () => {
     const serviceType = 'StatisticSearch';
     const code = '731Y001';
