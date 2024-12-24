@@ -6,6 +6,7 @@ import {
   ExchangeRateFetcher,
   BondYieldFetcher,
   InterestRateFetcher,
+  StockIndexFetcher,
 } from '../tasks';
 
 enum SUB_COMMAND {
@@ -22,6 +23,8 @@ enum SUB_COMMAND {
   BOND_YIELD = 'bond-yield',
   // 기준/정책 금리
   INTEREST_RATE = 'interest-rate',
+  // 주가지수(2015=100)
+  STOCK_INDEX = 'stock-index',
 }
 
 @Command({ name: 'economic-information' })
@@ -33,6 +36,7 @@ export class EconomicInformationCommand extends CommandRunner {
     private readonly exchangeRateFetcher: ExchangeRateFetcher,
     private readonly bondYieldFetcher: BondYieldFetcher,
     private readonly interestRateFetcher: InterestRateFetcher,
+    private readonly stockIndexFetcher: StockIndexFetcher,
   ) {
     super();
   }
@@ -53,6 +57,8 @@ export class EconomicInformationCommand extends CommandRunner {
         return await this.bondYieldFetcher.exec();
       case SUB_COMMAND.INTEREST_RATE:
         return await this.interestRateFetcher.exec();
+      case SUB_COMMAND.STOCK_INDEX:
+        return await this.stockIndexFetcher.exec();
       default:
         throw new Error('서브커맨드가 입력되지 않았습니다.');
     }

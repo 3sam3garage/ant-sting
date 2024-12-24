@@ -6,3 +6,4 @@ export * from './analyze-economic-information.task';
 export * from './exchange-rate.fetcher';
 export * from './bond-yield.fetcher';
 export * from './interest-rate.fetcher';
+export * from './stock-index.fetcher';

@@ -5,6 +5,7 @@ import {
   EconomicInformationDomainModule,
   ExchangeRateDomainModule,
   InterestRateDomainModule,
+  StockIndexDomainModule,
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
@@ -16,6 +17,7 @@ import {
   ExchangeRateFetcher,
   BondYieldFetcher,
   InterestRateFetcher,
+  StockIndexFetcher,
 } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 
@@ -27,6 +29,7 @@ import { ExternalApiModule } from '@libs/external-api';
     ExchangeRateDomainModule,
     BondYieldDomainModule,
     InterestRateDomainModule,
+    StockIndexDomainModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ECONOMIC_INFORMATION,
       inject: [RedisConfigService],
@@ -43,6 +46,7 @@ import { ExternalApiModule } from '@libs/external-api';
     ExchangeRateFetcher,
     BondYieldFetcher,
     InterestRateFetcher,
+    StockIndexFetcher,
   ],
 })
 export class EconomicInformationBatchModule {}
