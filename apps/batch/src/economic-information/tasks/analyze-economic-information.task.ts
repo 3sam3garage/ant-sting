@@ -6,6 +6,10 @@ import {
 } from '@libs/domain';
 import { ClaudeService } from '@libs/ai';
 import { ANALYZE_ECONOMIC_INFORMATION_PROMPT } from '@libs/ai';
+import {
+  fromEconomicInfoToSlackMessage,
+  SlackService,
+} from '@libs/external-api';
 import { today } from '@libs/common';
 
 /**
@@ -17,6 +21,7 @@ export class AnalyzeEconomicInformationTask {
     private readonly infoRepo: EconomicInformationRepository,
     private readonly analysisRepo: EconomicInformationAnalysisRepository,
     private readonly claudeService: ClaudeService,
+    private readonly slackService: SlackService,
   ) {}
 
   async exec() {
@@ -42,5 +47,9 @@ export class AnalyzeEconomicInformationTask {
 
     const analysis = EconomicInformationAnalysis.create({ ...response, date });
     await this.analysisRepo.save(analysis);
+
+    // slack 발송
+    const economicInformationMessage = fromEconomicInfoToSlackMessage(analysis);
+    await this.slackService.sendMessage(economicInformationMessage);
   }
 }

@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import { eachDayOfInterval, eachMonthOfInterval } from 'date-fns';
+import { isNil, omitBy } from 'lodash';
 
 it('test', () => {
   const res = createHash('sha256')
@@ -16,4 +17,30 @@ it('day interval', () => {
 it('month interval', () => {
   const months = eachMonthOfInterval({ start: '2022-01', end: '2024-02' });
   console.log(months);
+});
+
+it('regex', () => {
+  const escapeForRegex = (s: string): string =>
+    s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+  const res = escapeForRegex('');
+  console.log(res);
+
+  const q = {
+    a: '',
+    b: '',
+  };
+
+  const t = omitBy(q, isNil);
+  console.log(t);
+});
+
+it('map', () => {
+  const map = new Map();
+  map.set('a', 1);
+  map.set('b', 2);
+
+  for (const [key, val] of map) {
+    console.log(key, val);
+  }
 });

@@ -168,10 +168,10 @@ instructions:
 2. base on current_date, distinguish expectation and past data from text.
 3. figure out target price from text. (Do not display the currency, just leave the numbers.)
 4. figure out current price from text. (Do not display the currency, just leave the numbers.)
-5. figture curreny from text (USD, HKD, CAD, EUR, GBP, KRW, JPY)
+5. figure currency from text (USD, HKD, CAD, EUR, GBP, KRW, JPY)
 6. figure out position from text. (BUY, SELL, HOLD)
 7. Give your opinion whether to buy or not in field 'analysis.position' (BUY, SELL, HOLD)
-8. Base on informatino above, assess this stock's target price in 6 months.
+8. Base on information above, assess this stock's target price in 6 months.
 9. Give reason why you assessed that way in instruction 7-8. 
 
 <example>

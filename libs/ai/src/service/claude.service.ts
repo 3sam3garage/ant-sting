@@ -42,7 +42,7 @@ export class ClaudeService {
     const {
       system = BASE_SYSTEM_PROMPT,
       temperature = 1,
-      max_tokens = 2000,
+      max_tokens = 5000,
     } = options;
 
     const payload = {

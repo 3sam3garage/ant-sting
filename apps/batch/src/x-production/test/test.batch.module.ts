@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
 import {
+  BondYieldDomainModule,
   EconomicInformationDomainModule,
+  ExchangeRateDomainModule,
   FinancialStatementDomainModule,
+  InterestRateDomainModule,
+  StockIndexDomainModule,
   StockReportDomainModule,
 } from '@libs/domain';
 import { BullModule } from '@nestjs/bull';
@@ -17,6 +21,10 @@ import { ExternalApiModule } from '@libs/external-api';
     FinancialStatementDomainModule,
     EconomicInformationDomainModule,
     StockReportDomainModule,
+    BondYieldDomainModule,
+    ExchangeRateDomainModule,
+    InterestRateDomainModule,
+    StockIndexDomainModule,
     ExternalApiModule,
     BullModule.registerQueueAsync(
       {
