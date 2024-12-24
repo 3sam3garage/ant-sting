@@ -20,7 +20,7 @@ export class BondYieldFetcher {
     const endDate = format(now, 'yyyyMM');
     const startDate = format(subMonths(now, 12), 'yyyyMM');
 
-    const res = await this.koreaBankApi.getBondYieldInTerms({
+    const res = await this.koreaBankApi.fetchBondYieldInTerms({
       startDate,
       endDate,
       limit: 1000,

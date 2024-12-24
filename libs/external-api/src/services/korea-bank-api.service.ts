@@ -13,7 +13,7 @@ export class KoreaBankApiService {
     this.apiKey = this.externalApiConfigService.ecosApiKey;
   }
 
-  async getExchangeRate(param: EcosSearchInterface) {
+  async fetchExchangeRate(param: EcosSearchInterface) {
     const {
       code,
       interval,
@@ -29,7 +29,7 @@ export class KoreaBankApiService {
     return response?.data;
   }
 
-  async getBondYieldInTerms(param: EcosSearchInterface) {
+  async fetchBondYieldInTerms(param: EcosSearchInterface) {
     const {
       code = '902Y023',
       interval = 'M',
@@ -40,6 +40,38 @@ export class KoreaBankApiService {
     } = param;
 
     const url = `https://ecos.bok.or.kr/api/StatisticSearch/${this.apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}`;
+    const response = await axios.get<EcosSearchResponse>(url);
+    return response?.data;
+  }
+
+  async fetchBaseInterestRate(param: EcosSearchInterface) {
+    const {
+      code = '722Y001',
+      subCode = '0101000',
+      interval = 'M',
+      startDate,
+      endDate,
+      skip = 0,
+      limit = 100,
+    } = param;
+
+    const url = `https://ecos.bok.or.kr/api/StatisticSearch/${this.apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
+    const response = await axios.get<EcosSearchResponse>(url);
+    return response?.data;
+  }
+
+  async fetchPolicyBaseInterestRate(param: EcosSearchInterface) {
+    const {
+      code = '902Y006',
+      subCode = 'KR',
+      interval = 'M',
+      startDate,
+      endDate,
+      skip = 0,
+      limit = 100,
+    } = param;
+
+    const url = `https://ecos.bok.or.kr/api/StatisticSearch/${this.apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}`;
     const response = await axios.get<EcosSearchResponse>(url);
     return response?.data;
   }

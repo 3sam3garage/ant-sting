@@ -5,4 +5,5 @@ export * from './corporation';
 export * from './financial-statement';
 export * from './exchange-rate';
 export * from './bond-yield';
+export * from './interest-rate';
 export * from './constants';

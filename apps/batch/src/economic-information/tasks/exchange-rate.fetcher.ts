@@ -44,7 +44,7 @@ export class ExchangeRateFetcher {
     const endDate = format(now, 'yyyyMMdd');
     const startDate = format(subMonths(now, 1), 'yyyyMMdd');
 
-    const fromKRWtoUSD = await this.koreaBankApi.getExchangeRate({
+    const fromKRWtoUSD = await this.koreaBankApi.fetchExchangeRate({
       code: '731Y001', // 기준 통화 - KRW
       subCode: '0000001', // USD 코드
       interval: 'D',
@@ -59,7 +59,7 @@ export class ExchangeRateFetcher {
     );
     Logger.log('KRW to USD Done');
 
-    const fromUSDtoYen = await this.koreaBankApi.getExchangeRate({
+    const fromUSDtoYen = await this.koreaBankApi.fetchExchangeRate({
       code: '731Y002', // 기준 통화 - USD
       subCode: '0000002', // JPY 코드
       interval: 'D',
@@ -75,7 +75,7 @@ export class ExchangeRateFetcher {
     );
     Logger.log('USD to JPY Done');
 
-    const fromUSDtoEUR = await this.koreaBankApi.getExchangeRate({
+    const fromUSDtoEUR = await this.koreaBankApi.fetchExchangeRate({
       code: '731Y002', // 기준 통화 - USD
       subCode: '0000003', // EUR 코드
       interval: 'D',

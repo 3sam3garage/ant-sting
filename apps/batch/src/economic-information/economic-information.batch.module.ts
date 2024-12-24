@@ -4,6 +4,7 @@ import {
   BondYieldDomainModule,
   EconomicInformationDomainModule,
   ExchangeRateDomainModule,
+  InterestRateDomainModule,
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
@@ -14,6 +15,7 @@ import {
   KcifEconomicInformationCrawler,
   ExchangeRateFetcher,
   BondYieldFetcher,
+  InterestRateFetcher,
 } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 
@@ -24,6 +26,7 @@ import { ExternalApiModule } from '@libs/external-api';
     EconomicInformationDomainModule,
     ExchangeRateDomainModule,
     BondYieldDomainModule,
+    InterestRateDomainModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ECONOMIC_INFORMATION,
       inject: [RedisConfigService],
@@ -39,6 +42,7 @@ import { ExternalApiModule } from '@libs/external-api';
     KcifEconomicInformationCrawler,
     ExchangeRateFetcher,
     BondYieldFetcher,
+    InterestRateFetcher,
   ],
 })
 export class EconomicInformationBatchModule {}

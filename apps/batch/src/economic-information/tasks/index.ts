@@ -5,3 +5,4 @@ export * from './analyze-economic-information.task';
 // ecos & fred
 export * from './exchange-rate.fetcher';
 export * from './bond-yield.fetcher';
+export * from './interest-rate.fetcher';
