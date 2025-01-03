@@ -1,5 +1,10 @@
 import { createHash } from 'crypto';
-import { eachDayOfInterval, eachMonthOfInterval } from 'date-fns';
+import {
+  addDays,
+  eachDayOfInterval,
+  eachMonthOfInterval,
+  isWithinInterval,
+} from 'date-fns';
 import { isNil, omitBy } from 'lodash';
 
 it('test', () => {
@@ -7,6 +12,19 @@ it('test', () => {
     .update('디어앤컴퍼니 (DE US/Not Rated)')
     .digest('hex');
   console.log(res);
+});
+
+it('add day', () => {
+  const days = addDays(new Date(), 44);
+  console.log(days);
+});
+
+it('within interval', () => {
+  const days = isWithinInterval(new Date(), {
+    start: '2024-01-01',
+    end: '2025-01-03',
+  });
+  console.log(days);
 });
 
 it('day interval', () => {
