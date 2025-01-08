@@ -27,7 +27,7 @@ export class TestTask {
   ) {}
 
   async exec(): Promise<void> {
-    const query = { date: { $gte: '2023-12-01', $lte: '2024-12-31' } };
+    const query = { date: { $gte: '2023-12-01', $lte: '2025-01-31' } };
 
     const [baseInterests, policyInterests, bondYields] = await Promise.all([
       this.interestRateRepo.find({

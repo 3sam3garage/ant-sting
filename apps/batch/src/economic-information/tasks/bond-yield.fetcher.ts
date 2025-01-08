@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { KoreaBankApiService } from '@libs/external-api';
-import { format, parse, subMonths } from 'date-fns';
+import { addMonths, format, parse, subMonths } from 'date-fns';
 import {
   BOND_COUNTRIES,
   BOND_TYPE,
@@ -17,7 +17,7 @@ export class BondYieldFetcher {
 
   async exec() {
     const now = new Date();
-    const endDate = format(now, 'yyyyMM');
+    const endDate = format(addMonths(now, 2), 'yyyyMM');
     const startDate = format(subMonths(now, 12), 'yyyyMM');
 
     const res = await this.koreaBankApi.fetchBondYieldInTerms({

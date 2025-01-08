@@ -7,6 +7,7 @@ import { EconomicInformationAnalysisModule } from './economic-information-analys
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './components';
 import { ExchangeRateModule } from './exchange-rate';
+import { BondYieldModule } from './bond-yield';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ExchangeRateModule } from './exchange-rate';
     StockReportModule,
     StockAnalysisModule,
     ExchangeRateModule,
+    BondYieldModule,
     EconomicInformationAnalysisModule,
   ],
   providers: [

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { KoreaBankApiService } from '@libs/external-api';
-import { format, parse, subMonths } from 'date-fns';
+import { addMonths, format, parse, subMonths } from 'date-fns';
 import {
   INTEREST_COUNTRIES,
   INTEREST_TYPE,
@@ -19,7 +19,7 @@ export class InterestRateFetcher {
     const now = new Date();
     const query = {
       startDate: format(subMonths(now, 12), 'yyyyMM'),
-      endDate: format(now, 'yyyyMM'),
+      endDate: format(addMonths(now, 2), 'yyyyMM'),
     };
 
     // 기준금리

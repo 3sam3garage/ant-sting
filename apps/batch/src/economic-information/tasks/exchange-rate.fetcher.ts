@@ -5,7 +5,7 @@ import {
   ExchangeRateRepository,
 } from '@libs/domain';
 import { EcosSearchItem, KoreaBankApiService } from '@libs/external-api';
-import { format, parse, subMonths } from 'date-fns';
+import { addDays, format, parse, subMonths } from 'date-fns';
 
 @Injectable()
 export class ExchangeRateFetcher {
@@ -41,7 +41,7 @@ export class ExchangeRateFetcher {
 
   async exec() {
     const now = new Date();
-    const endDate = format(now, 'yyyyMMdd');
+    const endDate = format(addDays(now, 1), 'yyyyMMdd');
     const startDate = format(subMonths(now, 1), 'yyyyMMdd');
 
     const fromKRWtoUSD = await this.koreaBankApi.fetchExchangeRate({

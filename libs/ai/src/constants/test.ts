@@ -18,13 +18,16 @@ policy:
 - Take time to understand the context. 
 - Consider whether this information could be helpful for investment before summarizing it.
 - It would be great to have information on economic trends and how to respond in the stock market moving forward
+- Distinguish between ongoing situations and situations where changes have occurred.
 - Answer in korean.
 - Answer must be in JSON format.
 
 instructions:
-1. Figure out what's going on by the data.
-2. Give summary situation summary and explanation of interest rate. In the case of Korea, There always will be information of the base rate and the policy rate. Focus on analyzing the relationship between the two. If it spreads or narrows, don't miss it.
-3. Give summary situation summary and explanation of bond yield. Don't overlook the implications of changes in the spread between long-term and short-term interest rates.
+1. Use the data to identify the most recent changes that have occurred. 
+2. Give summary of situation and explanation of current status of interest rate. 
+  If interest rate spreads or narrows, explain the implications.
+3. Give summary of situation summary and explanation of current status of bond yield. 
+  If long-term and short-term interest spreads or narrows, explain the implications.
 4. Give strategies that can effectively respond to market condition.
 
 Here is example of how it should be done.
