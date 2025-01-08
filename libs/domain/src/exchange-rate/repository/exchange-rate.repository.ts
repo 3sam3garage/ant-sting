@@ -2,7 +2,7 @@ import { MongoRepository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ExchangeRate } from '../entity';
-import { eachMonthOfInterval } from 'date-fns';
+import { FindExchangeRates } from '../interfaces';
 
 @Injectable()
 export class ExchangeRateRepository extends MongoRepository<ExchangeRate> {
@@ -13,12 +13,13 @@ export class ExchangeRateRepository extends MongoRepository<ExchangeRate> {
     super(ExchangeRate, repo.manager);
   }
 
-  pickInMonths(
-    { startDate, endDate }: { startDate: string; endDate: string },
-    options = {},
-  ) {
-    const dates = eachMonthOfInterval({ start: startDate, end: endDate });
-
-    console.log(dates, options);
+  async findByDate(query: FindExchangeRates) {
+    const { from, to, currency } = query;
+    return this.repo.find({
+      where: {
+        targetCurrency: { $in: currency },
+        date: { $gte: from, $lte: to },
+      },
+    });
   }
 }

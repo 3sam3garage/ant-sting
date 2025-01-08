@@ -6,12 +6,14 @@ import { StockAnalysisModule } from './stock-analysis';
 import { EconomicInformationAnalysisModule } from './economic-information-analysis';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './components';
+import { ExchangeRateModule } from './exchange-rate';
 
 @Module({
   imports: [
     CoreModule,
     StockReportModule,
     StockAnalysisModule,
+    ExchangeRateModule,
     EconomicInformationAnalysisModule,
   ],
   providers: [
