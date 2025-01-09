@@ -29,11 +29,23 @@ instructions:
 3. Give summary of situation summary and explanation of current status of bond yield. 
   If long-term and short-term interest spreads or narrows, explain the implications.
 4. Give strategies that can effectively respond to market condition.
+5. Based on the given information, please rate on a scale of 1-10 whether the current Korean stock market is booming or not.
+  Please also briefly explain the reasons for your rating.
+6. Based on the given information, please rate on a scale of 1-10 whether the current US stock market is booming or not.
+  Please also briefly explain the reasons for your rating.
 
 Here is example of how it should be done.
 
 <example>
 {
+  "koreaMarket": {
+    "score: 5,
+    "reason": "높은 정책금리차로 인한 부담 상승"
+  },
+  "usMarket": {
+    "score: 7,
+    "reason": "미국 경제의 상대적 강세와 AI 산업의 지속적인 성장 전망"
+  },
   "strategies": [
     {
       "situation": "2022년 7월부터 2023년 1월까지 한국의 기준금리가 급격히 상승. (2.25% -> 3.5%)",

@@ -1,7 +1,14 @@
 version: '3.9'
 
+volumes:
+  grafana:
+
 services:
   grafana:
     image: grafana/grafana
     ports:
       - '9111:3000'
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    volumes:
+      - grafana:/var/lib/grafana
