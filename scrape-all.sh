@@ -8,3 +8,5 @@ nest start batch -- economic-information scrape-naver
 nest start batch -- economic-information scrape-kcif
 nest start batch -- economic-information exchange-rate
 nest start batch -- economic-information bond-yield
+nest start batch -- economic-information interest-rate
+nest start batch -- economic-information stock-index
