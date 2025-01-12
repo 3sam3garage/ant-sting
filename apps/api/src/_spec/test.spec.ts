@@ -1,4 +1,3 @@
-import { createHash } from 'crypto';
 import {
   addDays,
   eachDayOfInterval,
@@ -8,10 +7,9 @@ import {
 import { isNil, omitBy } from 'lodash';
 
 it('test', () => {
-  const res = createHash('sha256')
-    .update('디어앤컴퍼니 (DE US/Not Rated)')
-    .digest('hex');
-  console.log(res);
+  const tickers = ['QSI', 'ETH', 'BNB'];
+
+  console.log(JSON.stringify(tickers));
 });
 
 it('add day', () => {

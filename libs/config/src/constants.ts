@@ -18,4 +18,8 @@ export enum QUEUE_NAME {
   ECONOMIC_INFORMATION = 'ECONOMIC_INFORMATION',
   // 증권사 리포트 PDF 분석
   ANALYZE_STOCK = 'ANALYZE_STOCK',
+  // SEC 보고서(filing) 조회
+  FETCH_FILING = 'FETCH_FILING',
+  // SEC 보고서(filing) 분석
+  ANALYZE_FILING = 'ANALYZE_FILING',
 }

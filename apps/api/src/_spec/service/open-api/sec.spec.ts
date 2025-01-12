@@ -1,12 +1,6 @@
 import axios from 'axios';
 
 describe('SEC', () => {
-  const DEFAULT_HEADERS = {
-    Host: 'data.sec.gov',
-    'User-Agent': 'Personal iamdap91@<naver>.com',
-    'Accept-Encoding': 'gzip, deflate',
-  };
-
   describe('with fair access', () => {
     // https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data
     const DEFAULT_HEADERS = {
@@ -25,52 +19,60 @@ describe('SEC', () => {
     });
   });
 
-  it('8-k reports', async () => {
-    const formatCIK = (cik: string) => {
-      const prefixCount = 10 - cik.length;
-      const prefix = new Array(prefixCount).fill('0').join('');
-      return `CIK${prefix}${cik}`;
+  describe('with data.sec.gov', () => {
+    const DEFAULT_HEADERS = {
+      Host: 'data.sec.gov',
+      'User-Agent': 'Personal iamdap91@<naver>.com',
+      'Accept-Encoding': 'gzip, deflate',
     };
 
-    const cik = '1816431';
-    const submission = formatCIK(cik);
+    it('8-k reports', async () => {
+      const formatCIK = (cik: string) => {
+        const prefixCount = 10 - cik.length;
+        const prefix = new Array(prefixCount).fill('0').join('');
+        return `CIK${prefix}${cik}`;
+      };
 
-    const res = await axios.get(
-      `https://data.sec.gov/submissions/${submission}.json`,
-      { headers: DEFAULT_HEADERS },
-    );
+      const cik = '1816431';
+      const submission = formatCIK(cik);
 
-    const urls = [];
-    const { accessionNumber, primaryDocument, filingDate, form } =
-      res?.data?.filings?.recent;
-    for (let i = 0; i < accessionNumber.length; i++) {
-      // const formType = form[i];
-      // if (formType !== '8-K') {
-      //   continue;
-      // }
+      const res = await axios.get(
+        `https://data.sec.gov/submissions/${submission}.json`,
+        { headers: DEFAULT_HEADERS },
+      );
 
-      const accessNum = accessionNumber[i]?.replaceAll('-', '');
-      const document = primaryDocument[i];
-      const date = filingDate[i];
-      const url = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessNum}/${document}`;
+      const urls = [];
+      const { accessionNumber, primaryDocument, filingDate, form } =
+        res?.data?.filings?.recent;
+      for (let i = 0; i < accessionNumber.length; i++) {
+        // const formType = form[i];
+        // if (formType !== '8-K') {
+        //   continue;
+        // }
 
-      urls.push({ date, url });
-    }
+        const accessNum = accessionNumber[i]?.replaceAll('-', '');
+        const document = primaryDocument[i];
+        const date = filingDate[i];
+        const url = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessNum}/${document}`;
 
-    console.log(1);
-  });
+        urls.push({ date, url });
+      }
 
-  it('call report page', async () => {
-    const res = await axios
-      .get(
-        'https://www.sec.gov/Archives/edgar/data/1816431/000114036125000295/ny20041128x2_8k.htm',
-        { headers: { ...DEFAULT_HEADERS, Host: 'www.sec.gov' } },
-      )
-      .then((r) => {
-        console.log(r);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+      console.log(1);
+    });
+
+    it('call report page', async () => {
+      const res = await axios
+        .get(
+          'https://www.sec.gov/Archives/edgar/data/1816431/000114036125000295/ny20041128x2_8k.htm',
+          { headers: { ...DEFAULT_HEADERS, Host: 'www.sec.gov' } },
+        )
+        .then((r) => {
+          console.log(r);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    });
   });
 });

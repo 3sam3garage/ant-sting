@@ -8,6 +8,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './components';
 import { ExchangeRateModule } from './exchange-rate';
 import { BondYieldModule } from './bond-yield';
+import { FilingModule } from './filing';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { BondYieldModule } from './bond-yield';
     StockAnalysisModule,
     ExchangeRateModule,
     BondYieldModule,
+    FilingModule,
     EconomicInformationAnalysisModule,
   ],
   providers: [
