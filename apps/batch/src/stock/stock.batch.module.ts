@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
+import { TickerDomainModule } from '@libs/domain';
 import { SecTickerFetcher } from './tasks';
+import { StockCommand } from './commands';
 
 @Module({
   imports: [
+    TickerDomainModule,
     // FinancialStatementDomainModule,
     // EconomicInformationDomainModule,
     // StockReportDomainModule,
@@ -14,6 +17,6 @@ import { SecTickerFetcher } from './tasks';
     //   },
     // }),
   ],
-  providers: [SecTickerFetcher],
+  providers: [StockCommand, SecTickerFetcher],
 })
 export class StockBatchModule {}
