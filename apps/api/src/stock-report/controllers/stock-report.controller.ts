@@ -9,8 +9,8 @@ import {
   FindByDateQuery,
 } from '../../components';
 
-@ApiTags('stock-reports')
-@Controller('stock-reports')
+@ApiTags('stock-report-reports')
+@Controller('stock-report-reports')
 export class StockReportController {
   constructor(private readonly service: StockReportService) {}
 

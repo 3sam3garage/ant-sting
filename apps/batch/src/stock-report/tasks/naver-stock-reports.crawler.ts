@@ -62,7 +62,7 @@ export class NaverStockReportsCrawler {
         const itemUrl = itemAnchor.getAttribute('href');
 
         if (this.FIRMS_TO_EXCLUDE.includes(stockFirm)) {
-          Logger.debug('Excluding stock firm:', stockFirm);
+          Logger.debug('Excluding stock-report firm:', stockFirm);
           continue;
         }
 

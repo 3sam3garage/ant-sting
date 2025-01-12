@@ -28,7 +28,7 @@ export class AiAnalysis {
   reason: string;
 }
 
-@Entity({ name: 'stock-analysis' })
+@Entity({ name: 'stock-report-analysis' })
 export class StockAnalysis extends BaseEntity {
   @Column({ comment: '시장 타입' })
   @IsEnum(MARKET_TYPE)

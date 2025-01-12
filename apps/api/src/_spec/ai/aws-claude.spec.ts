@@ -36,7 +36,7 @@ describe('aws claude', () => {
 
   it('converse request', async () => {
     const query =
-      'describe most important feature in korea stock market. answer in korean';
+      'describe most important feature in korea stock-report market. answer in korean';
     const conversation = [
       { role: 'user', content: [{ text: query }] },
     ] as never;
@@ -56,7 +56,7 @@ describe('aws claude', () => {
 
   it('invoke request', async () => {
     const query =
-      'describe most important feature in korea stock market. answer in korean. answer in json format. feature field is required.';
+      'describe most important feature in korea stock-report market. answer in korean. answer in json format. feature field is required.';
     const client = new BedrockRuntimeClient({ region: 'us-east-1' });
 
     // Prepare the payload for the model.

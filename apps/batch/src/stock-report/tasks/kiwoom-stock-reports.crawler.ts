@@ -57,7 +57,7 @@ export class KiwoomStockReportsCrawler {
 
       const { '0': match, index } = titl?.match(this.TICKER_REGEX) || {};
       if (!match) {
-        Logger.debug('Not a stock report');
+        Logger.debug('Not a stock-report report');
         continue;
       }
 

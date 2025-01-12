@@ -13,8 +13,8 @@ enum SUB_COMMAND {
   SCRAPE_KIWOOM = 'scrape-kiwoom',
 }
 
-@Command({ name: 'stock' })
-export class StockCommand extends CommandRunner {
+@Command({ name: 'stock-report' })
+export class StockReportCommand extends CommandRunner {
   constructor(
     private readonly naverStockReportsCrawler: NaverStockReportsCrawler,
     private readonly hanaStockReportsCrawler: HanaStockReportsCrawler,

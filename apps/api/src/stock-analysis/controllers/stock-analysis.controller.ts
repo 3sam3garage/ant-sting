@@ -9,8 +9,8 @@ import {
 } from '../dto';
 import { CountByItemResponse, FigureShareResponse } from '../../components';
 
-@ApiTags('stock-analysis')
-@Controller('stock-analysis')
+@ApiTags('stock-report-analysis')
+@Controller('stock-report-analysis')
 export class StockAnalysisController {
   constructor(private readonly service: StockAnalysisService) {}
 

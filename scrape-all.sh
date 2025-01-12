@@ -1,9 +1,9 @@
 #!/bin/zsh
 
-nest start batch -- stock scrape-naver
-nest start batch -- stock scrape-hana
-nest start batch -- stock scrape-shinhan
-nest start batch -- stock scrape-kiwoom
+nest start batch -- stock-report scrape-naver
+nest start batch -- stock-report scrape-hana
+nest start batch -- stock-report scrape-shinhan
+nest start batch -- stock-report scrape-kiwoom
 nest start batch -- economic-information scrape-naver
 nest start batch -- economic-information scrape-kcif
 nest start batch -- economic-information exchange-rate

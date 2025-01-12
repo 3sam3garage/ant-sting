@@ -3,7 +3,7 @@ import { plainToInstance } from 'class-transformer';
 import { BaseEntity } from '../../base.entity';
 import { STOCK_INDEX_COUNTRIES, STOCK_INDEX_TYPE } from '../constants';
 
-@Entity({ name: 'stock-indexes', comment: '2015=100 기준' })
+@Entity({ name: 'stock-report-indexes', comment: '2015=100 기준' })
 @Index(['country', 'date'], { unique: true })
 export class StockIndex extends BaseEntity {
   @Column({ enum: STOCK_INDEX_COUNTRIES })

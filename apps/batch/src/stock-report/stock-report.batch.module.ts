@@ -6,7 +6,7 @@ import {
   StockReportDomainModule,
 } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
-import { StockCommand } from './commands';
+import { StockReportCommand } from './commands';
 import {
   HanaStockReportsCrawler,
   KiwoomStockReportsCrawler,
@@ -28,11 +28,11 @@ import {
     }),
   ],
   providers: [
-    StockCommand,
+    StockReportCommand,
     NaverStockReportsCrawler,
     HanaStockReportsCrawler,
     ShinhanStockReportsCrawler,
     KiwoomStockReportsCrawler,
   ],
 })
-export class StockBatchModule {}
+export class StockReportBatchModule {}

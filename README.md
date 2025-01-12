@@ -41,7 +41,7 @@ $ npm run start:batch:economic-inforamtion:analyze
 3. **scrape** stock-information. (consumer required)
 
 ```bash
-$ npm run start:batch:stock:scrape
+$ npm run start:batch:stock-report:scrape
 ```
 
 4. send notification.
