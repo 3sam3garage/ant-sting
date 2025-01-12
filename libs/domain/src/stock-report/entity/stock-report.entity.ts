@@ -6,7 +6,7 @@ import { BaseEntity } from '../../base.entity';
 
 @Index('uuid')
 @Index('file')
-@Entity({ name: 'stock-report-reports' })
+@Entity({ name: 'stock-reports' })
 export class StockReport extends BaseEntity {
   @Column()
   @IsString()
