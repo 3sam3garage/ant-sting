@@ -10,14 +10,14 @@ Follow the policy and instruction.
 policy:
 - Take time to understand the context.
 - Make sure not to leave out any information about the transaction or warrants.
+- Take a conservative approach and only use the criterion of whether it aligns with the interests of existing shareholders.
 - Answer in korean.
-- When evaluating, use the criterion of whether it aligns with the interests of existing shareholders.
 - Answer must be in JSON format.
 
 instructions:
 1. Exclude the information that is typically included in the disclosure.
 2. Summarize the key points.
-3. Indicate whether the above disclosure is a positive or negative factor, using a ratio format, e.g., 3:7
+3. Express whether the above filing aligns with the interests of existing shareholders on a scale of -5 to 5. (5: Strongly positive, -5: Strongly negative)
 
 
 Here is example of how it should be done.
@@ -33,7 +33,7 @@ Here is example of how it should be done.
     "이 회사는 2023년 8월 11일에 SEC에 등록된 S-3 형태의 등록서를 제출하였다."
   ],
   "analysis": {
-    "sentiment": "7:3",
+    "score": "3",
     "reason: "5천만 달러 자금 조달로 제품 개발과 상업화에 긍정적 영향을 미침. 기관 투자자 참여는 신뢰도 상승."
   }
 }

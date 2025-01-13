@@ -21,9 +21,7 @@ describe('SEC Document', () => {
 
   it('analyze filing document', async () => {
     const document = await secApiService.fetchFilingDocument(
-      // 'https://www.sec.gov/Archives/edgar/data/1816431/000114036125000295/ny20041128x2_8k.htm',
-      // 'https://www.sec.gov/Archives/edgar/data/1838359/000196794025000002/xsl144X01/primary_doc.xml',
-      'https://www.sec.gov/Archives/edgar/data/1837607/000183760725000005/aeon-20250224xpre14a.htm',
+      'https://www.sec.gov/Archives/edgar/data/1506983/000149315224050469/form424b5.htm',
     );
 
     const prompt = ANALYZE_SEC_DOCUMENT_PROMPT.replace(
@@ -34,10 +32,10 @@ describe('SEC Document', () => {
     const response = await claudeService.invoke(prompt);
     const {
       summaries,
-      analysis: { sentiment, reason },
+      analysis: { score, reason },
     } = response;
 
-    const entity = FilingAnalysis.create({ summaries, sentiment, reason });
+    const entity = FilingAnalysis.create({ summaries, score, reason });
     console.log(entity);
   });
 });

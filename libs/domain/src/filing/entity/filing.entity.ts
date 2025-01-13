@@ -4,7 +4,7 @@ import { BaseEntity } from '../../base.entity';
 
 export class FilingAnalysis {
   @Column()
-  sentiment: string;
+  score: number;
 
   @Column()
   reason: string;
