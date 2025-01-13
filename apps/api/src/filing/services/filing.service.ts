@@ -1,10 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Redis } from 'ioredis';
+import { Inject, Injectable } from '@nestjs/common';
 import { FilingRepository } from '@libs/domain';
+import { REDIS_NAME } from '@libs/config';
 import { FindFilingsQuery } from '../dto';
 
 @Injectable()
 export class FilingService {
-  constructor(private readonly repo: FilingRepository) {}
+  constructor(
+    @Inject(REDIS_NAME.ANT_STING)
+    private redis: Redis,
+    private readonly repo: FilingRepository,
+  ) {}
 
   async findByTickers(query: FindFilingsQuery) {
     return await this.repo.find({
@@ -15,6 +21,9 @@ export class FilingService {
   }
 
   async findTickerList(): Promise<string[]> {
-    return ['QSI', 'RGTI'];
+    // await this.redis.set('ticker-list', JSON.stringify(['QSI', 'RGTI']));
+
+    const text = await this.redis.get('ticker-list');
+    return JSON.parse(text);
   }
 }

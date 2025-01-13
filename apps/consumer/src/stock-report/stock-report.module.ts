@@ -17,7 +17,7 @@ import { QUEUE_NAME, RedisConfigService } from '@libs/config';
       name: QUEUE_NAME.ANALYZE_STOCK,
       inject: [RedisConfigService],
       useFactory: async (config: RedisConfigService) => {
-        return { redis: config.getConfig() };
+        return { redis: config.getCommonConfig() };
       },
     }),
   ],

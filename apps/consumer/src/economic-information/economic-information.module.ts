@@ -17,7 +17,7 @@ import { EconomicInformationConsumer } from './service';
       name: QUEUE_NAME.ECONOMIC_INFORMATION,
       inject: [RedisConfigService],
       useFactory: async (config: RedisConfigService) => {
-        return { redis: config.getConfig() };
+        return { redis: config.getCommonConfig() };
       },
     }),
   ],

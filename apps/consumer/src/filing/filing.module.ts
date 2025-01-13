@@ -14,7 +14,7 @@ import { FilingDomainModule, TickerDomainModule } from '@libs/domain';
       name: QUEUE_NAME.ANALYZE_FILING,
       inject: [RedisConfigService],
       useFactory: async (config: RedisConfigService) => {
-        return { redis: config.getConfig() };
+        return { redis: config.getCommonConfig() };
       },
     }),
   ],

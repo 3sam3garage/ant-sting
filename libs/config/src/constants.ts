@@ -23,3 +23,7 @@ export enum QUEUE_NAME {
   // SEC 보고서(filing) 분석
   ANALYZE_FILING = 'ANALYZE_FILING',
 }
+
+export enum REDIS_NAME {
+  ANT_STING = 'ANT_STING',
+}
