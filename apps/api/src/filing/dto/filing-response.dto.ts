@@ -3,8 +3,8 @@ import { plainToInstance, Type } from 'class-transformer';
 import { Filing } from '@libs/domain';
 
 class FilingAnalysis {
-  @IsString()
-  sentiment: string;
+  @IsNumber()
+  score: number;
 
   @IsString()
   reason: string;

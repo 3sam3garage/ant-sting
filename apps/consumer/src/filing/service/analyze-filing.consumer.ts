@@ -43,10 +43,10 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     const response = await this.claudeService.invoke(prompt);
     const {
       summaries,
-      analysis: { sentiment, reason },
+      analysis: { score, reason },
     } = response;
 
-    filing.analysis = FilingAnalysis.create({ summaries, sentiment, reason });
+    filing.analysis = FilingAnalysis.create({ summaries, score, reason });
     await this.filingRepository.save(filing);
   }
 }
