@@ -12,10 +12,4 @@ export class FilingController {
   async findByTickers(@Query() query: FindFilingsQuery) {
     return this.service.findByTickers(query);
   }
-
-  // @ApiOkResponse({ type: ExchangeRateResponse, isArray: true })
-  @Get('/ticker-list')
-  async findTickerList(): Promise<string[]> {
-    return this.service.findTickerList();
-  }
 }

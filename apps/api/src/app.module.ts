@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from './components';
 import { ExchangeRateModule } from './exchange-rate';
 import { BondYieldModule } from './bond-yield';
 import { FilingModule } from './filing';
+import { TickerModule } from './ticker';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FilingModule } from './filing';
     ExchangeRateModule,
     BondYieldModule,
     FilingModule,
+    TickerModule,
     EconomicInformationAnalysisModule,
   ],
   providers: [

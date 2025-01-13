@@ -19,11 +19,4 @@ export class FilingService {
       },
     });
   }
-
-  async findTickerList(): Promise<string[]> {
-    // await this.redis.set('ticker-list', JSON.stringify(['QSI', 'RGTI']));
-
-    const text = await this.redis.get('ticker-list');
-    return JSON.parse(text);
-  }
 }
