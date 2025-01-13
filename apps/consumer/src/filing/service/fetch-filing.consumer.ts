@@ -7,7 +7,7 @@ import { BaseConsumer } from '../../base.consumer';
 import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { SecApiService } from '@libs/external-api/services/sec-api.service';
-import { isAfter, isBefore, subMonths } from 'date-fns';
+import { isAfter, subMonths } from 'date-fns';
 
 @Processor(QUEUE_NAME.FETCH_FILING)
 export class FetchFilingConsumer extends BaseConsumer {
