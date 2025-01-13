@@ -7,6 +7,7 @@ import { BaseConsumer } from '../../base.consumer';
 import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { SecApiService } from '@libs/external-api/services/sec-api.service';
+import { isBefore, subMonths } from 'date-fns';
 
 @Processor(QUEUE_NAME.FETCH_FILING)
 export class FetchFilingConsumer extends BaseConsumer {
@@ -38,14 +39,14 @@ export class FetchFilingConsumer extends BaseConsumer {
 
     const filingInfos = await this.secApiService.fetchFilings(tenDigitCIK);
 
-    const { accessionNumber, primaryDocument, filingDate } =
+    const { accessionNumber, primaryDocument, filingDate, form } =
       filingInfos?.filings?.recent;
     for (let i = 0; i < accessionNumber.length; i++) {
-      // const formType = form[i];
       // if (formType !== '8-K') {
       //   continue;
       // }
 
+      const formType = form[i];
       const accessNum = accessionNumber[i]?.replaceAll('-', '');
       const document = primaryDocument[i];
       const date = filingDate[i];
@@ -64,10 +65,17 @@ export class FetchFilingConsumer extends BaseConsumer {
         continue;
       }
 
-      const entity = Filing.create({ date, url, cik, ticker });
+      const entity = Filing.create({ date, url, cik, ticker, formType });
       const result = await this.filingRepository.save(entity);
 
-      await this.queue.add({ filingId: result._id });
+      // 최근 한달 내 발행된 레포트만 ai 분석 요청
+      if (isBefore(new Date(date), subMonths(new Date(), 1))) {
+        const filingId = result._id.toString();
+        await this.queue.add(
+          { filingId },
+          { removeOnComplete: true, removeOnFail: true, jobId: filingId },
+        );
+      }
     }
   }
 }

@@ -31,8 +31,8 @@ Here is example of how it should be done.
     "A.G.P./Alliance Global Partners가 유일한 판매 대리인으로 계약을 체결하였다.",
     "이 회사는 2023년 8월 11일에 SEC에 등록된 S-3 형태의 등록서를 제출하였다."
   ],
-  "sentiment": {
-    "value": "7:3",
+  "analysis": {
+    "sentiment": "7:3",
     "reason: "5천만 달러 자금 조달로 제품 개발과 상업화에 긍정적 영향을 미침. 기관 투자자 참여는 신뢰도 상승."
   }
 }

@@ -26,8 +26,11 @@ export class TestTask2 {
         continue;
       }
 
-      console.log(entity);
-      await this.queue.add({ tickerId: entity._id.toString() });
+      const tickerId = entity._id.toString();
+      await this.queue.add(
+        { tickerId },
+        { removeOnComplete: true, removeOnFail: true, jobId: tickerId },
+      );
     }
   }
 }

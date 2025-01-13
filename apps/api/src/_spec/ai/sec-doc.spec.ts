@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppConfigModule } from '@libs/config';
 import { AiModule, ANALYZE_SEC_DOCUMENT_PROMPT, ClaudeService } from '@libs/ai';
 import { ExternalApiModule, SecApiService } from '@libs/external-api';
+import { FilingAnalysis } from '@libs/domain';
 
 describe('SEC Document', () => {
   let moduleRef: TestingModule;
@@ -30,6 +31,12 @@ describe('SEC Document', () => {
     );
 
     const response = await claudeService.invoke(prompt);
-    console.log(response);
+    const {
+      summaries,
+      analysis: { sentiment, reason },
+    } = response;
+
+    const entity = FilingAnalysis.create({ summaries, sentiment, reason });
+    console.log(entity);
   });
 });

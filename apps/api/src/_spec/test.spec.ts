@@ -2,7 +2,10 @@ import {
   addDays,
   eachDayOfInterval,
   eachMonthOfInterval,
+  isAfter,
+  isBefore,
   isWithinInterval,
+  subMonths,
 } from 'date-fns';
 import { isNil, omitBy } from 'lodash';
 
@@ -15,6 +18,14 @@ it('test', () => {
 it('add day', () => {
   const days = addDays(new Date(), 44);
   console.log(days);
+});
+
+it('isBefore', () => {
+  const beforeMonth = subMonths(new Date(), 1);
+  const target = new Date('2024-12-10');
+
+  const res = isBefore(target, beforeMonth);
+  console.log(res);
 });
 
 it('within interval', () => {
