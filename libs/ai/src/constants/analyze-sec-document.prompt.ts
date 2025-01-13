@@ -11,6 +11,7 @@ policy:
 - Take time to understand the context.
 - Make sure not to leave out any information about the transaction or warrants.
 - Answer in korean.
+- When evaluating, use the criterion of whether it aligns with the interests of existing shareholders.
 - Answer must be in JSON format.
 
 instructions:
