@@ -1,14 +1,12 @@
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import { Job, Queue } from 'bull';
-import axios from 'axios';
 import { QUEUE_NAME } from '@libs/config';
 import { joinUrl } from '@libs/common';
 import { Filing, FilingRepository, TickerRepository } from '@libs/domain';
 import { BaseConsumer } from '../../base.consumer';
-import { DATA_SEC_GOV_HEADERS } from '../constants';
-import { SecFiling } from '../interface';
 import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
+import { SecApiService } from '@libs/external-api/services/sec-api.service';
 
 @Processor(QUEUE_NAME.FETCH_FILING)
 export class FetchFilingConsumer extends BaseConsumer {
@@ -19,6 +17,7 @@ export class FetchFilingConsumer extends BaseConsumer {
     private readonly queue: Queue,
     private readonly tickerRepository: TickerRepository,
     private readonly filingRepository: FilingRepository,
+    private readonly secApiService: SecApiService,
   ) {
     super();
   }
@@ -37,13 +36,10 @@ export class FetchFilingConsumer extends BaseConsumer {
 
     const { tenDigitCIK, cik, ticker } = tickerInfo;
 
-    const res = await axios.get<SecFiling>(
-      `https://data.sec.gov/submissions/${tenDigitCIK}.json`,
-      { headers: DATA_SEC_GOV_HEADERS },
-    );
+    const filingInfos = await this.secApiService.fetchFilings(tenDigitCIK);
 
     const { accessionNumber, primaryDocument, filingDate } =
-      res?.data?.filings?.recent;
+      filingInfos?.filings?.recent;
     for (let i = 0; i < accessionNumber.length; i++) {
       // const formType = form[i];
       // if (formType !== '8-K') {

@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 import { QUEUE_NAME } from '@libs/config';
 import { ClaudeService } from '@libs/ai';
 import { FilingRepository } from '@libs/domain';
+import { SecApiService } from '@libs/external-api';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ANALYZE_FILING)
@@ -11,6 +12,7 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
   constructor(
     private readonly claudeService: ClaudeService,
     private readonly filingRepository: FilingRepository,
+    private readonly secApiService: SecApiService,
   ) {
     super();
   }
@@ -20,5 +22,8 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     const filing = await this.filingRepository.findOne({
       where: { _id: new ObjectId(filingId) },
     });
+
+    const document = await this.secApiService.fetchFilingDocument(filing.url);
+    console.log(document);
   }
 }
