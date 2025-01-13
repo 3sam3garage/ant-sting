@@ -90,6 +90,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/external-api/tsconfig.lib.json"
       }
+    },
+    "agent": {
+      "type": "application",
+      "root": "apps/agent",
+      "entryFile": "main",
+      "sourceRoot": "apps/agent/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/agent/tsconfig.app.json"
+      }
     }
   }
 }
