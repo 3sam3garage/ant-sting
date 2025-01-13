@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AiModule } from '@libs/ai';
-import { AnalyzeFilingConsumer } from './service';
+import { AnalyzeFilingConsumer, FetchFilingConsumer } from './service';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { FilingDomainModule, TickerDomainModule } from '@libs/domain';
@@ -17,7 +17,14 @@ import { FilingDomainModule, TickerDomainModule } from '@libs/domain';
         return { redis: config.getCommonConfig() };
       },
     }),
+    BullModule.registerQueueAsync({
+      name: QUEUE_NAME.FETCH_FILING,
+      inject: [RedisConfigService],
+      useFactory: async (config: RedisConfigService) => {
+        return { redis: config.getCommonConfig() };
+      },
+    }),
   ],
-  providers: [AnalyzeFilingConsumer],
+  providers: [AnalyzeFilingConsumer, FetchFilingConsumer],
 })
 export class FilingModule {}

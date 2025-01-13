@@ -22,7 +22,7 @@
     "start:batch:economic-inforamtion:interest-rate": "nest start batch -- economic-information interest-rate",
     "start:batch:economic-inforamtion:stock-index": "nest start batch -- economic-information stock-index",
     "start:batch:economic-inforamtion:analyze": "nest start batch -- economic-information analyze",
-    "start:batch:test": "nest start batch -- test test",
+    "start:batch:test": "nest start batch -- test test2",
     "start:consumer": "nest start consumer",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",

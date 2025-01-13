@@ -7,13 +7,15 @@ import {
   InterestRateDomainModule,
   StockIndexDomainModule,
   StockReportDomainModule,
+  TickerDomainModule,
 } from '@libs/domain';
 import { BullModule } from '@nestjs/bull';
-import { QUEUE_NAME, RedisConfigService } from '@libs/config';
+import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { TestCommand } from './commands';
-import { TestTask } from './tasks';
+import { TestTask, TestTask2 } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
+import { RedisService } from '@liaoliaots/nestjs-redis';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { ExternalApiModule } from '@libs/external-api';
     ExchangeRateDomainModule,
     InterestRateDomainModule,
     StockIndexDomainModule,
+    TickerDomainModule,
     ExternalApiModule,
     BullModule.registerQueueAsync(
       {
@@ -41,8 +44,26 @@ import { ExternalApiModule } from '@libs/external-api';
           return { redis: config.getCommonConfig() };
         },
       },
+      {
+        name: QUEUE_NAME.FETCH_FILING,
+        inject: [RedisConfigService],
+        useFactory: async (config: RedisConfigService) => {
+          return { redis: config.getCommonConfig() };
+        },
+      },
     ),
   ],
-  providers: [TestCommand, TestTask],
+  providers: [
+    TestCommand,
+    TestTask,
+    TestTask2,
+    {
+      provide: REDIS_NAME.ANT_STING,
+      inject: [RedisService],
+      useFactory: (service: RedisService) => {
+        return service.getOrThrow(REDIS_NAME.ANT_STING);
+      },
+    },
+  ],
 })
 export class TestBatchModule {}

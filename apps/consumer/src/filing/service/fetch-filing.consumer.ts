@@ -1,13 +1,14 @@
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import { Job, Queue } from 'bull';
 import axios from 'axios';
-import { ObjectId } from 'typeorm';
 import { QUEUE_NAME } from '@libs/config';
 import { joinUrl } from '@libs/common';
 import { Filing, FilingRepository, TickerRepository } from '@libs/domain';
 import { BaseConsumer } from '../../base.consumer';
 import { DATA_SEC_GOV_HEADERS } from '../constants';
 import { SecFiling } from '../interface';
+import { Logger } from '@nestjs/common';
+import { ObjectId } from 'mongodb';
 
 @Processor(QUEUE_NAME.FETCH_FILING)
 export class FetchFilingConsumer extends BaseConsumer {
@@ -28,7 +29,9 @@ export class FetchFilingConsumer extends BaseConsumer {
       where: { _id: new ObjectId(tickerId) },
     });
 
+    // 체크해서 보내므로 없을리는 없다.
     if (!tickerInfo) {
+      Logger.debug(`Ticker not found: ${tickerId}`);
       return;
     }
 
@@ -68,7 +71,7 @@ export class FetchFilingConsumer extends BaseConsumer {
       const entity = Filing.create({ date, url, cik, ticker });
       const result = await this.filingRepository.save(entity);
 
-      await this.queue.add(QUEUE_NAME.ANALYZE_FILING, { filingId: result._id });
+      await this.queue.add({ filingId: result._id });
     }
   }
 }

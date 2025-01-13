@@ -2,8 +2,7 @@ import { Column, Entity, Index } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { BaseEntity } from '../../base.entity';
 
-@Entity({ name: 'tickers', comment: '티커' })
-@Index(['ticker'])
+@Entity({ name: 'filings', comment: '티커' })
 @Index(['url'])
 export class Filing extends BaseEntity {
   @Column()
