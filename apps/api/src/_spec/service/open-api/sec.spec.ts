@@ -26,14 +26,14 @@ describe('SEC', () => {
       'Accept-Encoding': 'gzip, deflate',
     };
 
-    it('8-k reports', async () => {
+    it('reports', async () => {
       const formatCIK = (cik: string) => {
         const prefixCount = 10 - cik.length;
         const prefix = new Array(prefixCount).fill('0').join('');
         return `CIK${prefix}${cik}`;
       };
 
-      const cik = '1816431';
+      const cik = '1506983';
       const submission = formatCIK(cik);
 
       const res = await axios.get(
@@ -45,7 +45,7 @@ describe('SEC', () => {
       const { accessionNumber, primaryDocument, filingDate, form } =
         res?.data?.filings?.recent;
       for (let i = 0; i < accessionNumber.length; i++) {
-        // const formType = form[i];
+        const formType = form[i];
         // if (formType !== '8-K') {
         //   continue;
         // }
@@ -55,7 +55,7 @@ describe('SEC', () => {
         const date = filingDate[i];
         const url = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessNum}/${document}`;
 
-        urls.push({ date, url });
+        urls.push({ date, url, formType });
       }
 
       console.log(1);

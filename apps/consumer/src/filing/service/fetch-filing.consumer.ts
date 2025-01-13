@@ -7,7 +7,7 @@ import { BaseConsumer } from '../../base.consumer';
 import { Logger } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { SecApiService } from '@libs/external-api/services/sec-api.service';
-import { isBefore, subMonths } from 'date-fns';
+import { isAfter, isBefore, subMonths } from 'date-fns';
 
 @Processor(QUEUE_NAME.FETCH_FILING)
 export class FetchFilingConsumer extends BaseConsumer {
@@ -69,7 +69,7 @@ export class FetchFilingConsumer extends BaseConsumer {
       const result = await this.filingRepository.save(entity);
 
       // 최근 한달 내 발행된 레포트만 ai 분석 요청
-      if (isBefore(new Date(date), subMonths(new Date(), 1))) {
+      if (isAfter(new Date(date), subMonths(new Date(), 1))) {
         const filingId = result._id.toString();
         await this.queue.add(
           { filingId },

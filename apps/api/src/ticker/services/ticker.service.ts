@@ -12,7 +12,7 @@ export class TickerService {
   async findSnippets(): Promise<string[]> {
     // await this.redis.set('ticker-list', JSON.stringify(['QSI', 'RGTI']));
 
-    const text = await this.redis.get('ticker-list');
+    const text = await this.redis.get('ticker-snippets');
     return JSON.parse(text);
   }
 }
