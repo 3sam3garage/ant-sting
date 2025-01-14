@@ -15,6 +15,7 @@
     "start:batch:stock-report:scrape-shinhan": "nest start batch -- stock-report scrape-shinhan",
     "start:batch:stock-report:scrape-kiwoom": "nest start batch -- stock-report scrape-kiwoom",
     "start:batch:stock:scrape-sec-ticker": "nest start batch -- stock scrape-sec-ticker",
+    "start:batch:stock:scrape-rss": "nest start batch -- stock scrape-rss",
     "start:batch:economic-inforamtion:scrape-naver": "nest start batch -- economic-information scrape-naver",
     "start:batch:economic-inforamtion:scrape-kcif": "nest start batch -- economic-information scrape-kcif",
     "start:batch:economic-inforamtion:exchange-rate": "nest start batch -- economic-information exchange-rate",

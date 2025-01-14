@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { parseStringPromise } from 'xml2js';
 
 describe('SEC', () => {
   describe('with fair access', () => {
@@ -62,17 +63,33 @@ describe('SEC', () => {
     });
 
     it('call report page', async () => {
-      const res = await axios
-        .get(
-          'https://www.sec.gov/Archives/edgar/data/1816431/000114036125000295/ny20041128x2_8k.htm',
-          { headers: { ...DEFAULT_HEADERS, Host: 'www.sec.gov' } },
-        )
-        .then((r) => {
-          console.log(r);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      const res = await axios.get(
+        'https://www.sec.gov/Archives/edgar/data/1816431/000114036125000295/ny20041128x2_8k.htm',
+        { headers: { ...DEFAULT_HEADERS, Host: 'www.sec.gov' } },
+      );
+
+      console.log(res);
+    });
+
+    it('rss', async () => {
+      const res = await axios.get(
+        'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&output=atom',
+        {
+          params: { start: 0, count: 100 },
+          headers: {
+            ...DEFAULT_HEADERS,
+            Host: 'www.sec.gov',
+            Accept: 'application/json',
+          },
+        },
+      );
+
+      const json = await parseStringPromise(res.data, {
+        trim: true,
+        explicitArray: false,
+        emptyTag: () => null,
+      });
+      console.log(json);
     });
   });
 });

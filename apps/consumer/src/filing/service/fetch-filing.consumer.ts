@@ -37,7 +37,7 @@ export class FetchFilingConsumer extends BaseConsumer {
 
     const { tenDigitCIK, cik, ticker } = tickerInfo;
 
-    const filingInfos = await this.secApiService.fetchFilings(tenDigitCIK);
+    const filingInfos = await this.secApiService.fetchSubmission(tenDigitCIK);
 
     const { accessionNumber, primaryDocument, filingDate, form } =
       filingInfos?.filings?.recent;
