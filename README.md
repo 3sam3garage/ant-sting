@@ -10,61 +10,83 @@ $ npm install
 
 ## Running the app
 
-- Ant-sting includes 3 applications
+- Ant-sting includes 4 applications
   - api
   - batch
   - consumer
+  - agent
 
 ```bash
 $ npm run start:api
 $ npm run start:batch
 $ npm run start:consumer
+$ npm run start:agent
 ```
 
-## Recommended Steps to run daily batch
+## Batch Jobs
 
-1. **scrape** economic-information. (consumer required)
+### Scraping Stock Reports
 
 ```bash
-$ npm run start:batch:economic-inforamtion:scrape-naver
-```
-```bash
-$ npm run start:batch:economic-inforamtion:scrape-kcif
+$ nest start batch -- stock-report scrape-naver
 ```
 
-2. **analyze** economic-information.
-
 ```bash
-$ npm run start:batch:economic-inforamtion:analyze
+$ nest start batch -- stock-report scrape-hana
 ```
 
-3. **scrape** stock-information. (consumer required)
-
 ```bash
-$ npm run start:batch:stock-report:scrape
+$ nest start batch -- stock-report scrape-shinhan
 ```
 
-4. send notification.
-
 ```bash
-$ npm run start:batch:notification
+$ nest start batch -- stock-report scrape-kiwoom
 ```
 
-[//]: # '## Support'
-[//]: # "Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support)."
-
-## Monthly (or terms that are over month) batch
-
-- update company's stock code
+### Scraping Economic Information
 
 ```bash
-$ npm run start:batch:corporation:update-id
+$ nest start batch -- economic-information scrape-naver
 ```
 
-- update company's financial statement
+```bash
+$ nest start batch -- economic-information scrape-kcif
+```
 
 ```bash
-$ npm run start:batch:corporation:financial-statement
+$ nest start batch -- economic-information exchange-rate
+```
+
+```bash
+$ nest start batch -- economic-information bond-yield
+```
+
+```bash
+$ nest start batch -- economic-information interest-rate
+```
+
+```bash
+$ nest start batch -- economic-information stock-index
+```
+
+```bash
+$ nest start batch -- economic-information analyze
+```
+
+### Scraping SEC
+
+```bash
+$ nest start batch -- stock scrape-sec-ticker
+```
+
+```bash
+$ nest start batch -- stock scrape-rss
+```
+
+### Testing
+
+```bash
+$ nest start batch -- test test2
 ```
 
 ## Stay in touch
@@ -74,4 +96,4 @@ $ npm run start:batch:corporation:financial-statement
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+[MIT licensed](LICENSE).
