@@ -1,21 +1,20 @@
-import axios from 'axios';
 import { Injectable } from '@nestjs/common';
-import { SEC_FAIR_ACCESS_HEADERS } from '../constants';
-import { SecTickerResponse } from '../interface';
 import { Ticker, TickerRepository } from '@libs/domain';
+import { SecApiService } from '@libs/external-api';
 
 @Injectable()
 export class SecTickerFetcher {
   private readonly url = 'https://www.sec.gov/files/company_tickers.json';
 
-  constructor(private readonly tickerRepository: TickerRepository) {}
+  constructor(
+    private readonly tickerRepository: TickerRepository,
+    private readonly secApiService: SecApiService,
+  ) {}
 
   async exec() {
-    const res = await axios.get<SecTickerResponse>(this.url, {
-      headers: SEC_FAIR_ACCESS_HEADERS,
-    });
+    const response = await this.secApiService.fetchCompanyTickers();
 
-    for (const [, item] of Object.entries(res.data || {})) {
+    for (const [, item] of Object.entries(response || {})) {
       const { ticker, cik_str: cik, title: stockName } = item;
       const entity = Ticker.create({ ticker, cik, stockName });
 

@@ -2,22 +2,35 @@ import { Module } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
-import { UpdateFilingJob } from './jobs';
-import { TickerDomainModule } from '@libs/domain';
+import { UpdateFilingJob, ScrapeRssJob } from './jobs';
+import { FilingDomainModule, TickerDomainModule } from '@libs/domain';
+import { ExternalApiModule } from '@libs/external-api';
 
 @Module({
   imports: [
     TickerDomainModule,
-    BullModule.registerQueueAsync({
-      name: QUEUE_NAME.FETCH_FILING,
-      inject: [RedisConfigService],
-      useFactory: async (config: RedisConfigService) => {
-        return { redis: config.getCommonConfig() };
+    FilingDomainModule,
+    ExternalApiModule,
+    BullModule.registerQueueAsync(
+      {
+        name: QUEUE_NAME.FETCH_FILING,
+        inject: [RedisConfigService],
+        useFactory: async (config: RedisConfigService) => {
+          return { redis: config.getCommonConfig() };
+        },
       },
-    }),
+      {
+        name: QUEUE_NAME.ANALYZE_FILING,
+        inject: [RedisConfigService],
+        useFactory: async (config: RedisConfigService) => {
+          return { redis: config.getCommonConfig() };
+        },
+      },
+    ),
   ],
   providers: [
     UpdateFilingJob,
+    ScrapeRssJob,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],

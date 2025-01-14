@@ -2,14 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { ExternalApiConfigService } from '@libs/config';
 import { parseStringPromise } from 'xml2js';
 import axios from 'axios';
-import { FilingRss, SecFiling } from '../intefaces';
-import { DATA_SEC_GOV_HEADERS } from '../constants';
+import { FilingRss, SecFiling, SecTickerResponse } from '../intefaces';
+import { DATA_SEC_GOV_HEADERS, SEC_FAIR_ACCESS_HEADERS } from '../constants';
 
 @Injectable()
 export class SecApiService {
   constructor(
     private readonly externalApiConfigService: ExternalApiConfigService,
   ) {}
+
+  async fetchCompanyTickers(): Promise<SecTickerResponse> {
+    const response = await axios.get<SecTickerResponse>(
+      'https://www.sec.gov/files/company_tickers.json',
+      { headers: SEC_FAIR_ACCESS_HEADERS },
+    );
+
+    return response.data;
+  }
 
   async fetchSubmission(tenDigitCIK: string): Promise<SecFiling> {
     const response = await axios.get<SecFiling>(
@@ -22,7 +31,7 @@ export class SecApiService {
 
   async fetchFilingDocument(url: string) {
     const response = await axios.get(url, {
-      headers: { ...DATA_SEC_GOV_HEADERS, Host: 'www.sec.gov' },
+      headers: SEC_FAIR_ACCESS_HEADERS,
     });
 
     return response.data;
@@ -33,7 +42,7 @@ export class SecApiService {
       'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&output=atom',
       {
         params: { start, count },
-        headers: { ...DATA_SEC_GOV_HEADERS, Host: 'www.sec.gov' },
+        headers: SEC_FAIR_ACCESS_HEADERS,
       },
     );
 
