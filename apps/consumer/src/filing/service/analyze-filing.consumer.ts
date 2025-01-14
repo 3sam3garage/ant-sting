@@ -1,17 +1,24 @@
+import { Redis } from 'ioredis';
+import { Inject, Logger } from '@nestjs/common';
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { ObjectId } from 'mongodb';
 import { isBefore, subMonths } from 'date-fns';
-import { QUEUE_NAME } from '@libs/config';
+import { QUEUE_NAME, REDIS_NAME } from '@libs/config';
 import { ANALYZE_SEC_DOCUMENT_PROMPT, ClaudeService } from '@libs/ai';
-import { FilingAnalysis, FilingRepository } from '@libs/domain';
+import {
+  FilingAnalysis,
+  FilingRepository,
+  SEC_FILING_URL_SET,
+} from '@libs/domain';
 import { SecApiService } from '@libs/external-api';
-import { Logger } from '@nestjs/common';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ANALYZE_FILING)
 export class AnalyzeFilingConsumer extends BaseConsumer {
   constructor(
+    @Inject(REDIS_NAME.ANT_STING)
+    private readonly redis: Redis,
     private readonly claudeService: ClaudeService,
     private readonly filingRepository: FilingRepository,
     private readonly secApiService: SecApiService,
@@ -48,5 +55,6 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
 
     filing.analysis = FilingAnalysis.create({ summaries, score, reason });
     await this.filingRepository.save(filing);
+    await this.redis.sadd(SEC_FILING_URL_SET, filing.url);
   }
 }

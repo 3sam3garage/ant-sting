@@ -63,8 +63,13 @@ export class ScrapeRssJob {
 
       const ticker = foundTickerEntity?.ticker;
       const entity = Filing.create({ url, cik, ticker, formType, date });
-      await this.filingRepository.save(entity);
+      const result = await this.filingRepository.save(entity);
       await this.redis.sadd(SEC_FILING_URL_SET, url);
+
+      await this.queue.add(
+        { filingId: result._id.toString() },
+        { removeOnComplete: true, removeOnFail: false },
+      );
     }
   }
 

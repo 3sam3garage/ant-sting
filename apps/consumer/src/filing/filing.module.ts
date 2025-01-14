@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { AiModule } from '@libs/ai';
 import { AnalyzeFilingConsumer, FetchFilingConsumer } from './service';
 import { BullModule } from '@nestjs/bull';
-import { QUEUE_NAME, RedisConfigService } from '@libs/config';
+import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
 import { FilingDomainModule, TickerDomainModule } from '@libs/domain';
 import { ExternalApiModule } from '@libs/external-api';
+import { RedisService } from '@liaoliaots/nestjs-redis';
 
 @Module({
   imports: [
@@ -27,6 +28,16 @@ import { ExternalApiModule } from '@libs/external-api';
       },
     }),
   ],
-  providers: [AnalyzeFilingConsumer, FetchFilingConsumer],
+  providers: [
+    AnalyzeFilingConsumer,
+    FetchFilingConsumer,
+    {
+      provide: REDIS_NAME.ANT_STING,
+      inject: [RedisService],
+      useFactory: (service: RedisService) => {
+        return service.getOrThrow(REDIS_NAME.ANT_STING);
+      },
+    },
+  ],
 })
 export class FilingModule {}
