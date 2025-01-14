@@ -1,6 +1,7 @@
 import { IsNumber, IsString, ValidateNested } from 'class-validator';
-import { plainToInstance, Type } from 'class-transformer';
+import { plainToInstance, Transform, Type } from 'class-transformer';
 import { Filing } from '@libs/domain';
+import { ObjectId } from 'mongodb';
 
 class FilingAnalysis {
   @IsNumber()
@@ -14,6 +15,9 @@ class FilingAnalysis {
 }
 
 export class FilingResponse {
+  @Transform((value) => value.obj._id.toString())
+  _id: ObjectId;
+
   @IsString()
   ticker: string;
 
