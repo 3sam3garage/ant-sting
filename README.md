@@ -79,10 +79,6 @@ $ nest start batch -- economic-information analyze
 $ nest start batch -- stock scrape-sec-ticker
 ```
 
-```bash
-$ nest start batch -- stock scrape-rss
-```
-
 ### Testing
 
 ```bash
