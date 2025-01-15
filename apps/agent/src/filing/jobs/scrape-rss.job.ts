@@ -88,7 +88,7 @@ export class ScrapeRssJob {
       this.isRunning = true;
       await this.run();
     } catch (error: unknown) {
-      Logger.error('scrape-sec-rss 중 에러 발생', { error });
+      Logger.error('scrape-sec-rss 중 에러 발생', { error: error.toString() });
     } finally {
       this.isRunning = false;
     }

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { FilingDomainModule } from '@libs/domain';
+import { TickerDomainModule } from '@libs/domain';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { REDIS_NAME } from '@libs/config';
 import { TickerController } from './controllers';
 import { TickerService } from './services';
 
 @Module({
-  imports: [FilingDomainModule],
+  imports: [TickerDomainModule],
   controllers: [TickerController],
   providers: [
     TickerService,

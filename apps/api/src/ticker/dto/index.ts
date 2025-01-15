@@ -1,1 +1,1 @@
-export * from './find-filings.query';
+export * from './add-snippet.body';

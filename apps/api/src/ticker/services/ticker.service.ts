@@ -1,18 +1,29 @@
 import { Redis } from 'ioredis';
 import { Inject, Injectable } from '@nestjs/common';
 import { REDIS_NAME } from '@libs/config';
+import { TICKER_SNIPPETS_SET, TickerRepository } from '@libs/domain';
 
 @Injectable()
 export class TickerService {
   constructor(
     @Inject(REDIS_NAME.ANT_STING)
     private redis: Redis,
+    private readonly tickerRepository: TickerRepository,
   ) {}
 
   async findSnippets(): Promise<string[]> {
-    // await this.redis.set('ticker-list', JSON.stringify(['QSI', 'RGTI']));
+    return (await this.redis.smembers(TICKER_SNIPPETS_SET)) || [];
+  }
 
-    const text = await this.redis.get('ticker-snippets');
-    return JSON.parse(text);
+  async find() {
+    return this.tickerRepository.find();
+  }
+
+  async deleteSnippets(ticker: string) {
+    await this.redis.srem(TICKER_SNIPPETS_SET, ticker);
+  }
+
+  async addSnippet(ticker: string) {
+    await this.redis.sadd(TICKER_SNIPPETS_SET, ticker);
   }
 }

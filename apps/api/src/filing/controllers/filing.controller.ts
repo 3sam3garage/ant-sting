@@ -1,7 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FilingService } from '../services';
-import { FilingResponse, FindFilingsQuery } from '../dto';
+import {
+  FigureFilingShareQuery,
+  FilingResponse,
+  FindFilingsQuery,
+} from '../dto';
 import { ObjectId } from 'mongodb';
 
 @ApiTags('filings')
@@ -10,10 +14,13 @@ export class FilingController {
   constructor(private readonly service: FilingService) {}
 
   @Get()
-  async findByTickers(
-    @Query() query: FindFilingsQuery,
-  ): Promise<FilingResponse[]> {
-    return this.service.findByTickers(query);
+  async find(@Query() query: FindFilingsQuery): Promise<FilingResponse[]> {
+    return this.service.find(query);
+  }
+
+  @Get('share')
+  async figureShare(@Query() query: FigureFilingShareQuery) {
+    return this.service.figureShare(query);
   }
 
   @Get(':_id')
