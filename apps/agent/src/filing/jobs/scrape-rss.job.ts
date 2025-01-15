@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   Filing,
   FilingRepository,
+  FILINGS_TO_ANALYZE,
   SEC_FILING_URL_SET,
   TickerRepository,
 } from '@libs/domain';
@@ -43,7 +44,7 @@ export class ScrapeRssJob {
       }
 
       const cik = this.figureCIKFromTitle(feed.title);
-      const formType = feed?.category?.$?.term;
+      const formType = feed?.category?.$?.term?.trim() || '';
       const date = format(new Date(feed.updated), 'yyyy-MM-dd'); // KST
       const foundTickerEntity = await this.tickerRepository.findOne({
         where: { cik },
@@ -57,6 +58,7 @@ export class ScrapeRssJob {
         case !!foundFiling:
         // `ticker`가 없는 종목일 경우
         case !foundTickerEntity:
+        case !FILINGS_TO_ANALYZE.includes(formType):
           await this.redis.sadd(SEC_FILING_URL_SET, url);
           continue;
       }
