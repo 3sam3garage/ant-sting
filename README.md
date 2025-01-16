@@ -79,6 +79,12 @@ $ nest start batch -- economic-information analyze
 $ nest start batch -- stock scrape-sec-ticker
 ```
 
+### Scraping Finra Short Interest
+
+```bash
+$ nest start batch -- stock scrape-finra-short-interest
+```
+
 ### Testing
 
 ```bash

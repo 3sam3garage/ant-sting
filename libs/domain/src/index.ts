@@ -9,4 +9,5 @@ export * from './interest-rate';
 export * from './stock-index';
 export * from './ticker';
 export * from './filing';
+export * from './short-interest';
 export * from './constants';
