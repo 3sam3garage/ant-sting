@@ -22,6 +22,9 @@ export enum QUEUE_NAME {
   FETCH_FILING = 'FETCH_FILING',
   // SEC 보고서(filing) 분석
   ANALYZE_FILING = 'ANALYZE_FILING',
+
+  // 실시간 공매도현황 크롤링 ( fintel )
+  SCRAPE_REALTIME_SHORT = 'SCRAPE_REALTIME_SHORT',
 }
 
 export enum REDIS_NAME {
