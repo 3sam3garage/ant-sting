@@ -12,4 +12,9 @@ export class ShortInterestController {
   async findOneByTicker(@Query() query: FindShortInterestQuery) {
     return this.service.findOneByTicker(query);
   }
+
+  @Get('/realtime')
+  async findOneRealtimeByTicker(@Query() query: FindShortInterestQuery) {
+    return this.service.findOneRealtimeByTicker(query);
+  }
 }

@@ -5,7 +5,10 @@ import { Browser, launch, Page } from 'puppeteer';
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
 import { Inject, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { TickerRepository } from '@libs/domain';
+import {
+  REALTIME_SHORT_INTEREST_REDIS_KEY,
+  TickerRepository,
+} from '@libs/domain';
 import { QUEUE_NAME, REDIS_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
 import { DEFAULT_BROWSER_OPTIONS_ARGS } from '../constants';
@@ -53,7 +56,7 @@ export class RealtimeShortInterestConsumer
         'network.proxy.ssl_port': 443,
       },
       defaultViewport: { height: 2500, width: 1920 },
-      headless: true,
+      headless: false,
       browser: 'firefox',
       // devtools: true,
     });
@@ -69,6 +72,7 @@ export class RealtimeShortInterestConsumer
       await sleep(3 * 1000);
     }
 
+    await sleep(1000);
     await this.page.goto(`https://fintel.io/ko/ss/us/${ticker}`);
 
     const table = await page.evaluate(() => {
@@ -92,8 +96,12 @@ export class RealtimeShortInterestConsumer
 
       // console.log(timestamp?.innerText?.trim());
     }
+    if (items.length === 0) {
+      throw new Error('No realtime short interest data found');
+    }
+
     await this.redis.set(
-      `realtime-short-interest:${ticker}`,
+      `${REALTIME_SHORT_INTEREST_REDIS_KEY}:${ticker}`,
       JSON.stringify(items),
     );
   }
