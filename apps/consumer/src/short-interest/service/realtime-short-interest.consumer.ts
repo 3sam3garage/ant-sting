@@ -58,7 +58,7 @@ export class RealtimeShortInterestConsumer
       defaultViewport: { height: 2500, width: 1920 },
       headless: false,
       browser: 'firefox',
-      // devtools: true,
+      devtools: true,
     });
 
     const [page] = await browser.pages();
@@ -111,7 +111,7 @@ export class RealtimeShortInterestConsumer
     try {
       await this.exec(this.page, ticker);
     } catch (e) {
-      Logger.error(e.message);
+      Logger.error(JSON.stringify(e.message));
       throw e;
     } finally {
       await this.browser.close();

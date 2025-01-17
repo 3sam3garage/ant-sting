@@ -6,6 +6,7 @@ import { Redis } from 'ioredis';
 import { parse as parseHTML } from 'node-html-parser';
 import { REDIS_NAME } from '@libs/config';
 import { DEFAULT_BROWSER_OPTIONS_ARGS } from '../constants';
+import { REALTIME_SHORT_INTEREST_REDIS_KEY } from '@libs/domain';
 
 @Injectable()
 export class BrowserProxyCrawlerTask {
@@ -15,8 +16,11 @@ export class BrowserProxyCrawlerTask {
   ) {}
 
   private async run(page: Page) {
-    await page.goto('https://fintel.io/ko/ss/us/rgti', { timeout: 60 * 1000 });
+    await page.goto('https://fintel.io/ko/ss/us/iaux', { timeout: 60 * 1000 });
 
+    await page.waitForSelector(
+      'div#short-shares-availability div.row table#short-shares-availability-table',
+    );
     const table = await page.evaluate(() => {
       const tableElement = document.querySelector(
         'div#short-shares-availability div.row table#short-shares-availability-table',
@@ -39,7 +43,10 @@ export class BrowserProxyCrawlerTask {
 
       console.log(timestamp?.innerText?.trim());
     }
-    console.log(1);
+
+    if (items.length > 0) {
+      this.redis.set(REALTIME_SHORT_INTEREST_REDIS_KEY, JSON.stringify(items));
+    }
   }
 
   private async figureProxy(): Promise<void> {
@@ -49,7 +56,7 @@ export class BrowserProxyCrawlerTask {
 
     const proxies: any[] = (response?.data?.proxies || []).filter((proxy) => {
       const { uptime, port } = proxy;
-      return uptime > 90 && port === 443;
+      return port === 443;
     });
 
     for (const { ip } of proxies || []) {
