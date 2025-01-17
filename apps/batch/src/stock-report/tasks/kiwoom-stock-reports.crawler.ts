@@ -5,6 +5,7 @@ import axios from 'axios';
 import { format, subMonths } from 'date-fns';
 import {
   KIWOOM_BASE_URL,
+  MARKET_TYPE_SET,
   StockReport,
   StockReportRepository,
 } from '@libs/domain';
@@ -67,6 +68,11 @@ export class KiwoomStockReportsCrawler {
         ?.replace('(', '')
         ?.replace(')', '')
         ?.split(/\.|\s/);
+
+      if (!MARKET_TYPE_SET.has(market)) {
+        Logger.debug('Not Supported Market:', market);
+        continue;
+      }
 
       const filePath = new URL(this.KIWOOM_BASE_PDF_URL);
       filePath.searchParams.set('rMenuGb', 'CC');

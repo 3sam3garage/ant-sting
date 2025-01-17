@@ -23,6 +23,8 @@ export enum MARKET_TYPE {
   TT = 'TT',
 }
 
+export const MARKET_TYPE_SET = new Set(Object.values(MARKET_TYPE));
+
 export enum CURRENCY_TYPE {
   KRW = 'KRW',
   JPY = 'JPY',
