@@ -3,6 +3,7 @@ import { CoreModule } from '@libs/core';
 import { EconomicInformationModule } from './economic-information';
 import { StockReportModule } from './stock-report';
 import { FilingModule } from './filing';
+import { ShortInterestModule } from './short-interest';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { FilingModule } from './filing';
     EconomicInformationModule,
     StockReportModule,
     FilingModule,
+    ShortInterestModule,
   ],
 })
 export class ConsumerModule {}

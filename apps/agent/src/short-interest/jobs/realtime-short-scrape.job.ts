@@ -24,7 +24,12 @@ export class RealtimeShortScrapeJob {
     for (const ticker of tickers) {
       jobs.push({
         data: { ticker },
-        opts: { attempts: 5, removeOnComplete: true, removeOnFail: false },
+        opts: {
+          attempts: 5,
+          removeOnComplete: true,
+          removeOnFail: false,
+          jobId: ticker,
+        },
       });
     }
 
