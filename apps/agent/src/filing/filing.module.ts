@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
-import { UpdateFilingJob, ScrapeRssJob } from './jobs';
+import { UpdateFilingJob, ScrapeRssJob, FetchProxyJob } from './jobs';
 import { FilingDomainModule, TickerDomainModule } from '@libs/domain';
 import { ExternalApiModule } from '@libs/external-api';
 
@@ -31,6 +31,7 @@ import { ExternalApiModule } from '@libs/external-api';
   providers: [
     UpdateFilingJob,
     ScrapeRssJob,
+    FetchProxyJob,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],
