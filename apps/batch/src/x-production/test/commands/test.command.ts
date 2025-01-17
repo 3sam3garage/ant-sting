@@ -1,16 +1,16 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { TestTask, TestTask2 } from '../tasks';
+import { BrowserProxyCrawlerTask, TestTask } from '../tasks';
 
 enum SUB_COMMAND {
   TEST = 'test',
-  TEST2 = 'test2',
+  BROWSER_PROXY_CRAWLER = 'browser-proxy-crawler',
 }
 
 @Command({ name: 'test' })
 export class TestCommand extends CommandRunner {
   constructor(
     private readonly testTask: TestTask,
-    private readonly testTask2: TestTask2,
+    private readonly browserProxyCrawlerTask: BrowserProxyCrawlerTask,
   ) {
     super();
   }
@@ -21,8 +21,8 @@ export class TestCommand extends CommandRunner {
     switch (subcommand) {
       case SUB_COMMAND.TEST:
         return await this.testTask.exec();
-      case SUB_COMMAND.TEST2:
-        return await this.testTask2.exec();
+      case SUB_COMMAND.BROWSER_PROXY_CRAWLER:
+        return await this.browserProxyCrawlerTask.exec();
       default:
         throw new Error('Invalid subcommand');
     }

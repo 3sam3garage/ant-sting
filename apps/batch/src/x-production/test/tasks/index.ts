@@ -1,2 +1,2 @@
 export * from './test.task';
-export * from './test2.task';
+export * from './browser-proxy-crawler.task';

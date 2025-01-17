@@ -13,7 +13,7 @@ import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { TestCommand } from './commands';
-import { TestTask, TestTask2 } from './tasks';
+import { BrowserProxyCrawlerTask, TestTask } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 
@@ -56,7 +56,7 @@ import { RedisService } from '@liaoliaots/nestjs-redis';
   providers: [
     TestCommand,
     TestTask,
-    TestTask2,
+    BrowserProxyCrawlerTask,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],
