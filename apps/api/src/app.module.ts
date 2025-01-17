@@ -13,6 +13,7 @@ import { ExchangeRateModule } from './exchange-rate';
 import { BondYieldModule } from './bond-yield';
 import { FilingModule } from './filing';
 import { TickerModule } from './ticker';
+import { ShortInterestModule } from './short-interest';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TickerModule } from './ticker';
     BondYieldModule,
     FilingModule,
     TickerModule,
+    ShortInterestModule,
     EconomicInformationAnalysisModule,
   ],
   providers: [
