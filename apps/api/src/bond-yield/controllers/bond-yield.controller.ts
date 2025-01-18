@@ -9,7 +9,7 @@ export class BondYieldController {
   constructor(private readonly service: BondYieldService) {}
 
   @ApiOkResponse({ type: BondYieldChartResponse, isArray: true })
-  @Get('chart')
+  @Get('graph')
   async retrieveChart(@Query() query: FindBondYieldsQuery) {
     return this.service.findByDate(query);
   }
