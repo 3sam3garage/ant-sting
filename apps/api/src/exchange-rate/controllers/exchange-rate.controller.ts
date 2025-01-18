@@ -13,4 +13,9 @@ export class ExchangeRateController {
   async findByDate(@Query() query: FindExchangeRatesQuery) {
     return this.service.findByDate(query);
   }
+
+  @Get('graph')
+  async graph(@Query() query: FindExchangeRatesQuery) {
+    return this.service.processGraph(query);
+  }
 }

@@ -20,5 +20,4 @@ export enum BOND_COUNTRIES {
 export enum BOND_TYPE {
   IRLT = 'IRLT',
   IR3TIB = 'IR3TIB',
-  '10_YEARS' = '10_YEARS',
 }
