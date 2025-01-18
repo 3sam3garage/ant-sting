@@ -15,6 +15,7 @@ import { FilingModule } from './filing';
 import { TickerModule } from './ticker';
 import { ShortInterestModule } from './short-interest';
 import { StockIndexModule } from './stock-index';
+import { InterestRateModule } from './interest-rate';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { StockIndexModule } from './stock-index';
     TickerModule,
     StockIndexModule,
     ShortInterestModule,
+    InterestRateModule,
     EconomicInformationAnalysisModule,
   ],
   providers: [
