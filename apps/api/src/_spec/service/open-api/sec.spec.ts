@@ -1,19 +1,23 @@
 import axios from 'axios';
 import { parseStringPromise } from 'xml2js';
+import {
+  DATA_SEC_GOV_HEADERS,
+  SEC_FAIR_ACCESS_HEADERS,
+} from '@libs/external-api/constants';
 
 describe('SEC', () => {
-  describe('with fair access', () => {
-    // https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data
-    const DEFAULT_HEADERS = {
-      Host: 'www.sec.gov',
-      'User-Agent': 'Personal iamdap91@<naver>.com',
-      'Accept-Encoding': 'gzip, deflate',
-    };
+  const formatCIK = (cik: string) => {
+    const prefixCount = 10 - cik.length;
+    const prefix = new Array(prefixCount).fill('0').join('');
+    return `CIK${prefix}${cik}`;
+  };
 
+  // https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data
+  describe('with fair access', () => {
     it('company-tickers.json', async () => {
       const res = await axios.get(
         'https://www.sec.gov/files/company_tickers.json',
-        { headers: DEFAULT_HEADERS },
+        { headers: DATA_SEC_GOV_HEADERS },
       );
 
       console.log(res.data);
@@ -21,25 +25,13 @@ describe('SEC', () => {
   });
 
   describe('with data.sec.gov', () => {
-    const DEFAULT_HEADERS = {
-      Host: 'data.sec.gov',
-      'User-Agent': 'Personal iamdap91@<naver>.com',
-      'Accept-Encoding': 'gzip, deflate',
-    };
-
-    it('reports', async () => {
-      const formatCIK = (cik: string) => {
-        const prefixCount = 10 - cik.length;
-        const prefix = new Array(prefixCount).fill('0').join('');
-        return `CIK${prefix}${cik}`;
-      };
-
+    it('submission', async () => {
       const cik = '1506983';
       const submission = formatCIK(cik);
 
       const res = await axios.get(
         `https://data.sec.gov/submissions/${submission}.json`,
-        { headers: DEFAULT_HEADERS },
+        { headers: DATA_SEC_GOV_HEADERS },
       );
 
       const urls = [];
@@ -65,7 +57,7 @@ describe('SEC', () => {
     it('call report page', async () => {
       const res = await axios.get(
         'https://www.sec.gov/Archives/edgar/data/1816431/000114036125000295/ny20041128x2_8k.htm',
-        { headers: { ...DEFAULT_HEADERS, Host: 'www.sec.gov' } },
+        { headers: SEC_FAIR_ACCESS_HEADERS },
       );
 
       console.log(res);
@@ -76,11 +68,7 @@ describe('SEC', () => {
         'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&output=atom',
         {
           params: { start: 0, count: 100 },
-          headers: {
-            ...DEFAULT_HEADERS,
-            Host: 'www.sec.gov',
-            Accept: 'application/json',
-          },
+          headers: SEC_FAIR_ACCESS_HEADERS,
         },
       );
 
@@ -90,6 +78,43 @@ describe('SEC', () => {
         emptyTag: () => null,
       });
       console.log(json);
+    });
+  });
+
+  describe('xbrl', () => {
+    // 안쓸뜻
+    it('company concept', async () => {
+      const rawCIK = '320193';
+      const cik = formatCIK(rawCIK);
+
+      const res = await axios.get(
+        `https://data.sec.gov/api/xbrl/companyconcept/${cik}/us-gaap/AccountsPayableCurrent.json`,
+        { headers: DATA_SEC_GOV_HEADERS },
+      );
+
+      console.log(res);
+    });
+
+    it('company facts', async () => {
+      const rawCIK = '320193';
+      const cik = formatCIK(rawCIK);
+
+      const res = await axios.get(
+        `https://data.sec.gov/api/xbrl/companyfacts/${cik}.json`,
+        { headers: DATA_SEC_GOV_HEADERS },
+      );
+
+      console.log(res);
+    });
+
+    // 안쓸뜻
+    it('frames', async () => {
+      const res = await axios.get(
+        `https://data.sec.gov/api/xbrl/frames/us-gaap/AccountsPayableCurrent/USD/CY2019Q1I.json`,
+        { headers: DATA_SEC_GOV_HEADERS },
+      );
+
+      console.log(res);
     });
   });
 });
