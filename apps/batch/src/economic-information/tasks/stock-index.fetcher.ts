@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { KoreaBankApiService } from '@libs/external-api';
-import { format, parse, subMonths } from 'date-fns';
+import { addMonths, format, parse, subMonths } from 'date-fns';
 import {
   STOCK_INDEX_COUNTRIES,
   STOCK_INDEX_TYPE,
@@ -18,7 +18,7 @@ export class StockIndexFetcher {
   async exec() {
     const now = new Date();
     const query = {
-      endDate: format(now, 'yyyyMM'),
+      endDate: format(addMonths(now, 1), 'yyyyMM'),
       startDate: format(subMonths(now, 12), 'yyyyMM'),
     };
 
