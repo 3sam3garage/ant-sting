@@ -1,10 +1,16 @@
 import { random } from 'lodash';
 import { Redis } from 'ioredis';
 import { parse as parseHTML } from 'node-html-parser';
-import { Browser, launch, Page } from 'puppeteer';
+import { Browser, launch, Page, ProtocolError } from 'puppeteer';
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
-import { Inject, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import {
   REALTIME_SHORT_INTEREST_REDIS_KEY,
   TickerRepository,
@@ -21,6 +27,7 @@ export class RealtimeShortInterestConsumer
 {
   private browser: Browser;
   private page: Page;
+  private ip: string;
 
   constructor(
     @Inject(REDIS_NAME.ANT_STING)
@@ -46,13 +53,13 @@ export class RealtimeShortInterestConsumer
   }
 
   async initBrowser() {
-    const ip = await this.figureProxyIp();
+    this.ip = await this.figureProxyIp();
 
     const browser = await launch({
       args: DEFAULT_BROWSER_OPTIONS_ARGS,
       extraPrefsFirefox: {
         'network.proxy.type': 1,
-        'network.proxy.ssl': ip,
+        'network.proxy.ssl': this.ip,
         'network.proxy.ssl_port': 443,
       },
       defaultViewport: { height: 2500, width: 1920 },
@@ -73,7 +80,12 @@ export class RealtimeShortInterestConsumer
     }
 
     await sleep(1000);
-    await this.page.goto(`https://fintel.io/ko/ss/us/${ticker}`);
+    const response = await this.page.goto(
+      `https://fintel.io/ko/ss/us/${ticker}`,
+    );
+    if (response?.status() === 403) {
+      throw new ForbiddenException();
+    }
 
     const table = await page.evaluate(() => {
       const tableElement = document.querySelector(
@@ -112,8 +124,12 @@ export class RealtimeShortInterestConsumer
       await this.exec(this.page, ticker);
     } catch (e) {
       Logger.error(JSON.stringify(e.message));
-      throw e;
-    } finally {
+      switch (true) {
+        case e instanceof ForbiddenException:
+        case e instanceof ProtocolError:
+          await this.redis.srem('proxies', this.ip);
+          throw e;
+      }
       await this.browser.close();
       await this.initBrowser();
     }

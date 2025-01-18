@@ -1,5 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { launch, Page } from 'puppeteer';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import { launch, Page, ProtocolError } from 'puppeteer';
 import axios from 'axios';
 import { random } from 'lodash';
 import { Redis } from 'ioredis';
@@ -16,11 +16,16 @@ export class BrowserProxyCrawlerTask {
   ) {}
 
   private async run(page: Page) {
-    await page.goto('https://fintel.io/ko/ss/us/iaux', { timeout: 60 * 1000 });
+    const ticker = 'iaux';
 
-    await page.waitForSelector(
-      'div#short-shares-availability div.row table#short-shares-availability-table',
-    );
+    const response = await page.goto(`https://fintel.io/ko/ss/us/${ticker}`, {
+      timeout: 60 * 1000,
+    });
+
+    if (response?.status() === 403) {
+      throw new ForbiddenException();
+    }
+
     const table = await page.evaluate(() => {
       const tableElement = document.querySelector(
         'div#short-shares-availability div.row table#short-shares-availability-table',
@@ -45,7 +50,10 @@ export class BrowserProxyCrawlerTask {
     }
 
     if (items.length > 0) {
-      this.redis.set(REALTIME_SHORT_INTEREST_REDIS_KEY, JSON.stringify(items));
+      await this.redis.set(
+        `${REALTIME_SHORT_INTEREST_REDIS_KEY}:${ticker.toUpperCase()}`,
+        JSON.stringify(items),
+      );
     }
   }
 
@@ -55,7 +63,7 @@ export class BrowserProxyCrawlerTask {
     );
 
     const proxies: any[] = (response?.data?.proxies || []).filter((proxy) => {
-      const { uptime, port } = proxy;
+      const { uptime, port, ssl } = proxy;
       return port === 443;
     });
 
@@ -65,7 +73,7 @@ export class BrowserProxyCrawlerTask {
   }
 
   async exec(): Promise<void> {
-    await this.figureProxy();
+    // await this.figureProxy();
 
     const proxyIps = await this.redis.smembers('proxies');
     const index = random(0, proxyIps.length - 1);
@@ -82,9 +90,9 @@ export class BrowserProxyCrawlerTask {
         'network.proxy.ssl_port': 443,
       },
       defaultViewport: { height: 2500, width: 1920 },
-      headless: true,
+      headless: false,
       browser: 'firefox',
-      // devtools: true,
+      devtools: true,
     });
 
     const [page] = await browser.pages();
@@ -92,6 +100,10 @@ export class BrowserProxyCrawlerTask {
     try {
       await this.run(page);
     } catch (e) {
+      if (e instanceof ProtocolError || e instanceof ForbiddenException) {
+        await this.redis.srem('proxies', ip);
+      }
+
       console.error(e);
     } finally {
       await browser.close();
