@@ -14,6 +14,7 @@ import { BondYieldModule } from './bond-yield';
 import { FilingModule } from './filing';
 import { TickerModule } from './ticker';
 import { ShortInterestModule } from './short-interest';
+import { StockIndexModule } from './stock-index';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ShortInterestModule } from './short-interest';
     BondYieldModule,
     FilingModule,
     TickerModule,
+    StockIndexModule,
     ShortInterestModule,
     EconomicInformationAnalysisModule,
   ],
