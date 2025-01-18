@@ -24,7 +24,7 @@ describe('korea-bank', () => {
     const code = '731Y001';
     const interval = 'D';
     const startDate = '20200101';
-    const endDate = '20241201';
+    const endDate = '20250301';
     const skip = 0;
     const limit = 10000;
 
