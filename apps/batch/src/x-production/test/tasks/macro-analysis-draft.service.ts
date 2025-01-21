@@ -14,7 +14,7 @@ import { ClaudeService } from '@libs/ai';
 import { TEST_INTEREST_PROMPT } from '@libs/ai/constants/test';
 
 @Injectable()
-export class TestTask {
+export class MacroAnalysisDraft {
   constructor(
     private readonly stockReportRepo: StockReportRepository,
     private readonly stockAnalysisRepo: StockAnalysisRepository,

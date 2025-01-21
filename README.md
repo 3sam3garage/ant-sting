@@ -88,7 +88,11 @@ $ nest start batch -- stock scrape-finra-short-interest
 ### Testing
 
 ```bash
-$ nest start batch -- test test2
+$ nest start batch -- test macro-analysis-draft
+```
+
+```bash
+$ nest start batch -- test add-realtime-short-message
 ```
 
 ## Stay in touch

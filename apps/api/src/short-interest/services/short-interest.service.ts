@@ -30,7 +30,7 @@ export class ShortInterestService {
     );
 
     const now = new Date();
-    const json: any[] = JSON.parse(text);
+    const json: any[] = JSON.parse(text) || [];
     return json.map(({ timestamp, quantity }) => {
       const relativeTime = differenceInMinutes(now, new Date(timestamp));
 

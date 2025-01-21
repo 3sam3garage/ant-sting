@@ -1,16 +1,22 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { BrowserProxyCrawlerTask, TestTask } from '../tasks';
+import {
+  AddRealtimeShortMessageService,
+  BrowserProxyCrawlerTask,
+  MacroAnalysisDraft,
+} from '../tasks';
 
 enum SUB_COMMAND {
-  TEST = 'test',
+  MACRO_ANALYSIS_DRAFT = 'macro-analysis-draft',
+  ADD_REALTIME_SHORT_MESSAGE = 'add-realtime-short-message',
   BROWSER_PROXY_CRAWLER = 'browser-proxy-crawler',
 }
 
 @Command({ name: 'test' })
 export class TestCommand extends CommandRunner {
   constructor(
-    private readonly testTask: TestTask,
+    private readonly macroAnalysisDraft: MacroAnalysisDraft,
     private readonly browserProxyCrawlerTask: BrowserProxyCrawlerTask,
+    private readonly addRealtimeShortMessageService: AddRealtimeShortMessageService,
   ) {
     super();
   }
@@ -19,8 +25,10 @@ export class TestCommand extends CommandRunner {
     const [subcommand] = passedParam;
 
     switch (subcommand) {
-      case SUB_COMMAND.TEST:
-        return await this.testTask.exec();
+      case SUB_COMMAND.ADD_REALTIME_SHORT_MESSAGE:
+        return await this.addRealtimeShortMessageService.exec();
+      case SUB_COMMAND.MACRO_ANALYSIS_DRAFT:
+        return await this.macroAnalysisDraft.exec();
       case SUB_COMMAND.BROWSER_PROXY_CRAWLER:
         return await this.browserProxyCrawlerTask.exec();
       default:

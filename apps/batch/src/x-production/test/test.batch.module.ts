@@ -13,7 +13,11 @@ import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { TestCommand } from './commands';
-import { BrowserProxyCrawlerTask, TestTask } from './tasks';
+import {
+  AddRealtimeShortMessageService,
+  BrowserProxyCrawlerTask,
+  MacroAnalysisDraft,
+} from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 
@@ -51,12 +55,20 @@ import { RedisService } from '@liaoliaots/nestjs-redis';
           return { redis: config.getCommonConfig() };
         },
       },
+      {
+        name: QUEUE_NAME.SCRAPE_REALTIME_SHORT,
+        inject: [RedisConfigService],
+        useFactory: async (config: RedisConfigService) => {
+          return { redis: config.getCommonConfig() };
+        },
+      },
     ),
   ],
   providers: [
     TestCommand,
-    TestTask,
+    MacroAnalysisDraft,
     BrowserProxyCrawlerTask,
+    AddRealtimeShortMessageService,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],

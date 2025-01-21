@@ -65,7 +65,7 @@ export class RealtimeShortInterestConsumer
       defaultViewport: { height: 2500, width: 1920 },
       headless: true,
       browser: 'firefox',
-      devtools: true,
+      // devtools: true,
     });
 
     const [page] = await browser.pages();
