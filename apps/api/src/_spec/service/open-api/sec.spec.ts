@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { parseStringPromise } from 'xml2js';
+import { parse as parseHTML } from 'node-html-parser';
 import {
   DATA_SEC_GOV_HEADERS,
   SEC_FAIR_ACCESS_HEADERS,
@@ -60,7 +61,11 @@ describe('SEC', () => {
         { headers: SEC_FAIR_ACCESS_HEADERS },
       );
 
-      console.log(res);
+      const html = parseHTML(res.data)?.removeWhitespace();
+      const body = html.querySelector('body');
+
+      console.log(body.innerHTML);
+      console.log(body.innerHTML);
     });
 
     it('rss', async () => {

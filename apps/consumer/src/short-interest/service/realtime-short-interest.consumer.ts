@@ -11,10 +11,7 @@ import {
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
-import {
-  REALTIME_SHORT_INTEREST_REDIS_KEY,
-  TickerRepository,
-} from '@libs/domain';
+import { REALTIME_SHORT_INTEREST_REDIS_KEY } from '@libs/domain';
 import { QUEUE_NAME, REDIS_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
 import { DEFAULT_BROWSER_OPTIONS_ARGS } from '../constants';
@@ -32,7 +29,6 @@ export class RealtimeShortInterestConsumer
   constructor(
     @Inject(REDIS_NAME.ANT_STING)
     private readonly redis: Redis,
-    private readonly tickerRepository: TickerRepository,
   ) {
     super();
   }

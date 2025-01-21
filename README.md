@@ -8,6 +8,10 @@ _Ant-sting_ is a project aimed at assisting with investments in financial assets
 $ npm install
 ```
 
+```bash
+$ npx puppeteer browsers install firefox@stable
+```
+
 ## Running the app
 
 - Ant-sting includes 4 applications

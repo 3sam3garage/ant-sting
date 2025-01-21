@@ -83,7 +83,10 @@ export class BrowserProxyCrawlerTask {
     const ip = proxyIps[index];
 
     const browser = await launch({
-      args: DEFAULT_BROWSER_OPTIONS_ARGS,
+      args: [
+        ...DEFAULT_BROWSER_OPTIONS_ARGS,
+        '--disable-site-isolation-trials',
+      ],
       // extraPrefsFirefox: {
       //   'network.proxy.type': 1,
       //   'network.proxy.ssl': ip,
@@ -96,6 +99,23 @@ export class BrowserProxyCrawlerTask {
     });
 
     const [page] = await browser.pages();
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+      console.log(req.initiator());
+      console.log(req.url());
+      switch (true) {
+        case req.url().endsWith('png'):
+        case req.url().endsWith('jpg'):
+        case req.url().endsWith('jpeg'):
+        case req.url().endsWith('css'):
+        case req.url().endsWith('js'):
+        case req.url().endsWith('svg'):
+          req.abort();
+          break;
+        default:
+          req.continue();
+      }
+    });
 
     try {
       await this.run(page);

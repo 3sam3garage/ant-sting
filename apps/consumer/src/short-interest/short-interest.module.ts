@@ -17,7 +17,7 @@ import { BullModule } from '@nestjs/bull';
     }),
   ],
   providers: [
-    RealtimeShortInterestConsumer,
+    // RealtimeShortInterestConsumer,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],
