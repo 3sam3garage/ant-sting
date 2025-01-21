@@ -10,7 +10,7 @@
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start:api": "nest start api --watch",
     "start:api:prod": "node dist/apps/api/main",
-    "start:batch": "nest start batch -- test test",
+    "start:batch": "nest start batch -- test browser-proxy-crawler",
     "start:consumer": "nest start consumer --watch",
     "start:agent": "nest start agent --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

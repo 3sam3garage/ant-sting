@@ -13,3 +13,4 @@ nest start batch -- economic-information interest-rate
 nest start batch -- economic-information stock-index
 
 nest start batch -- stock scrape-sec-ticker
+nest start batch -- stock scrape-finra-short-interest

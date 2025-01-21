@@ -5,8 +5,8 @@ import { random } from 'lodash';
 import { Redis } from 'ioredis';
 import { parse as parseHTML } from 'node-html-parser';
 import { REDIS_NAME } from '@libs/config';
-import { DEFAULT_BROWSER_OPTIONS_ARGS } from '../constants';
 import { REALTIME_SHORT_INTEREST_REDIS_KEY } from '@libs/domain';
+import { DEFAULT_BROWSER_OPTIONS_ARGS } from '../constants';
 
 @Injectable()
 export class BrowserProxyCrawlerTask {
@@ -16,7 +16,7 @@ export class BrowserProxyCrawlerTask {
   ) {}
 
   private async run(page: Page) {
-    const ticker = 'iaux';
+    const ticker = 'gctk';
 
     const response = await page.goto(`https://fintel.io/ko/ss/us/${ticker}`, {
       timeout: 60 * 1000,
@@ -84,11 +84,11 @@ export class BrowserProxyCrawlerTask {
 
     const browser = await launch({
       args: DEFAULT_BROWSER_OPTIONS_ARGS,
-      extraPrefsFirefox: {
-        'network.proxy.type': 1,
-        'network.proxy.ssl': ip,
-        'network.proxy.ssl_port': 443,
-      },
+      // extraPrefsFirefox: {
+      //   'network.proxy.type': 1,
+      //   'network.proxy.ssl': ip,
+      //   'network.proxy.ssl_port': 443,
+      // },
       defaultViewport: { height: 2500, width: 1920 },
       headless: false,
       browser: 'firefox',
