@@ -63,7 +63,7 @@ export class RealtimeShortInterestConsumer
         'network.proxy.ssl_port': 443,
       },
       defaultViewport: { height: 2500, width: 1920 },
-      headless: false,
+      headless: true,
       browser: 'firefox',
       devtools: true,
     });
