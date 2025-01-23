@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { FirefoxService } from './service';
+import { ChromiumService } from './service';
 
 @Module({
-  providers: [FirefoxService],
-  exports: [FirefoxService],
+  providers: [ChromiumService],
+  exports: [ChromiumService],
 })
 export class BrowserModule {}

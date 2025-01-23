@@ -1,2 +1,3 @@
 export * from './browser.module';
-export * from './service/firefox.service';
+export * from './service';
+export * from './constants';

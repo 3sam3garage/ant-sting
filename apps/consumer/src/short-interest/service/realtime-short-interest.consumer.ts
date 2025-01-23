@@ -75,6 +75,7 @@ export class RealtimeShortInterestConsumer
       await sleep(3 * 1000);
     }
 
+    await page.goto('chrome://newtab');
     await sleep(1000);
     const response = await this.page.goto(
       `https://fintel.io/ko/ss/us/${ticker}`,

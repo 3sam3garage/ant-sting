@@ -15,7 +15,7 @@ import { AiModule } from '@libs/ai';
 import { TestCommand } from './commands';
 import {
   AddRealtimeShortMessageService,
-  BrowserProxyCrawlerTask,
+  RealtimeShortInterestCrawler,
   MacroAnalysisDraft,
 } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
@@ -69,7 +69,7 @@ import { BrowserModule } from '@libs/browser';
   providers: [
     TestCommand,
     MacroAnalysisDraft,
-    BrowserProxyCrawlerTask,
+    RealtimeShortInterestCrawler,
     AddRealtimeShortMessageService,
     {
       provide: REDIS_NAME.ANT_STING,

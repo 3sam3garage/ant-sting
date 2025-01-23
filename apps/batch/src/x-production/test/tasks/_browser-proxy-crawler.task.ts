@@ -1,7 +1,6 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { launch, Page, ProtocolError } from 'puppeteer';
 import axios from 'axios';
-import { random } from 'lodash';
 import { Redis } from 'ioredis';
 import { parse as parseHTML } from 'node-html-parser';
 import { REDIS_NAME } from '@libs/config';
@@ -70,15 +69,6 @@ export class BrowserProxyCrawlerTask {
   }
 
   async exec(): Promise<void> {
-    // await this.figureProxy();
-
-    const proxyIps = await this.redis.smembers('proxies');
-    const index = random(0, proxyIps.length - 1);
-
-    console.log(proxyIps);
-
-    const ip = proxyIps[index];
-
     const browser = await launch({
       args: [
         ...DEFAULT_BROWSER_OPTIONS_ARGS,
@@ -98,25 +88,17 @@ export class BrowserProxyCrawlerTask {
     const [page] = await browser.pages();
     await page.setRequestInterception(true);
     page.on('request', (req) => {
-      switch (true) {
-        case req.url().endsWith('png'):
-        case req.url().endsWith('jpg'):
-        case req.url().endsWith('jpeg'):
-        case req.url().endsWith('css'):
-        case req.url().endsWith('js'):
-        case req.url().endsWith('svg'):
-          req.abort();
-          break;
-        default:
-          req.continue();
-      }
+      const url = req.url();
+      const resources = ['png', 'jpg', 'jpeg', 'js', 'svg'];
+      const abort = resources.some((resource) => url.endsWith(resource));
+
+      abort ? req.abort() : req.continue();
     });
 
     try {
       await this.run(page);
     } catch (e) {
       if (e instanceof ProtocolError || e instanceof ForbiddenException) {
-        await this.redis.srem('proxies', ip);
       }
 
       console.error(e);
