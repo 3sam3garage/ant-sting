@@ -20,6 +20,7 @@ import {
 } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 import { RedisService } from '@liaoliaots/nestjs-redis';
+import { BrowserModule } from '@libs/browser';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { RedisService } from '@liaoliaots/nestjs-redis';
     StockIndexDomainModule,
     TickerDomainModule,
     ExternalApiModule,
+    BrowserModule,
     BullModule.registerQueueAsync(
       {
         name: QUEUE_NAME.ECONOMIC_INFORMATION,

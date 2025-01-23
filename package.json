@@ -51,6 +51,7 @@
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20",
     "unzipper": "^0.12.3",
+    "user-agents": "^1.1.428",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
@@ -64,6 +65,7 @@
     "@types/pdf-parse": "^1.1.4",
     "@types/supertest": "^6.0.0",
     "@types/unzipper": "^0.10.10",
+    "@types/user-agents": "^1.0.4",
     "@types/xml2js": "^0.4.14",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
@@ -107,7 +109,8 @@
       "^@libs/domain(|/.*)$": "<rootDir>/libs/domain/src/$1",
       "^@libs/config(|/.*)$": "<rootDir>/libs/config/src/$1",
       "^@libs/ai(|/.*)$": "<rootDir>/libs/ai/src/$1",
-      "^@libs/external-api(|/.*)$": "<rootDir>/libs/external-api/src/$1"
+      "^@libs/external-api(|/.*)$": "<rootDir>/libs/external-api/src/$1",
+      "^@libs/browser(|/.*)$": "<rootDir>/libs/browser/src/$1"
     }
   }
 }

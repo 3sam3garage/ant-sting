@@ -54,6 +54,12 @@
       ],
       "@libs/external-api/*": [
         "libs/external-api/src/*"
+      ],
+      "@libs/browser": [
+        "libs/browser/src"
+      ],
+      "@libs/browser/*": [
+        "libs/browser/src/*"
       ]
     }
   }
