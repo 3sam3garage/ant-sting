@@ -16,12 +16,9 @@ export class BrowserProxyCrawlerTask {
   ) {}
 
   private async run(page: Page) {
-    const ticker = 'gctk';
+    const ticker = 'lexx';
 
-    const response = await page.goto(`https://fintel.io/ko/ss/us/${ticker}`, {
-      timeout: 60 * 1000,
-    });
-
+    const response = await page.goto(`https://fintel.io/ko/ss/us/${ticker}`);
     if (response?.status() === 403) {
       throw new ForbiddenException();
     }
@@ -101,8 +98,6 @@ export class BrowserProxyCrawlerTask {
     const [page] = await browser.pages();
     await page.setRequestInterception(true);
     page.on('request', (req) => {
-      console.log(req.initiator());
-      console.log(req.url());
       switch (true) {
         case req.url().endsWith('png'):
         case req.url().endsWith('jpg'):
