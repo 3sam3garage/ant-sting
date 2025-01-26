@@ -6,7 +6,7 @@ import {
 } from '@libs/domain';
 import { REDIS_NAME } from '@libs/config';
 import { FindShortInterestQuery, ShortInterestResponse } from '../dto';
-import { differenceInMinutes } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 
 @Injectable()
 export class ShortInterestService {
@@ -29,13 +29,13 @@ export class ShortInterestService {
       `${REALTIME_SHORT_INTEREST_REDIS_KEY}:${ticker}`,
     );
 
-    const now = new Date();
+    // const now = new Date();
     const json: any[] = JSON.parse(text) || [];
     return json.map(({ timestamp, quantity }) => {
-      const relativeTime = differenceInMinutes(now, new Date(timestamp));
+      const relativeTime = formatDistanceToNow(timestamp, { addSuffix: true });
 
       return {
-        relativeTime: `${relativeTime} Min Ago`,
+        relativeTime: `${relativeTime}`,
         timestamp,
         quantity,
       };
