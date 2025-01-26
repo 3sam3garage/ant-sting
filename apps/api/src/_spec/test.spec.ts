@@ -8,11 +8,13 @@ import {
   subMonths,
 } from 'date-fns';
 import { isNil, omitBy } from 'lodash';
+import { formatDistanceToNow } from 'date-fns';
 
 it('test', () => {
-  const tickers = ['QSI', 'ETH', 'BNB'];
+  const givenDate = new Date('2025-01-27T12:45:00'); // 예시로 주어진 날짜
+  const difference = formatDistanceToNow(givenDate, { addSuffix: true });
 
-  console.log(JSON.stringify(tickers));
+  console.log(`주어진 시간은 현재 시간과 ${difference} 차이가 있습니다.`);
 });
 
 it('add day', () => {
