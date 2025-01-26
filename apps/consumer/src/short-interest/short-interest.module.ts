@@ -4,9 +4,11 @@ import { RealtimeShortInterestConsumer } from './service';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { BullModule } from '@nestjs/bull';
+import { BrowserModule } from '@libs/browser';
 
 @Module({
   imports: [
+    BrowserModule,
     TickerDomainModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.SCRAPE_REALTIME_SHORT,
@@ -17,7 +19,7 @@ import { BullModule } from '@nestjs/bull';
     }),
   ],
   providers: [
-    // RealtimeShortInterestConsumer,
+    RealtimeShortInterestConsumer,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],
