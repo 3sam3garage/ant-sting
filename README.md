@@ -92,11 +92,21 @@ $ nest start batch -- stock scrape-finra-short-interest
 ### Testing
 
 ```bash
-$ nest start batch -- test macro-analysis-draft
+$ nest start batch -- test add-realtime-short-message
+```
+
+### POC
+
+```bash
+$ nest start batch -- poc macro-analysis-draft
 ```
 
 ```bash
-$ nest start batch -- test add-realtime-short-message
+$ nest start batch -- poc realtime-short-interest-crawler
+```
+
+```bash
+$ nest start batch -- poc stock-news-crawler
 ```
 
 ## Stay in touch
