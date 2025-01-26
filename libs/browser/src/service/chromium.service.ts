@@ -58,8 +58,10 @@ export class ChromiumService implements OnModuleInit, OnModuleDestroy {
       page = await this.browser.newPage();
     }
 
-    await this.overrideUserAgentToRandom(page);
-    await this.addRequestInterception(page);
+    await Promise.all([
+      this.overrideUserAgentToRandom(page),
+      this.addRequestInterception(page),
+    ]);
 
     return page;
   }
@@ -68,7 +70,7 @@ export class ChromiumService implements OnModuleInit, OnModuleDestroy {
     const browser = await launch({
       args: [...DEFAULT_CHROMIUM_OPTION_ARGS],
       defaultViewport: { height: 1080, width: 1920 },
-      headless: false,
+      headless: true,
       browser: 'chrome',
       devtools: true,
     });

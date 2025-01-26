@@ -1,4 +1,16 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
+import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
+import { PocCommand } from './commands';
+import {
+  RealtimeShortInterestCrawler,
+  MacroAnalysisDraft,
+  StockNewsCrawler,
+} from './tasks';
+import { ExternalApiModule } from '@libs/external-api';
+import { RedisService } from '@liaoliaots/nestjs-redis';
+import { BrowserModule } from '@libs/browser';
+import { AiModule } from '@libs/ai';
 import {
   BondYieldDomainModule,
   EconomicInformationDomainModule,
@@ -9,14 +21,6 @@ import {
   StockReportDomainModule,
   TickerDomainModule,
 } from '@libs/domain';
-import { BullModule } from '@nestjs/bull';
-import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
-import { AiModule } from '@libs/ai';
-import { TestCommand } from './commands';
-import { AddRealtimeShortMessageService, MacroAnalysisDraft } from './tasks';
-import { ExternalApiModule } from '@libs/external-api';
-import { RedisService } from '@liaoliaots/nestjs-redis';
-import { BrowserModule } from '@libs/browser';
 
 @Module({
   imports: [
@@ -63,9 +67,10 @@ import { BrowserModule } from '@libs/browser';
     ),
   ],
   providers: [
-    TestCommand,
+    PocCommand,
     MacroAnalysisDraft,
-    AddRealtimeShortMessageService,
+    RealtimeShortInterestCrawler,
+    StockNewsCrawler,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],
@@ -75,4 +80,4 @@ import { BrowserModule } from '@libs/browser';
     },
   ],
 })
-export class TestBatchModule {}
+export class PocBatchModule {}

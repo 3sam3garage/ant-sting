@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '@libs/core';
-import { CorporationBatchModule } from './x-production/corporation';
 import { StockReportBatchModule } from './stock-report';
-import { TestBatchModule } from './x-production/test';
 import { EconomicInformationBatchModule } from './economic-information';
-import { NotificationBatchModule } from './x-production/notification';
 import { StockBatchModule } from './stock';
+
+import { CorporationBatchModule } from './x-production/corporation';
+import { TestBatchModule } from './x-production/test';
+import { NotificationBatchModule } from './x-production/notification';
+import { PocBatchModule } from './x-production/poc';
 
 @Module({
   imports: [
@@ -13,6 +15,7 @@ import { StockBatchModule } from './stock';
 
     // test
     TestBatchModule,
+    PocBatchModule,
 
     // actual running batches
     CorporationBatchModule,
