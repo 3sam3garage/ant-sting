@@ -13,6 +13,7 @@ import {
 } from '@libs/domain';
 import { SecApiService } from '@libs/external-api';
 import { BaseConsumer } from '../../base.consumer';
+import { parse as parseHTML } from 'node-html-parser';
 
 @Processor(QUEUE_NAME.ANALYZE_FILING)
 export class AnalyzeFilingConsumer extends BaseConsumer {
@@ -42,11 +43,15 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     }
 
     const document = await this.secApiService.fetchFilingDocument(filing.url);
+    const html = parseHTML(document);
+    const body = html.querySelector('body');
+
+    const content = body?.innerHTML ? body?.innerHTML : html?.innerHTML;
+
     const prompt = ANALYZE_SEC_DOCUMENT_PROMPT.replace(
       '{{SEC_FILING}}',
-      document,
+      content,
     );
-
     const response = await this.claudeService.invoke(prompt);
     const {
       summaries,
