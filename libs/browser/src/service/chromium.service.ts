@@ -14,7 +14,9 @@ export class ChromiumService implements OnModuleDestroy {
   constructor() {}
 
   async onModuleDestroy() {
-    await this.browser.close();
+    if (this.browser) {
+      await this.browser.close();
+    }
   }
 
   /**
