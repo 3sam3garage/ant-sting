@@ -36,6 +36,7 @@ export const DEFAULT_FIREFOX_OPTIONS_ARGS = [
 ];
 
 export const DEFAULT_CHROMIUM_OPTION_ARGS = [
+  '--incognito',
   '--no-sandbox',
   '--disable-background-networking',
   '--disable-background-timer-throttling',
@@ -79,5 +80,5 @@ export const TYPES_TO_BLOCK: ResourceType[] = [
 
 export enum PAGE_PURPOSE {
   REALTIME_SHORT_INTEREST = 0,
-  INVESTORS_NEWS = 1,
+  STOCK_MARKET_NEWS = 1,
 }

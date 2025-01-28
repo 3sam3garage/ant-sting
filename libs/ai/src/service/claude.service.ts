@@ -5,27 +5,38 @@ import {
 import { Injectable } from '@nestjs/common';
 import { BASE_SYSTEM_PROMPT } from '../constants';
 
+export enum MODEL_TYPE {
+  CLAUDE_SONNET = 'anthropic.claude-3-5-sonnet-20240620-v1:0',
+  CLAUDE_HAIKU = 'anthropic.claude-3-haiku-20240307-v1:0',
+}
+
 interface InvokeOptions {
   temperature?: number;
   system?: string;
   max_tokens?: number;
+  model?: MODEL_TYPE;
+}
+
+interface InvokePayload {
+  payload: string;
+  model: MODEL_TYPE;
 }
 
 @Injectable()
 export class ClaudeService {
-  private modelId = 'anthropic.claude-3-5-sonnet-20240620-v1:0';
   private client: BedrockRuntimeClient;
 
   constructor() {
     this.client = new BedrockRuntimeClient();
   }
 
-  private async send(payload: string) {
+  private async sendInJson({ payload, model }: InvokePayload) {
     const command = new InvokeModelCommand({
       contentType: 'application/json',
       body: payload,
-      modelId: this.modelId,
+      modelId: model,
     });
+
     const apiResponse = await this.client.send(command);
 
     const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
@@ -42,7 +53,8 @@ export class ClaudeService {
     const {
       system = BASE_SYSTEM_PROMPT,
       temperature = 1,
-      max_tokens = 30000,
+      max_tokens = 200000,
+      model = MODEL_TYPE.CLAUDE_SONNET,
     } = options;
 
     const payload = {
@@ -56,6 +68,9 @@ export class ClaudeService {
       ],
     };
 
-    return this.send(JSON.stringify(payload));
+    return this.sendInJson({
+      payload: JSON.stringify(payload),
+      model,
+    });
   }
 }

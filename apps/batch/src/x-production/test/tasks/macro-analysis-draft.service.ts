@@ -10,8 +10,7 @@ import {
   StockAnalysisRepository,
   StockReportRepository,
 } from '@libs/domain';
-import { ClaudeService } from '@libs/ai';
-import { TEST_INTEREST_PROMPT } from '@libs/ai/constants/test';
+import { ClaudeService, POC_INTEREST_PROMPT } from '@libs/ai';
 
 @Injectable()
 export class MacroAnalysisDraft {
@@ -55,7 +54,7 @@ export class MacroAnalysisDraft {
       });
     };
 
-    const prompt = TEST_INTEREST_PROMPT.replace(
+    const prompt = POC_INTEREST_PROMPT.replace(
       '{{BASE_INTEREST_RATE}}',
       JSON.stringify(removeIds(baseInterests)),
     )

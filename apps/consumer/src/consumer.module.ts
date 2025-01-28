@@ -4,6 +4,7 @@ import { EconomicInformationModule } from './economic-information';
 import { StockReportModule } from './stock-report';
 import { FilingModule } from './filing';
 import { ShortInterestModule } from './short-interest';
+import { NewsModule } from './news';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ShortInterestModule } from './short-interest';
     StockReportModule,
     FilingModule,
     ShortInterestModule,
+    NewsModule,
   ],
 })
 export class ConsumerModule {}

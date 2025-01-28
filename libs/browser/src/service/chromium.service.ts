@@ -7,6 +7,11 @@ import {
   TYPES_TO_BLOCK,
 } from '../constants';
 
+interface GetPageOptions {
+  cleanPage?: boolean;
+  resetBrowser?: boolean;
+}
+
 @Injectable()
 export class ChromiumService implements OnModuleDestroy {
   private browser: Browser;
@@ -51,13 +56,23 @@ export class ChromiumService implements OnModuleDestroy {
     });
   }
 
-  async getPage(purpose: PAGE_PURPOSE) {
+  async getPage(purpose: PAGE_PURPOSE, options?: GetPageOptions) {
+    const { cleanPage, resetBrowser } = options || {};
+    if (this.browser && resetBrowser) {
+      await this.browser.close();
+      await this.initBrowser();
+    }
+
     if (!this.browser) {
       await this.initBrowser();
     }
 
     const pages = await this.browser.pages();
     let page = pages[purpose];
+
+    if (cleanPage && page) {
+      await page.close();
+    }
 
     if (!page) {
       page = await this.browser.newPage();

@@ -1,4 +1,4 @@
-export const TEST_INTEREST_PROMPT = `
+export const POC_INTEREST_PROMPT = `
 <information>
   <interest_rate>
     <base_interest_rate>{{BASE_INTEREST_RATE}}</base_interest_rate>

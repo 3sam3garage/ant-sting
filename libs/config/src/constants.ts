@@ -25,6 +25,9 @@ export enum QUEUE_NAME {
 
   // 실시간 공매도현황 크롤링 ( fintel )
   SCRAPE_REALTIME_SHORT = 'SCRAPE_REALTIME_SHORT',
+
+  // investing.com 주식 뉴스 크롤링
+  ANALYZE_MARKET_NEWS = 'ANALYZE_MARKET_NEWS',
 }
 
 export enum REDIS_NAME {

@@ -18,6 +18,7 @@ import {
   FinancialStatementDomainModule,
   InterestRateDomainModule,
   StockIndexDomainModule,
+  StockMarketNewsDomainModule,
   StockReportDomainModule,
   TickerDomainModule,
 } from '@libs/domain';
@@ -33,6 +34,7 @@ import {
     InterestRateDomainModule,
     StockIndexDomainModule,
     TickerDomainModule,
+    StockMarketNewsDomainModule,
     ExternalApiModule,
     BrowserModule,
     BullModule.registerQueueAsync(
@@ -59,6 +61,13 @@ import {
       },
       {
         name: QUEUE_NAME.SCRAPE_REALTIME_SHORT,
+        inject: [RedisConfigService],
+        useFactory: async (config: RedisConfigService) => {
+          return { redis: config.getCommonConfig() };
+        },
+      },
+      {
+        name: QUEUE_NAME.ANALYZE_MARKET_NEWS,
         inject: [RedisConfigService],
         useFactory: async (config: RedisConfigService) => {
           return { redis: config.getCommonConfig() };
