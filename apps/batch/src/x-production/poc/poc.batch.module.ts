@@ -5,7 +5,7 @@ import { PocCommand } from './commands';
 import {
   RealtimeShortInterestCrawler,
   MacroAnalysisDraft,
-  StockNewsCrawler,
+  StockMarketNewsCrawler,
 } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 import { RedisService } from '@liaoliaots/nestjs-redis';
@@ -79,7 +79,7 @@ import {
     PocCommand,
     MacroAnalysisDraft,
     RealtimeShortInterestCrawler,
-    StockNewsCrawler,
+    StockMarketNewsCrawler,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],

@@ -8,6 +8,7 @@ import { CorporationBatchModule } from './x-production/corporation';
 import { TestBatchModule } from './x-production/test';
 import { NotificationBatchModule } from './x-production/notification';
 import { PocBatchModule } from './x-production/poc';
+import { StockMarketNewsBatchModule } from './stock-market-news';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PocBatchModule } from './x-production/poc';
     StockBatchModule,
     EconomicInformationBatchModule,
     NotificationBatchModule,
+    StockMarketNewsBatchModule,
   ],
 })
 export class BatchModule {}

@@ -77,6 +77,12 @@ $ nest start batch -- economic-information stock-index
 $ nest start batch -- economic-information analyze
 ```
 
+### Scrape Stock Market news
+
+```bash
+$ nest start batch -- stock-market-news scrape-list
+```
+
 ### Scraping SEC
 
 ```bash
@@ -103,10 +109,6 @@ $ nest start batch -- poc macro-analysis-draft
 
 ```bash
 $ nest start batch -- poc realtime-short-interest-crawler
-```
-
-```bash
-$ nest start batch -- poc stock-news-crawler
 ```
 
 ## Stay in touch

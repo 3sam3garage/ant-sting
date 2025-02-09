@@ -8,7 +8,7 @@ import { Queue } from 'bull';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
-export class StockNewsCrawler {
+export class StockMarketNewsCrawler {
   constructor(
     @InjectQueue(QUEUE_NAME.ANALYZE_MARKET_NEWS)
     private readonly queue: Queue,

@@ -2,7 +2,7 @@ import { Command, CommandRunner } from 'nest-commander';
 import {
   RealtimeShortInterestCrawler,
   MacroAnalysisDraft,
-  StockNewsCrawler,
+  StockMarketNewsCrawler,
 } from '../tasks';
 
 enum SUB_COMMAND {
@@ -18,7 +18,7 @@ export class PocCommand extends CommandRunner {
   constructor(
     private readonly macroAnalysisDraft: MacroAnalysisDraft,
     private readonly realtimeShortInterestCrawler: RealtimeShortInterestCrawler,
-    private readonly stockNewsCrawlerTask: StockNewsCrawler,
+    private readonly stockNewsCrawlerTask: StockMarketNewsCrawler,
   ) {
     super();
   }
