@@ -29,7 +29,7 @@ export class ShortInterestResponse {
 
     return {
       ...entity,
-      items: entity.items.reverse(),
+      items: entity?.items?.reverse() || [],
     };
   }
 }

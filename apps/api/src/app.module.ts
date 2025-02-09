@@ -16,6 +16,7 @@ import { TickerModule } from './ticker';
 import { ShortInterestModule } from './short-interest';
 import { StockIndexModule } from './stock-index';
 import { InterestRateModule } from './interest-rate';
+import { StockMarketNewsModule } from './stock-market-news';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { InterestRateModule } from './interest-rate';
     ShortInterestModule,
     InterestRateModule,
     EconomicInformationAnalysisModule,
+    StockMarketNewsModule,
   ],
   providers: [
     {
