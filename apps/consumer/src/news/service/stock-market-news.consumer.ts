@@ -18,6 +18,8 @@ export class StockMarketNewsConsumer extends BaseConsumer {
     private readonly claudeService: ClaudeService,
   ) {
     super();
+
+    // @todo proxy를 결제해서 사용하면 아마 빼도 될 것 같은데.
     this.browserFactory = new BrowserFactory({
       fastMode: true,
       headless: true,
