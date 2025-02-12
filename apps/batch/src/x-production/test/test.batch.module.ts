@@ -13,7 +13,11 @@ import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { TestCommand } from './commands';
-import { AddRealtimeShortMessageService, MacroAnalysisDraft } from './tasks';
+import {
+  AddRealtimeShortMessageService,
+  MacroAnalysisDraft,
+  ProxyFetcher,
+} from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { BrowserModule } from '@libs/browser';
@@ -66,6 +70,7 @@ import { BrowserModule } from '@libs/browser';
     TestCommand,
     MacroAnalysisDraft,
     AddRealtimeShortMessageService,
+    ProxyFetcher,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],
