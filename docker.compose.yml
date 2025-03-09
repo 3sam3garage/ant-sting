@@ -1,30 +1,54 @@
-version: '3.9'
+version: "3.8"
+
+networks:
+  network:
 
 volumes:
-  grafana:
-  minio:
+  service_redis:
+  service_mongo:
+#  service_s3:
 
 services:
-  grafana:
-    image: grafana/grafana
-    ports:
-      - '9111:3000'
-    environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-    volumes:
-      - grafana:/var/lib/grafana
-
-  minio_s3:
-    platform: linux/amd64
-    image: minio/minio
+  redis:
+    image: redis:8.0-M03-alpine
+    container_name: redis
+    restart: always
     networks:
       - network
     ports:
-      - 9000:9000
-      - 9001:9001
+      - 6379:6379
     volumes:
-      - minio:/data
+      - service_redis:/data
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
     environment:
-      - MINIO_ROOT_USER=minio
-      - MINIO_ROOT_PASSWORD=minio
-    command: server /data --console-address ":9001"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: rgb-stock
+      MONGO_DATA_DIR: /data/db
+    networks:
+      - network
+    volumes:
+      - service_mongo:/data/db
+      - ./mongo/mongodb.key:/etc/mongodb.key
+    ports:
+      - 27017:27017
+    command: mongod --replSet localDev --keyFile /etc/mongodb.key --bind_ip_all
+
+#  minio_s3:
+#    platform: linux/amd64
+#    image: minio/minio
+#    container_name: s3
+#    networks:
+#      - network
+#    ports:
+#      - 9000:9000
+#      - 9001:9001
+#    volumes:
+#      - service_s3:/data
+#    environment:
+#      - MINIO_ROOT_USER=root
+#      - MINIO_ROOT_PASSWORD=root
+#    command: server /data --console-address ":9001"
