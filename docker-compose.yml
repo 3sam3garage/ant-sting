@@ -4,11 +4,23 @@ networks:
   network:
 
 volumes:
+  service_grafana:
   service_redis:
   service_mongo:
 #  service_s3:
 
 services:
+  grafana:
+    image: grafana/grafana
+    networks:
+      - network
+    ports:
+      - '9111:3000'
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    volumes:
+      - service_grafana:/var/lib/grafana
+
   redis:
     image: redis:8.0-M03-alpine
     container_name: redis
@@ -32,10 +44,10 @@ services:
       - network
     volumes:
       - service_mongo:/data/db
-      - ./mongo/mongodb.key:/etc/mongodb.key
+#      - ./mongo/mongodb.key:/etc/mongodb.key
     ports:
       - 27017:27017
-    command: mongod --replSet localDev --keyFile /etc/mongodb.key --bind_ip_all
+#    command: mongod --replSet localDev --keyFile /etc/mongodb.key --bind_ip_all
 
 #  minio_s3:
 #    platform: linux/amd64
