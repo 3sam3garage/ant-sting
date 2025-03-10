@@ -10,6 +10,7 @@ import {
   FilingAnalysis,
   FilingRepository,
   SEC_FILING_URL_SET,
+  TICKER_SNIPPETS_SET,
 } from '@libs/domain';
 import { SecApiService } from '@libs/external-api';
 import { BaseConsumer } from '../../base.consumer';
@@ -61,5 +62,9 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     filing.analysis = FilingAnalysis.create({ summaries, score, reason });
     await this.filingRepository.save(filing);
     await this.redis.sadd(SEC_FILING_URL_SET, filing.url);
+
+    if (score >= 3) {
+      await this.redis.sadd(TICKER_SNIPPETS_SET, filing.ticker);
+    }
   }
 }
