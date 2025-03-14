@@ -10,9 +10,14 @@ import {
   FilingAnalysis,
   FilingRepository,
   SEC_FILING_URL_SET,
+  SLACK_MESSAGE_FILING_SET,
   TICKER_SNIPPETS_SET,
 } from '@libs/domain';
-import { SecApiService } from '@libs/external-api';
+import {
+  fromSecFilingToSlackMessage,
+  SecApiService,
+  SlackService,
+} from '@libs/external-api';
 import { BaseConsumer } from '../../base.consumer';
 import { parse as parseHTML } from 'node-html-parser';
 
@@ -24,6 +29,7 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     private readonly claudeService: ClaudeService,
     private readonly filingRepository: FilingRepository,
     private readonly secApiService: SecApiService,
+    private readonly slackService: SlackService,
   ) {
     super();
   }
@@ -63,8 +69,24 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     await this.filingRepository.save(filing);
     await this.redis.sadd(SEC_FILING_URL_SET, filing.url);
 
+    // 후처리
     if (score >= 3) {
       await this.redis.sadd(TICKER_SNIPPETS_SET, filing.ticker);
+    }
+
+    if (score >= 4) {
+      const exists = await this.redis.hexists(
+        SLACK_MESSAGE_FILING_SET,
+        filing.ticker,
+      );
+
+      if (exists) {
+        return;
+      }
+
+      const slackMessage = fromSecFilingToSlackMessage(filing);
+      await this.slackService.sendMessage(slackMessage);
+      await this.redis.sadd(SLACK_MESSAGE_FILING_SET, filing.ticker);
     }
   }
 }

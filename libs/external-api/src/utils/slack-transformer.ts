@@ -1,4 +1,8 @@
-import { EconomicInformationAnalysis, StockAnalysis } from '@libs/domain';
+import {
+  EconomicInformationAnalysis,
+  Filing,
+  StockAnalysis,
+} from '@libs/domain';
 import { SlackMessage, SlackMessageBlock } from '../intefaces';
 
 export const fromEconomicInfoToSlackMessage = (
@@ -235,4 +239,61 @@ export const fromForeignStockAnalysisToSlackMessage = (
   };
 
   return message;
+};
+
+export const fromSecFilingToSlackMessage = (filing: Filing): SlackMessage => {
+  const {
+    ticker,
+    url,
+    analysis: { score, reason },
+  } = filing;
+
+  const scoreToStars = (score: number = 0) => {
+    let stars = '';
+    for (let i = 0; i < score; i++) {
+      stars += ':star:';
+    }
+
+    return stars;
+  };
+
+  return <SlackMessage>{
+    blocks: [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: ':fire: *호재 공시*',
+        },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*${ticker}*  ${scoreToStars(+score)}`,
+        },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: reason,
+        },
+        accessory: {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: '공시 상세',
+            emoji: true,
+          },
+          value: 'click_me_123',
+          url,
+          action_id: 'button-action',
+        },
+      },
+    ],
+  };
 };

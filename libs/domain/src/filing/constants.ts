@@ -1,5 +1,7 @@
 export const SEC_FILING_URL_SET = 'sec-filing-url-set';
 
+export const SLACK_MESSAGE_FILING_SET = 'slack-filing-set';
+
 export const FILINGS_TO_ANALYZE = [
   // 연간 보고서
   '10-K',
