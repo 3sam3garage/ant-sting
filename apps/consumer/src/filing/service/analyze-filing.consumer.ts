@@ -4,6 +4,7 @@ import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { ObjectId } from 'mongodb';
 import { isBefore, subMonths } from 'date-fns';
+import { addDays, startOfDay } from 'date-fns/fp';
 import { QUEUE_NAME, REDIS_NAME } from '@libs/config';
 import { ANALYZE_SEC_DOCUMENT_PROMPT, ClaudeService } from '@libs/ai';
 import {
@@ -20,6 +21,7 @@ import {
 } from '@libs/external-api';
 import { BaseConsumer } from '../../base.consumer';
 import { parse as parseHTML } from 'node-html-parser';
+import { flow } from 'lodash';
 
 @Processor(QUEUE_NAME.ANALYZE_FILING)
 export class AnalyzeFilingConsumer extends BaseConsumer {
@@ -32,6 +34,17 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     private readonly slackService: SlackService,
   ) {
     super();
+  }
+
+  private ttlResolver(dateTime: Date) {
+    return flow(
+      addDays(1),
+      startOfDay,
+      (expiredAt) => expiredAt.getTime() - Date.now(),
+      (ttl) => ttl / 1000,
+      Math.ceil,
+      Math.abs,
+    )(dateTime);
   }
 
   @Process({ concurrency: 1 })
@@ -69,11 +82,12 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     await this.filingRepository.save(filing);
     await this.redis.sadd(SEC_FILING_URL_SET, filing.url);
 
-    // 후처리
+    // 3점 이상인 항목은 5분마다 정기적으로 수집하도록 포함.
     if (score >= 3) {
       await this.redis.sadd(TICKER_SNIPPETS_SET, filing.ticker);
     }
 
+    // 4점 이상인 항목은 슬랙 메시지 발송
     if (score >= 4) {
       const exists = await this.redis.hexists(
         SLACK_MESSAGE_FILING_SET,
@@ -87,6 +101,8 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
       const slackMessage = fromSecFilingToSlackMessage(filing);
       await this.slackService.sendMessage(slackMessage);
       await this.redis.sadd(SLACK_MESSAGE_FILING_SET, filing.ticker);
+      const ttl = this.ttlResolver(new Date());
+      await this.redis.expire(SLACK_MESSAGE_FILING_SET, ttl);
     }
   }
 }
