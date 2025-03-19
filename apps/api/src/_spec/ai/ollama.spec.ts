@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AiModule, ANALYZE_SEC_DOCUMENT_PROMPT, OllamaService } from '@libs/ai';
+import {
+  AiModule,
+  ANALYZE_SEC_DOCUMENT_PROMPT,
+  GEMMA_ANALYZE_PDF_STOCK_REPORT,
+  OllamaService,
+} from '@libs/ai';
 import { ExternalApiModule, SecApiService } from '@libs/external-api';
 import { AppConfigModule } from '@libs/config';
 import { parse as parseHTML } from 'node-html-parser';
 import axios from 'axios';
 import pdf from 'pdf-parse';
-import { PDF_PARSING_PROMPT } from '../constants';
 
 describe('ollama', () => {
   let moduleRef: TestingModule;
@@ -48,7 +52,7 @@ describe('ollama', () => {
     const item = await axios.get(summary.href, { responseType: 'arraybuffer' });
     const data = await pdf(item.data, { max: 2 });
 
-    const prompt = PDF_PARSING_PROMPT.replace(
+    const prompt = GEMMA_ANALYZE_PDF_STOCK_REPORT.replace(
       '{{PDF_EXTRACTED_TEXT}}',
       data.text,
     );
