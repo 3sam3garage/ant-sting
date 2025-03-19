@@ -11,7 +11,7 @@ export class OllamaService {
     this.OLLAMA_URL = this.aiConfigService.ollamaUrl;
   }
 
-  private async invoke(prompt: string): Promise<Record<string, any>> {
+  async invoke(prompt: string): Promise<Record<string, any>> {
     const aiResponse = await axios.post(`${this.OLLAMA_URL}/api/generate`, {
       ...this.BASE_PARAM,
       prompt,

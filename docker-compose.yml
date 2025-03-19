@@ -7,6 +7,7 @@ volumes:
   service_grafana:
   service_redis:
   service_mongo:
+  service_llama:
 #  service_s3:
 
 services:
@@ -64,3 +65,13 @@ services:
 #      - MINIO_ROOT_USER=root
 #      - MINIO_ROOT_PASSWORD=root
 #    command: server /data --console-address ":9001"
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    networks:
+      - network
+    ports:
+      - 11434:11434
+    volumes:
+      - service_llama:/root/.ollama

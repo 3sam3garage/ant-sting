@@ -1,44 +1,43 @@
 import axios from 'axios';
+import { Test, TestingModule } from '@nestjs/testing';
+import {
+  AiModule,
+  ANALYZE_SEC_DOCUMENT_PROMPT,
+  ClaudeService,
+  OllamaService,
+} from '@libs/ai';
+import { ExternalApiModule, SecApiService } from '@libs/external-api';
+import { AppConfigModule } from '@libs/config';
+import { parse as parseHTML } from 'node-html-parser';
 
 describe('ollama', () => {
-  it(
-    'llama 3.1 api',
-    async () => {
-      const responses = [];
+  let moduleRef: TestingModule;
+  let ollamaService: OllamaService;
+  let secApiService: SecApiService;
 
-      for (let i = 0; i < 3; i++) {
-        const res = await axios.post('http://localhost:11434/api/generate', {
-          model: 'llama3.1',
-          prompt: '',
-          stream: false,
-        });
+  beforeEach(async () => {
+    moduleRef = await Test.createTestingModule({
+      imports: [AppConfigModule, AiModule, ExternalApiModule],
+      providers: [OllamaService, SecApiService],
+    }).compile();
 
-        responses.push(res.data.response);
-      }
-
-      console.log(responses);
-    },
-    120 * 1000,
-  );
-
-  it('kospi api', async () => {
-    const res = await axios.get(
-      'https://apis.data.go.kr/1160100/service/GetMarketIndexInfoService/getStockMarketIndex',
-      {
-        params: {
-          serviceKey: process.env.DATA_GO_SERVICE_KEY,
-          idxNm: '코스피',
-          resultType: 'json',
-          numOfRows: 30,
-        },
-      },
-    );
-
-    console.log(res.data);
+    ollamaService = moduleRef.get(ClaudeService);
+    secApiService = moduleRef.get(SecApiService);
   });
 
-  it('includes', async () => {
-    const q = '2024-08-08'.replaceAll(/\-/g, '');
-    console.log(q);
+  it('analyze filing', async () => {
+    const document = await secApiService.fetchFilingDocument(
+      'https://www.sec.gov/Archives/edgar/data/1114446/000183988225015512/ubs_424b2-07543.htm',
+    );
+    const html = parseHTML(document);
+    const body = html.querySelector('body');
+    const content = body?.innerHTML ? body?.innerHTML : html?.innerHTML;
+    const prompt = ANALYZE_SEC_DOCUMENT_PROMPT.replace(
+      '{{SEC_FILING}}',
+      content,
+    );
+
+    const response = await ollamaService.invoke(prompt);
+    console.log(response);
   });
 });
