@@ -7,7 +7,7 @@ volumes:
   service_grafana:
   service_redis:
   service_mongo:
-  service_llama:
+  service_ollama:
 #  service_s3:
 
 services:
@@ -74,4 +74,4 @@ services:
     ports:
       - 11434:11434
     volumes:
-      - service_llama:/root/.ollama
+      - service_ollama:/root/.ollama
