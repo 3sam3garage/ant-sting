@@ -10,6 +10,8 @@ export interface EcosSearchInterface {
 
 export interface EcosSearchItem {
   STAT_CODE: string;
+  ITEM_NAME1: string;
+  ITEM_NAME2: string;
   ITEM_CODE1: string;
   ITEM_CODE2: string;
   UNIT_NAME: string;

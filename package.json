@@ -12,6 +12,7 @@
     "start:api:prod": "node dist/apps/api/main",
     "start:batch": "nest start batch -- poc stock-news-crawler",
     "start:batch:poc": "nest start batch -- test proxy-fetcher",
+    "start:batch:avg-exchange-rate": "nest start batch -- economic-information average-exchange-rate",
     "start:consumer": "nest start consumer --watch",
     "start:agent": "nest start agent --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

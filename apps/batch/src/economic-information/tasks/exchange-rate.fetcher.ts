@@ -5,7 +5,7 @@ import {
   ExchangeRateRepository,
 } from '@libs/domain';
 import { EcosSearchItem, KoreaBankApiService } from '@libs/external-api';
-import { addDays, addMonths, format, parse, subMonths } from 'date-fns';
+import { addMonths, format, parse, subMonths } from 'date-fns';
 
 @Injectable()
 export class ExchangeRateFetcher {

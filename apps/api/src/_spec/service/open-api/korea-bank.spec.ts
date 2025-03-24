@@ -21,10 +21,10 @@ describe('korea-bank', () => {
   // exchange-rate
   describe('환율', () => {
     const serviceType = 'StatisticSearch';
-    const code = '731Y001';
-    const interval = 'D';
-    const startDate = '20200101';
-    const endDate = '20250301';
+    const code = '731Y004';
+    const interval = 'M';
+    const startDate = '202001';
+    const endDate = '202503';
     const skip = 0;
     const limit = 10000;
 
@@ -34,6 +34,22 @@ describe('korea-bank', () => {
 
       const res = await axios.get(url);
       const { row, list_total_count } = res?.data?.[serviceType];
+
+      console.log(row, list_total_count);
+    });
+
+    it('월평균 테스트', async () => {
+      const subCode = '0000037';
+      const itemCode = '0000100';
+      const url = `https://ecos.bok.or.kr/api/${serviceType}/${apiKey}/json/kr/${skip}/${limit}/${code}/${interval}/${startDate}/${endDate}/${subCode}/${itemCode}`;
+
+      const res = await axios.get(url);
+      const { row, list_total_count } = res?.data?.[serviceType];
+
+      const items = row.map((item) => {
+        const { ITEM_NAME1, TIME, DATA_VALUE } = item;
+        return { name: ITEM_NAME1, date: TIME, value: DATA_VALUE };
+      });
 
       console.log(row, list_total_count);
     });

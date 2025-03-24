@@ -18,6 +18,7 @@ import {
   BondYieldFetcher,
   InterestRateFetcher,
   StockIndexFetcher,
+  AverageExchangeRateFetcher,
 } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 
@@ -47,6 +48,7 @@ import { ExternalApiModule } from '@libs/external-api';
     BondYieldFetcher,
     InterestRateFetcher,
     StockIndexFetcher,
+    AverageExchangeRateFetcher,
   ],
 })
 export class EconomicInformationBatchModule {}
