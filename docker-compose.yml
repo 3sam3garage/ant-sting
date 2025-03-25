@@ -8,6 +8,7 @@ volumes:
   service_redis:
   service_mongo:
   service_ollama:
+  service_open_webui:
 #  service_s3:
 
 services:
@@ -75,3 +76,16 @@ services:
       - 11434:11434
     volumes:
       - service_ollama:/root/.ollama
+
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    networks:
+      - network
+    ports:
+      - 3000:8080
+    environment:
+      OLLAMA_BASE_URL: "http://192.168.1.109:11434"
+    volumes:
+      - service_open_webui:/app/backend/data
