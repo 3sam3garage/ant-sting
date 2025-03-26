@@ -22,6 +22,9 @@ interface InvokePayload {
   model: MODEL_TYPE;
 }
 
+/**
+ * @deprecated
+ */
 @Injectable()
 export class ClaudeService {
   private client: BedrockRuntimeClient;
