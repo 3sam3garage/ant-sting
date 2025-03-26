@@ -4,8 +4,10 @@ import {
   EconomicInformationAnalysisRepository,
   EconomicInformationRepository,
 } from '@libs/domain';
-import { ClaudeService } from '@libs/ai';
-import { ANALYZE_ECONOMIC_INFORMATION_PROMPT } from '@libs/ai';
+import {
+  ANALYZE_GEMMA_ECONOMIC_INFORMATION_PROMPT,
+  OllamaService,
+} from '@libs/ai';
 import {
   fromEconomicInfoToSlackMessage,
   SlackService,
@@ -20,7 +22,7 @@ export class AnalyzeEconomicInformationTask {
   constructor(
     private readonly infoRepo: EconomicInformationRepository,
     private readonly analysisRepo: EconomicInformationAnalysisRepository,
-    private readonly claudeService: ClaudeService,
+    private readonly ollamaService: OllamaService,
     private readonly slackService: SlackService,
   ) {}
 
@@ -39,11 +41,13 @@ export class AnalyzeEconomicInformationTask {
         throw new Error('economic-information-analysis Entity already exists.');
     }
 
-    const prompt = ANALYZE_ECONOMIC_INFORMATION_PROMPT.replace(
-      '{{INFORMATION}}',
-      infoEntity.items.join('\n'),
+    const prompt = ANALYZE_GEMMA_ECONOMIC_INFORMATION_PROMPT.replace(
+      '{{ECONOMIC_INFORMATION}}',
+      JSON.stringify(infoEntity?.items || []),
     );
-    const response = await this.claudeService.invoke(prompt);
+
+    const response = await this.ollamaService.invoke({ prompt });
+    console.log(response);
 
     const analysis = EconomicInformationAnalysis.create({ ...response, date });
     await this.analysisRepo.save(analysis);

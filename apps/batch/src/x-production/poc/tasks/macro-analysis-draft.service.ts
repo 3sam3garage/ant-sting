@@ -10,7 +10,7 @@ import {
   StockAnalysisRepository,
   StockReportRepository,
 } from '@libs/domain';
-import { ClaudeService, POC_INTEREST_PROMPT } from '@libs/ai';
+import { OllamaService, POC_INTEREST_PROMPT } from '@libs/ai';
 
 @Injectable()
 export class MacroAnalysisDraft {
@@ -22,7 +22,7 @@ export class MacroAnalysisDraft {
     private readonly interestRateRepo: InterestRateRepository,
     private readonly exchangeRateRepo: ExchangeRateRepository,
     private readonly bondYieldRepo: BondYieldRepository,
-    private readonly claudeService: ClaudeService,
+    private readonly OllamaService: OllamaService,
   ) {}
 
   async exec(): Promise<void> {
@@ -64,7 +64,7 @@ export class MacroAnalysisDraft {
       )
       .replace('{{BOND_YIELD}}', JSON.stringify(removeIds(bondYields)));
 
-    const res = await this.claudeService.invoke(prompt);
+    const res = await this.OllamaService.invoke({ prompt });
     console.log(res);
   }
 }

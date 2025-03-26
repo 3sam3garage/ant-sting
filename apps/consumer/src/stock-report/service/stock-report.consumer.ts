@@ -14,7 +14,7 @@ import {
   StockReportRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { ANALYZE_PDF_STOCK_REPORT_PROMPT, ClaudeService } from '@libs/ai';
+import { ANALYZE_PDF_STOCK_REPORT_PROMPT, OllamaService } from '@libs/ai';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ANALYZE_STOCK)
@@ -22,7 +22,7 @@ export class StockReportConsumer extends BaseConsumer {
   constructor(
     private readonly stockReportRepo: StockReportRepository,
     private readonly stockAnalysisRepo: StockAnalysisRepository,
-    private readonly claudeService: ClaudeService,
+    private readonly ollamaService: OllamaService,
   ) {
     super();
   }
@@ -73,7 +73,7 @@ export class StockReportConsumer extends BaseConsumer {
     ).replace('{{PDF_EXTRACTED_TEXT}}', data.text);
 
     const { targetPrice, currentPrice, position, currency, analysis } =
-      await this.claudeService.invoke(prompt);
+      await this.ollamaService.invoke({ prompt });
 
     const entity = StockAnalysis.create({
       uuid,

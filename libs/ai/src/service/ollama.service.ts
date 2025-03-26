@@ -22,7 +22,10 @@ export class OllamaService {
   //   return JSON.parse(aiResponse.data.response);
   // }
 
-  async invoke(query: any): Promise<Record<string, any>> {
+  async invoke(query: {
+    prompt: string;
+    images?: string[];
+  }): Promise<Record<string, any>> {
     const { prompt, images } = query;
     const aiResponse = await axios.post(`${this.OLLAMA_URL}/api/generate`, {
       ...this.BASE_PARAM,
@@ -32,7 +35,8 @@ export class OllamaService {
       format: 'json',
     });
 
-    console.log(aiResponse.data.response);
+    // console.log(aiResponse.data);
+    // console.log(aiResponse.data.response);
     return JSON.parse(aiResponse.data.response);
   }
 }

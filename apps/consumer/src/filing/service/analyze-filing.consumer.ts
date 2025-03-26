@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb';
 import { isBefore, subMonths } from 'date-fns';
 import { addDays, startOfDay } from 'date-fns/fp';
 import { QUEUE_NAME, REDIS_NAME } from '@libs/config';
-import { ANALYZE_SEC_DOCUMENT_PROMPT, ClaudeService } from '@libs/ai';
+import { ANALYZE_SEC_DOCUMENT_PROMPT, OllamaService } from '@libs/ai';
 import {
   FilingAnalysis,
   FilingRepository,
@@ -28,7 +28,7 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
   constructor(
     @Inject(REDIS_NAME.ANT_STING)
     private readonly redis: Redis,
-    private readonly claudeService: ClaudeService,
+    private readonly ollamaService: OllamaService,
     private readonly filingRepository: FilingRepository,
     private readonly secApiService: SecApiService,
     private readonly slackService: SlackService,
@@ -72,7 +72,7 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
       '{{SEC_FILING}}',
       content,
     );
-    const response = await this.claudeService.invoke(prompt);
+    const response = await this.ollamaService.invoke(prompt);
     const {
       summaries,
       analysis: { score, reason },

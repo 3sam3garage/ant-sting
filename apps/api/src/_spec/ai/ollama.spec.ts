@@ -85,8 +85,8 @@ describe('ollama', () => {
    */
   it('analyze pdf in text', async () => {
     const summary = {
-      // href: 'https://stock.pstatic.net/stock-research/company/2/20250320_company_604438000.pdf',
-      href: 'https://stock.pstatic.net/stock-research/company/21/20250320_company_798363000.pdf',
+      href: 'https://stock.pstatic.net/stock-research/company/2/20250320_company_604438000.pdf',
+      // href: 'https://stock.pstatic.net/stock-research/company/21/20250320_company_798363000.pdf',
       // href: 'https://stock.pstatic.net/stock-research/company/16/20250319_company_212300000.pdf',
       // href: 'https://stock.pstatic.net/stock-research/company/62/20250319_company_986497000.pdf',
     };
