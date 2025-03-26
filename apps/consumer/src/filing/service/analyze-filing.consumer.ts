@@ -72,7 +72,7 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
       '{{SEC_FILING}}',
       content,
     );
-    const response = await this.ollamaService.invoke(prompt);
+    const response = await this.ollamaService.invoke({ prompt });
     const {
       summaries,
       analysis: { score, reason },
