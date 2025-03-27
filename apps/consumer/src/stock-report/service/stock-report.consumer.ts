@@ -49,7 +49,7 @@ export class StockReportConsumer extends BaseConsumer {
     }
   }
 
-  @Process({ concurrency: 3 })
+  @Process({ concurrency: 1 })
   async run({ data: { stockReportId } }: Job<{ stockReportId: string }>) {
     const { uuid, file, stockName, date, code, market } =
       await this.stockReportRepo.findOne({
