@@ -12,16 +12,6 @@ export class OllamaService {
     this.OLLAMA_URL = this.aiConfigService.ollamaUrl;
   }
 
-  // async invoke(prompt: string): Promise<Record<string, any>> {
-  //   const aiResponse = await axios.post(`${this.OLLAMA_URL}/api/generate`, {
-  //     ...this.BASE_PARAM,
-  //     prompt,
-  //   });
-  //
-  //   console.log(aiResponse.data.response);
-  //   return JSON.parse(aiResponse.data.response);
-  // }
-
   async invoke(query: {
     prompt: string;
     images?: string[];
@@ -36,7 +26,6 @@ export class OllamaService {
     });
 
     // console.log(aiResponse.data);
-    // console.log(aiResponse.data.response);
     return JSON.parse(aiResponse.data.response);
   }
 }
