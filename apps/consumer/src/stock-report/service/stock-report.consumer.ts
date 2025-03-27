@@ -3,8 +3,6 @@ import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import axios from 'axios';
-import pdf from 'pdf-parse';
-import { today } from '@libs/common';
 import {
   CURRENCY_TYPE,
   MARKET_POSITION,
@@ -14,7 +12,7 @@ import {
   StockReportRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { ANALYZE_PDF_STOCK_REPORT_PROMPT, OllamaService } from '@libs/ai';
+import { GeminiService, GEMMA_ANALYZE_PDF_STOCK_REPORT } from '@libs/ai';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ANALYZE_STOCK)
@@ -22,7 +20,7 @@ export class StockReportConsumer extends BaseConsumer {
   constructor(
     private readonly stockReportRepo: StockReportRepository,
     private readonly stockAnalysisRepo: StockAnalysisRepository,
-    private readonly ollamaService: OllamaService,
+    private readonly geminiService: GeminiService,
   ) {
     super();
   }
@@ -64,16 +62,26 @@ export class StockReportConsumer extends BaseConsumer {
       return;
     }
 
-    const pdfFile = await axios.get(file, { responseType: 'arraybuffer' });
-    const data = await pdf(pdfFile.data, { max: 2 });
+    const pdfResponse = await axios.get(file, { responseType: 'arraybuffer' });
+    const uploadedFile = await this.geminiService.upload({
+      data: new Blob([pdfResponse.data]),
+      mimeType: 'application/pdf',
+    });
 
-    const prompt = ANALYZE_PDF_STOCK_REPORT_PROMPT.replace(
-      '{{TODAY}}',
-      today(),
-    ).replace('{{PDF_EXTRACTED_TEXT}}', data.text);
+    const response = await this.geminiService.invoke({
+      contents: [
+        GEMMA_ANALYZE_PDF_STOCK_REPORT,
+        { fileData: { fileUri: uploadedFile.uri } },
+      ],
+    });
+
+    let reportResponse = response;
+    if (Array.isArray(response)) {
+      reportResponse = response.pop();
+    }
 
     const { targetPrice, currentPrice, position, currency, analysis } =
-      await this.ollamaService.invoke({ prompt });
+      reportResponse;
 
     const entity = StockAnalysis.create({
       uuid,

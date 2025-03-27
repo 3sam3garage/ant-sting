@@ -71,7 +71,7 @@ describe('ollama', () => {
     const pdfResponse = await axios.get(summary.href, {
       responseType: 'arraybuffer',
     });
-    const image = await geminiService.upload({
+    const file = await geminiService.upload({
       data: new Blob([pdfResponse.data]),
       mimeType: 'application/pdf',
     });
@@ -79,10 +79,16 @@ describe('ollama', () => {
     const response = await geminiService.invoke({
       contents: [
         GEMMA_ANALYZE_PDF_STOCK_REPORT,
-        { fileData: { fileUri: image.uri } },
+        { fileData: { fileUri: file.uri } },
       ],
     });
-    console.log(response);
+
+    let reportResponse = response;
+    if (Array.isArray(response)) {
+      reportResponse = response.pop();
+    }
+
+    console.log(reportResponse);
   });
 
   it('analyze pdf in text', async () => {

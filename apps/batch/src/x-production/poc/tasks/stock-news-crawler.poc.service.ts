@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { QUEUE_NAME } from '@libs/config';
 import { ChromiumService, PAGE_PURPOSE } from '@libs/browser';
-import { OllamaService, ANALYZE_NEWS_PROMPT } from '@libs/ai';
+import { GeminiService, ANALYZE_NEWS_PROMPT } from '@libs/ai';
 import { StockMarketNews, StockMarketNewsRepository } from '@libs/domain';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
@@ -13,7 +13,7 @@ export class StockMarketNewsCrawler {
     @InjectQueue(QUEUE_NAME.ANALYZE_MARKET_NEWS)
     private readonly queue: Queue,
     private readonly chromiumService: ChromiumService,
-    private readonly ollamaService: OllamaService,
+    private readonly geminiService: GeminiService,
     private readonly stockMarketNewsRepository: StockMarketNewsRepository,
   ) {}
 
@@ -91,7 +91,7 @@ export class StockMarketNewsCrawler {
     });
 
     const prompt = ANALYZE_NEWS_PROMPT.replace('{{NEWS}}', article);
-    const response = await this.ollamaService.invoke({ prompt });
+    const response = await this.geminiService.invoke({ contents: prompt });
 
     await this.stockMarketNewsRepository.save({
       ...entity,

@@ -3,7 +3,7 @@ import { Process, Processor } from '@nestjs/bull';
 import { ObjectId } from 'mongodb';
 import { Logger } from '@nestjs/common';
 import { StockMarketNewsRepository } from '@libs/domain';
-import { ANALYZE_NEWS_PROMPT, OllamaService } from '@libs/ai';
+import { ANALYZE_NEWS_PROMPT, GeminiService } from '@libs/ai';
 import { QUEUE_NAME } from '@libs/config';
 import { BrowserFactory } from '@libs/browser';
 import { BaseConsumer } from '../../base.consumer';
@@ -15,7 +15,7 @@ export class StockMarketNewsConsumer extends BaseConsumer {
 
   constructor(
     private readonly stockMarketNewsRepository: StockMarketNewsRepository,
-    private readonly ollamaService: OllamaService,
+    private readonly geminiService: GeminiService,
   ) {
     super();
 
@@ -58,7 +58,7 @@ export class StockMarketNewsConsumer extends BaseConsumer {
     });
 
     const prompt = ANALYZE_NEWS_PROMPT.replace('{{NEWS}}', article);
-    const response = await this.ollamaService.invoke({ prompt });
+    const response = await this.geminiService.invoke({ contents: prompt });
 
     await this.stockMarketNewsRepository.save({
       ...entity,

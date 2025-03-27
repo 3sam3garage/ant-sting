@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppConfigModule } from '@libs/config';
-import { GeminiService, OllamaService } from './service';
+import { GeminiService } from './service';
 
 @Module({
   imports: [AppConfigModule],
-  providers: [OllamaService, GeminiService],
-  exports: [OllamaService, GeminiService],
+  providers: [GeminiService],
+  exports: [GeminiService],
 })
 export class AiModule {}

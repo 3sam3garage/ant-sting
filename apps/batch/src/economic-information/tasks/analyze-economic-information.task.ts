@@ -6,7 +6,7 @@ import {
 } from '@libs/domain';
 import {
   ANALYZE_GEMMA_ECONOMIC_INFORMATION_PROMPT,
-  OllamaService,
+  GeminiService,
 } from '@libs/ai';
 import {
   fromEconomicInfoToSlackMessage,
@@ -22,7 +22,7 @@ export class AnalyzeEconomicInformationTask {
   constructor(
     private readonly infoRepo: EconomicInformationRepository,
     private readonly analysisRepo: EconomicInformationAnalysisRepository,
-    private readonly ollamaService: OllamaService,
+    private readonly geminiService: GeminiService,
     private readonly slackService: SlackService,
   ) {}
 
@@ -46,7 +46,7 @@ export class AnalyzeEconomicInformationTask {
       JSON.stringify(infoEntity?.items || []),
     );
 
-    const response = await this.ollamaService.invoke({ prompt });
+    const response = await this.geminiService.invoke({ contents: prompt });
     console.log(response);
 
     const analysis = EconomicInformationAnalysis.create({ ...response, date });
