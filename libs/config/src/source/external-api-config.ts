@@ -16,6 +16,9 @@ export interface ExternalApiConfig {
   // FRED 연방은행
   FRED_API_KEY: string;
 
+  // 구글 AI 스튜디오
+  GOOGLE_AI_STUDIO_API_KEY: string;
+
   SLACK_WEBHOOK_URL: string;
 
   SLACK_TOKEN: string;
@@ -32,5 +35,6 @@ export default registerAs<ExternalApiConfig>('EXTERNAL_API', () => {
     OPEN_DART_API_KEY: env.OPEN_DART_API_KEY,
     ECOS_API_KEY: env.ECOS_API_KEY,
     FRED_API_KEY: env.FRED_API_KEY,
+    GOOGLE_AI_STUDIO_API_KEY: env.GOOGLE_AI_STUDIO_API_KEY,
   };
 });

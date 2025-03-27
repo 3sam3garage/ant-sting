@@ -36,4 +36,8 @@ export class ExternalApiConfigService {
   get fredApiKey(): string {
     return this.config.FRED_API_KEY;
   }
+
+  get googleAIStudioApiKey(): string {
+    return this.config.GOOGLE_AI_STUDIO_API_KEY;
+  }
 }
