@@ -1,10 +1,10 @@
 #!/bin/zsh
 
 # scrape reports
-#nest start batch -- stock-report scrape-naver
-#nest start batch -- stock-report scrape-hana
-#nest start batch -- stock-report scrape-shinhan
-#nest start batch -- stock-report scrape-kiwoom
+nest start batch -- stock-report scrape-naver
+nest start batch -- stock-report scrape-hana
+nest start batch -- stock-report scrape-shinhan
+nest start batch -- stock-report scrape-kiwoom
 
 # scrape economic information
 nest start batch -- economic-information scrape-naver
