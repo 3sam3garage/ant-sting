@@ -1,7 +1,7 @@
-FROM node:18.14.0-alpine as tsbuild
+FROM node:20.19.0-alpine as tsbuild
 
-ARG NPM_TOKEN
-ENV NPM_TOKEN=$NPM_TOKEN
+#ARG NPM_TOKEN
+#ENV NPM_TOKEN=$NPM_TOKEN
 
 ARG BUILD_SERVICE_NAME
 ENV BUILD_SERVICE_NAME=$BUILD_SERVICE_NAME
@@ -11,15 +11,15 @@ WORKDIR /usr/app
 
 COPY .npmrc package*.json tsconfig*.json nest-cli*.json ./
 
-RUN echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
+#RUN echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
 
 RUN npm ci
 COPY apps ./apps
 COPY libs ./libs
 RUN npm run build:${BUILD_SERVICE_NAME}
 
-FROM node:18.14.0-alpine
-LABEL maintainer="ddocdoc <dev@ddocdoc.kr>"
+FROM node:20.19.0-alpine
+LABEL maintainer="3sam3 <iamdap91@gmail.com>"
 
 ARG BUILD_SERVICE_NAME
 ENV BUILD_SERVICE_NAME=$BUILD_SERVICE_NAME
