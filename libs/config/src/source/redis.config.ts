@@ -1,7 +1,12 @@
 import { registerAs } from '@nestjs/config';
-import { CommonRedisOptions } from 'ioredis';
 
-export default registerAs<CommonRedisOptions>('REDIS', () => {
+export interface RedisConfig {
+  host: string;
+  port: number;
+  db: number;
+}
+
+export default registerAs<RedisConfig>('REDIS', () => {
   const { env } = process;
 
   return {

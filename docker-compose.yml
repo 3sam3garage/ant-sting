@@ -89,3 +89,18 @@ services:
       OLLAMA_BASE_URL: "http://192.168.1.109:11434"
     volumes:
       - service_open_webui:/app/backend/data
+
+  ant-sting-batch:
+    image: iamdap91/ant-sting-batch
+    networks:
+      network:
+    env_file:
+      - .env
+    environment:
+      - BUILD_SERVICE_NAME=batch
+    command:
+      - 'node'
+      - './apps/batch/src/main.js'
+      - 'test'
+      - 'proxy-fetcher'
+
