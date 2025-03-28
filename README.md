@@ -111,6 +111,12 @@ $ nest start batch -- poc macro-analysis-draft
 $ nest start batch -- poc realtime-short-interest-crawler
 ```
 
+## Container Registry
+- [ant-sting-api](https://hub.docker.com/r/iamdap91/ant-sting-api)
+- [ant-sting-batch](https://hub.docker.com/r/iamdap91/ant-sting-batch)
+- [ant-sting-consumer](https://hub.docker.com/r/iamdap91/ant-sting-consumer)
+- [ant-sting-agent](https://hub.docker.com/r/iamdap91/ant-sting-agent)
+
 ## Stay in touch
 
 - Author - [3sam3]()
