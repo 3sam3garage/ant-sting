@@ -1,16 +1,16 @@
-name: 설정_개발환경 배포
+name: 설정_운영환경 배포
 on:
   workflow_dispatch:
   push:
     branches:
-      - test-server
+      - main
 
 jobs:
   api:
     uses: "./.github/workflows/build-and-deploy.yaml"
     with:
       serviceName: ant-sting-api
-      deployEnv: test
+      deployEnv: prod
       buildServiceName: api
     secrets: inherit
 
@@ -18,7 +18,7 @@ jobs:
     uses: "./.github/workflows/build-and-deploy.yaml"
     with:
       serviceName: ant-sting-agent
-      deployEnv: test
+      deployEnv: prod
       buildServiceName: agent
     secrets: inherit
 
@@ -26,7 +26,7 @@ jobs:
     uses: "./.github/workflows/build-and-deploy.yaml"
     with:
       serviceName: ant-sting-batch
-      deployEnv: test
+      deployEnv: prod
       buildServiceName: batch
     secrets: inherit
 
@@ -34,6 +34,6 @@ jobs:
     uses: "./.github/workflows/build-and-deploy.yaml"
     with:
       serviceName: ant-sting-consumer
-      deployEnv: test
+      deployEnv: prod
       buildServiceName: consumer
     secrets: inherit

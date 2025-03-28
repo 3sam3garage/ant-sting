@@ -9,7 +9,7 @@ ENV BUILD_SERVICE_NAME=$BUILD_SERVICE_NAME
 RUN mkdir /usr/app
 WORKDIR /usr/app
 
-COPY .npmrc package*.json tsconfig*.json nest-cli*.json ./
+COPY package*.json tsconfig*.json nest-cli*.json ./
 
 #RUN echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
 
@@ -36,7 +36,7 @@ RUN chown node:node /usr/app/temp
 
 COPY --from=tsbuild /usr/app/dist .
 COPY --from=tsbuild /usr/app/node_modules ./node_modules
-COPY API.md project-info.json package.json nest-cli*.json ./
+COPY package.json nest-cli*.json ./
 COPY ./tools/entrypoint.sh .
 
 RUN npm prune --omit=dev

@@ -6,7 +6,10 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build:api": "nest build api",
+    "build:agent": "nest build agent",
+    "build:batch": "nest build batch",
+    "build:consumer": "nest build consumer",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start:api": "nest start api --watch",
     "start:api:prod": "node dist/apps/api/main",
