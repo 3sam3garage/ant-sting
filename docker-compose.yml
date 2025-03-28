@@ -92,6 +92,7 @@ services:
 
   ant-sting-batch:
     image: iamdap91/ant-sting-batch
+    platform: linux/amd64
     networks:
       network:
     env_file:
@@ -101,6 +102,37 @@ services:
     command:
       - 'node'
       - './apps/batch/src/main.js'
-      - 'test'
-      - 'proxy-fetcher'
+      - ${BATCH_COMMAND}
+      - ${BATCH_SUBCOMMAND}
 
+  ant-sting-api:
+    image: iamdap91/ant-sting-api
+    platform: linux/amd64
+    networks:
+      network:
+    env_file:
+      - .env
+    environment:
+      - BUILD_SERVICE_NAME=api
+    ports:
+      - "3002:3002"
+
+  ant-sting-consumer:
+    image: iamdap91/ant-sting-consumer
+    platform: linux/amd64
+    networks:
+      network:
+    env_file:
+      - .env
+    environment:
+      - BUILD_SERVICE_NAME=consumer
+
+  ant-sting-agent:
+    image: iamdap91/ant-sting-agent
+    platform: linux/amd64
+    networks:
+      network:
+    env_file:
+      - .env
+    environment:
+      - BUILD_SERVICE_NAME=agent
