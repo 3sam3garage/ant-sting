@@ -14,40 +14,20 @@ export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
   }
 
   async findByDate(query: FindAnalysisByDate) {
-    const { from, to, aiSuggestion, reportSuggestion } = query;
+    const { from, to, stockCode } = query;
 
     const filterQuery: FilterOperators<StockAnalysis> = {
-      where: {
-        date: { $gte: from, $lte: to },
-      },
+      where: {},
     };
 
-    if (aiSuggestion) {
-      filterQuery.where['aiAnalysis.position'] = aiSuggestion;
+    if (stockCode) {
+      filterQuery.where = { ...filterQuery.where, stockCode };
     }
 
-    if (reportSuggestion) {
-      filterQuery.where['reportAnalysis.position'] = reportSuggestion;
+    if (from && to) {
+      filterQuery.where.date = { $gte: from, $lte: to };
     }
 
     return this.repo.find(filterQuery);
-  }
-
-  async countByDate(query: FindAnalysisByDate) {
-    const { from, to, aiSuggestion, reportSuggestion } = query;
-
-    const filterQuery: FilterOperators<StockAnalysis> = {
-      date: { $gte: from, $lte: to },
-    };
-
-    if (aiSuggestion) {
-      filterQuery['aiAnalysis.position'] = aiSuggestion;
-    }
-
-    if (reportSuggestion) {
-      filterQuery['reportAnalysis.position'] = reportSuggestion;
-    }
-
-    return this.repo.count(filterQuery);
   }
 }

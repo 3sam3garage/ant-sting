@@ -2,12 +2,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { StockReportService } from '../services';
-import { StockReportResponse } from '../dto';
-import {
-  CountByItemResponse,
-  FigureShareResponse,
-  FindByDateQuery,
-} from '../../components';
+import { FindStockQuery, StockReportResponse } from '../dto';
 
 @ApiTags('stock-reports')
 @Controller('stock-reports')
@@ -16,31 +11,21 @@ export class StockReportController {
 
   @ApiOkResponse({ type: StockReportResponse, isArray: true })
   @Get()
-  async findByDate(@Query() query: FindByDateQuery) {
+  async findByDate(
+    @Query() query: FindStockQuery,
+  ): Promise<StockReportResponse[]> {
     return this.service.findByDate(query);
   }
 
   @ApiOkResponse({ type: Number })
   @Get('count')
-  async count(@Query() query: FindByDateQuery) {
+  async count(@Query() query: FindStockQuery) {
     return this.service.countByDate(query);
-  }
-
-  @ApiOkResponse({ type: FigureShareResponse })
-  @Get('share')
-  async share(@Query() query: FindByDateQuery) {
-    return this.service.figureShare(query);
-  }
-
-  @ApiOkResponse({ type: CountByItemResponse })
-  @Get('count-by-item')
-  async countByReports(@Query() query: FindByDateQuery) {
-    return this.service.countByReport(query);
   }
 
   @ApiOkResponse({ type: StockReportResponse })
   @Get(':_id')
-  async findOneById(@Param('_id') _id: string) {
+  async findOneById(@Param('_id') _id: string): Promise<StockReportResponse> {
     return this.service.findOneById(new ObjectId(_id));
   }
 }

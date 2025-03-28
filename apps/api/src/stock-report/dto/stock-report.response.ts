@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { ApiProperty } from '@nestjs/swagger';
-import { MARKET_TYPE } from '@libs/domain';
+import { MARKET_TYPE, StockReport } from '@libs/domain';
+import { plainToInstance } from 'class-transformer';
 
 export class StockReportResponse {
   @ApiProperty()
@@ -29,4 +30,8 @@ export class StockReportResponse {
 
   @ApiProperty({ example: '2024-08-08' })
   date: string;
+
+  static fromEntity(entity: StockReport) {
+    return plainToInstance(StockReportResponse, entity);
+  }
 }

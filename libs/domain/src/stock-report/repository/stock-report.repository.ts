@@ -1,7 +1,8 @@
-import { MongoRepository } from 'typeorm';
+import { FilterOperators, MongoRepository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockReport } from '../entity';
+import { FindStockByDate } from '@libs/domain/stock-report/interfaces/find-report.interface';
 
 @Injectable()
 export class StockReportRepository extends MongoRepository<StockReport> {
@@ -16,17 +17,32 @@ export class StockReportRepository extends MongoRepository<StockReport> {
     return this.repo.findOne({ where: { uuid } });
   }
 
-  async findByDate(from: Date, to: Date) {
-    return this.repo.find({
-      where: {
-        date: { $gte: from, $lte: to },
-      },
-    });
+  async findByDate(query: FindStockByDate) {
+    const { from, to, code } = query;
+
+    const filterQuery: FilterOperators<StockReport> = {
+      where: {},
+    };
+    if (code) {
+      filterQuery.where = { ...filterQuery.where, code };
+    }
+    if (from && to) {
+      filterQuery.where.date = { $gte: from, $lte: to };
+    }
+
+    return await this.repo.find(filterQuery);
   }
 
-  async countByDate(from: Date, to: Date) {
-    return this.repo.count({
-      date: { $gte: from, $lte: to },
-    });
+  async countByDate(query: FindStockByDate) {
+    const { from, to, code } = query;
+    const filterQuery: FilterOperators<StockReport> = {};
+    if (code) {
+      filterQuery.code = code;
+    }
+    if (from && to) {
+      filterQuery.date = { $gte: from, $lte: to };
+    }
+
+    return this.repo.count(filterQuery);
   }
 }

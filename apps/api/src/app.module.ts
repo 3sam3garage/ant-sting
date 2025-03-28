@@ -2,37 +2,15 @@ import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { CoreModule } from '@libs/core';
 import { StockReportModule } from './stock-report';
 import { StockAnalysisModule } from './stock-analysis';
-import { EconomicInformationAnalysisModule } from './economic-information-analysis';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import {
   HttpExceptionFilter,
   validationExceptionFilter,
   RequestLoggerMiddleware,
 } from './components';
-import { ExchangeRateModule } from './exchange-rate';
-import { BondYieldModule } from './bond-yield';
-import { FilingModule } from './filing';
-import { TickerModule } from './ticker';
-import { ShortInterestModule } from './short-interest';
-import { StockIndexModule } from './stock-index';
-import { InterestRateModule } from './interest-rate';
-import { StockMarketNewsModule } from './stock-market-news';
 
 @Module({
-  imports: [
-    CoreModule,
-    StockReportModule,
-    StockAnalysisModule,
-    ExchangeRateModule,
-    BondYieldModule,
-    FilingModule,
-    TickerModule,
-    StockIndexModule,
-    ShortInterestModule,
-    InterestRateModule,
-    EconomicInformationAnalysisModule,
-    StockMarketNewsModule,
-  ],
+  imports: [CoreModule, StockReportModule, StockAnalysisModule],
   providers: [
     {
       provide: APP_FILTER,

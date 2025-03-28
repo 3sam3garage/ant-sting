@@ -1,52 +1,27 @@
 import { ObjectId } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { StockReportRepository } from '@libs/domain';
-import { FindByDateQuery } from '../../components';
-import { countBy } from 'lodash';
+import { FindStockQuery, StockReportResponse } from '../dto';
 
 @Injectable()
 export class StockReportService {
   constructor(private readonly repo: StockReportRepository) {}
 
   async findOneById(_id: ObjectId) {
-    return this.repo.findOne({ where: { _id } });
+    const entity = await this.repo.findOne({ where: { _id } });
+    return StockReportResponse.fromEntity(entity);
   }
 
-  async findByDate(query: FindByDateQuery) {
-    const { from, to } = query;
-    return await this.repo.findByDate(from, to);
+  async findByDate(query: FindStockQuery) {
+    const { from, to, code } = query;
+    const entities = await this.repo.findByDate({ from, to, code });
+
+    return entities.map((entity) => StockReportResponse.fromEntity(entity));
   }
 
-  async countByDate(query: FindByDateQuery) {
-    const { from, to } = query;
-    const count = await this.repo.countByDate(from, to);
+  async countByDate(query: FindStockQuery): Promise<{ count: number }> {
+    const count = await this.repo.countByDate(query);
 
     return { count };
-  }
-
-  async figureShare(query: FindByDateQuery) {
-    const { from, to } = query;
-    const reports = await this.repo.findByDate(from, to);
-    const share = countBy(reports, 'market');
-
-    return { share };
-  }
-
-  async countByReport(query: FindByDateQuery) {
-    const { from, to } = query;
-    const reports = await this.repo.findByDate(from, to);
-    const share = countBy(reports, 'code');
-
-    const map = new Map();
-    for (const report of reports) {
-      map.set(report.code, report.stockName);
-    }
-
-    const items = [];
-    for (const [key, value] of Object.entries(share)) {
-      const name = map.get(key);
-      items.push({ name: `${name} (${key})`, value });
-    }
-    return { items };
   }
 }
