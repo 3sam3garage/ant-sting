@@ -20,7 +20,7 @@ export class DatabaseConfigService {
       cache: {
         type: 'ioredis',
         options: {
-          socket: { ...this.redisConf },
+          ...this.redisConf,
         },
       },
     };
