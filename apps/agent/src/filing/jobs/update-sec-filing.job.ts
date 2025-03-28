@@ -6,6 +6,9 @@ import { TICKER_SNIPPETS_SET, TickerRepository } from '@libs/domain';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 
+/**
+ * @deprecated
+ */
 @Injectable()
 export class UpdateSecFilingJob {
   private isRunning = false;

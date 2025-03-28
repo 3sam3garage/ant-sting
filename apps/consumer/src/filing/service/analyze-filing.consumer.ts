@@ -6,13 +6,12 @@ import { ObjectId } from 'mongodb';
 import { isBefore, subMonths } from 'date-fns';
 import { addDays, startOfDay } from 'date-fns/fp';
 import { QUEUE_NAME, REDIS_NAME } from '@libs/config';
-import { ANALYZE_SEC_DOCUMENT_PROMPT, GeminiService } from '@libs/ai';
+import { ANALYZE_GEMMA_SEC_DOCUMENT_PROMPT, GeminiService } from '@libs/ai';
 import {
   FilingAnalysis,
   FilingRepository,
   SEC_FILING_URL_SET,
   SLACK_MESSAGE_FILING_SET,
-  TICKER_SNIPPETS_SET,
 } from '@libs/domain';
 import {
   fromSecFilingToSlackMessage,
@@ -68,7 +67,7 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
 
     const content = body?.innerHTML ? body?.innerHTML : html?.innerHTML;
 
-    const prompt = ANALYZE_SEC_DOCUMENT_PROMPT.replace(
+    const prompt = ANALYZE_GEMMA_SEC_DOCUMENT_PROMPT.replace(
       '{{SEC_FILING}}',
       content,
     );
@@ -83,9 +82,9 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     await this.redis.sadd(SEC_FILING_URL_SET, filing.url);
 
     // 3점 이상인 항목은 5분마다 정기적으로 수집하도록 포함.
-    if (score >= 3) {
-      await this.redis.sadd(TICKER_SNIPPETS_SET, filing.ticker);
-    }
+    // if (score >= 3) {
+    //   await this.redis.sadd(TICKER_SNIPPETS_SET, filing.ticker);
+    // }
 
     // 4점 이상인 항목은 슬랙 메시지 발송
     if (score >= 4) {
