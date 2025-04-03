@@ -5,7 +5,7 @@ import { StockReportService } from '../services';
 import { FindStockQuery, StockReportResponse } from '../dto';
 
 @ApiTags('stock-reports')
-@Controller('stock-reports')
+@Controller('/v1/stock-reports')
 export class StockReportController {
   constructor(private readonly service: StockReportService) {}
 
