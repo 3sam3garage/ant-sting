@@ -10,6 +10,7 @@ Follow this instructions:
 
 Follow this policy:
 - Answer must be in korean.
+- Try to be conservative when evaluating target price.
 
 Use this JSON schema:
 Return: {

@@ -64,8 +64,12 @@ describe('ollama', () => {
     const summary = {
       // href: 'https://stock.pstatic.net/stock-research/company/2/20250320_company_604438000.pdf',
       // href: 'https://stock.pstatic.net/stock-research/company/21/20250320_company_798363000.pdf',
-      href: 'https://stock.pstatic.net/stock-research/company/16/20250319_company_212300000.pdf',
+      // href: 'https://stock.pstatic.net/stock-research/company/16/20250319_company_212300000.pdf',
       // href: 'https://stock.pstatic.net/stock-research/company/62/20250319_company_986497000.pdf',
+      // href: 'https://stock.pstatic.net/stock-research/company/31/20250403_company_277023000.pdf',
+      // href: 'https://stock.pstatic.net/stock-research/company/63/20250402_company_367848000.pdf',
+      // href: 'https://stock.pstatic.net/stock-research/company/57/20250401_company_622360000.pdf',
+      href: 'https://stock.pstatic.net/stock-research/company/16/20250401_company_206120000.pdf',
     };
 
     const pdfResponse = await axios.get(summary.href, {
@@ -93,7 +97,8 @@ describe('ollama', () => {
 
   it('analyze pdf in text', async () => {
     const summary = {
-      href: 'https://stock.pstatic.net/stock-research/company/2/20250320_company_604438000.pdf',
+      href: 'https://stock.pstatic.net/stock-research/company/31/20250403_company_277023000.pdf',
+      // href: 'https://stock.pstatic.net/stock-research/company/2/20250320_company_604438000.pdf',
       // href: 'https://stock.pstatic.net/stock-research/company/21/20250320_company_798363000.pdf',
       // href: 'https://stock.pstatic.net/stock-research/company/16/20250319_company_212300000.pdf',
       // href: 'https://stock.pstatic.net/stock-research/company/62/20250319_company_986497000.pdf',
