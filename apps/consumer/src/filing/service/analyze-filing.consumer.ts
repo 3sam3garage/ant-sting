@@ -44,6 +44,9 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
       case !FILINGS_TO_ANALYZE.includes(filing.formType):
         Logger.debug('Filing is not 8-K');
         return;
+      case !filing.url.includes('8k'):
+        Logger.debug('8-K, but common filing');
+        return;
     }
 
     const document = await this.secApiService.fetchFilingDocument(filing.url);
@@ -57,6 +60,7 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
       content,
     );
     const response = await this.geminiService.invoke({ contents: prompt });
+    console.log(response);
     const {
       summaries,
       analysis: { score, reason },
