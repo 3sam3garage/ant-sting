@@ -28,17 +28,6 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
     super();
   }
 
-  // private ttlResolver(dateTime: Date) {
-  //   return flow(
-  //     addDays(1),
-  //     startOfDay,
-  //     (expiredAt) => expiredAt.getTime() - Date.now(),
-  //     (ttl) => ttl / 1000,
-  //     Math.ceil,
-  //     Math.abs,
-  //   )(dateTime);
-  // }
-
   @Process({ concurrency: 1 })
   async run({ data: { filingId } }: Job<{ filingId: string }>) {
     const filing = await this.filingRepository.findOne({
@@ -75,28 +64,5 @@ export class AnalyzeFilingConsumer extends BaseConsumer {
 
     filing.analysis = FilingAnalysis.create({ summaries, score, reason });
     await this.filingRepository.save(filing);
-
-    // 3점 이상인 항목은 5분마다 정기적으로 수집하도록 포함.
-    // if (score >= 3) {
-    //   await this.redis.sadd(TICKER_SNIPPETS_SET, filing.ticker);
-    // }
-
-    // 4점 이상인 항목은 슬랙 메시지 발송
-    // if (score >= 4) {
-    //   const exists = await this.redis.hexists(
-    //     SLACK_MESSAGE_FILING_SET,
-    //     filing.ticker,
-    //   );
-    //
-    //   if (exists) {
-    //     return;
-    //   }
-    //
-    //   const slackMessage = fromSecFilingToSlackMessage(filing);
-    //   await this.slackService.sendMessage(slackMessage);
-    //   await this.redis.sadd(SLACK_MESSAGE_FILING_SET, filing.ticker);
-    //   const ttl = this.ttlResolver(new Date());
-    //   await this.redis.expire(SLACK_MESSAGE_FILING_SET, ttl);
-    // }
   }
 }
