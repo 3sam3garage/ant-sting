@@ -1,11 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import {
-  Filing,
-  FilingRepository,
-  FILINGS_TO_ANALYZE,
-  SEC_FILING_URL_SET,
-  TickerRepository,
-} from '@libs/domain';
+import { Filing, FilingRepository, TickerRepository } from '@libs/domain';
 import { SecApiService } from '@libs/external-api';
 import { QUEUE_NAME, REDIS_NAME } from '@libs/config';
 import { Redis } from 'ioredis';
@@ -39,9 +33,6 @@ export class ScrapeRssJob {
 
     for (const feed of feeds) {
       const url = feed?.link?.$?.href || '';
-      if (await this.redis.sismember(SEC_FILING_URL_SET, url)) {
-        continue;
-      }
 
       const cik = this.figureCIKFromTitle(feed.title);
       const formType = feed?.category?.$?.term?.trim() || '';
@@ -58,15 +49,12 @@ export class ScrapeRssJob {
         case !!foundFiling:
         // `ticker`가 없는 종목일 경우
         case !foundTickerEntity:
-        case !FILINGS_TO_ANALYZE.includes(formType):
-          await this.redis.sadd(SEC_FILING_URL_SET, url);
           continue;
       }
 
       const ticker = foundTickerEntity?.ticker;
       const entity = Filing.create({ url, cik, ticker, formType, date });
       const result = await this.filingRepository.save(entity);
-      await this.redis.sadd(SEC_FILING_URL_SET, url);
 
       await this.queue.add(
         { filingId: result._id.toString() },

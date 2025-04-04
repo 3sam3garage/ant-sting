@@ -8,9 +8,17 @@ import {
   validationExceptionFilter,
   RequestLoggerMiddleware,
 } from './components';
+import { FilingsModule } from './filings';
+import { ShortInterestModule } from './short-interest';
 
 @Module({
-  imports: [CoreModule, StockReportModule, StockAnalysisModule],
+  imports: [
+    CoreModule,
+    StockReportModule,
+    StockAnalysisModule,
+    FilingsModule,
+    ShortInterestModule,
+  ],
   providers: [
     {
       provide: APP_FILTER,

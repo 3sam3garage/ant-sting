@@ -6,6 +6,8 @@ import { FindStockByDate } from '@libs/domain/stock-report/interfaces/find-repor
 
 @Injectable()
 export class StockReportRepository extends MongoRepository<StockReport> {
+  private readonly QUERY_LIMIT = 1000;
+
   constructor(
     @InjectRepository(StockReport)
     private readonly repo: MongoRepository<StockReport>,
@@ -30,7 +32,7 @@ export class StockReportRepository extends MongoRepository<StockReport> {
       filterQuery.where.date = { $gte: from, $lte: to };
     }
 
-    return await this.repo.find(filterQuery);
+    return await this.repo.find({ ...filterQuery, take: this.QUERY_LIMIT });
   }
 
   async countByDate(query: FindStockByDate) {

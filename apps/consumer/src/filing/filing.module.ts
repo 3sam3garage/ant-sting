@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AiModule } from '@libs/ai';
-import { AnalyzeFilingConsumer, FetchFilingConsumer } from './service';
+import { AnalyzeFilingConsumer } from './service';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
 import { FilingDomainModule, TickerDomainModule } from '@libs/domain';
@@ -30,7 +30,6 @@ import { RedisService } from '@liaoliaots/nestjs-redis';
   ],
   providers: [
     AnalyzeFilingConsumer,
-    FetchFilingConsumer,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],

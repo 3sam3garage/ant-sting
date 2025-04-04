@@ -6,6 +6,8 @@ import { StockAnalysis } from '../entity';
 
 @Injectable()
 export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
+  private readonly QUERY_LIMIT = 1000;
+
   constructor(
     @InjectRepository(StockAnalysis)
     private readonly repo: MongoRepository<StockAnalysis>,
@@ -28,6 +30,6 @@ export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
       filterQuery.where.date = { $gte: from, $lte: to };
     }
 
-    return this.repo.find(filterQuery);
+    return await this.repo.find({ ...filterQuery, take: this.QUERY_LIMIT });
   }
 }
