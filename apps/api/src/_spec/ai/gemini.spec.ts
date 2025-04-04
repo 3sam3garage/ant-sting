@@ -37,16 +37,22 @@ describe('ollama', () => {
       // 'https://www.sec.gov/Archives/edgar/data/1672909/000143774925007886/0001437749-25-007886-index.htm',
       // 'https://www.sec.gov/Archives/edgar/data/4962/000000496225000024/0000004962-25-000024-index.htm',
       // 'https://www.sec.gov/Archives/edgar/data/1847367/000110465925021990/0001104659-25-021990-index.htm',
+      // 'https://www.sec.gov/Archives/edgar/data/1747068/000174706820000004/mcbs-20200124x8k.htm',
+      'https://www.sec.gov/Archives/edgar/data/1747068/000155837019008926/f8-k.htm',
 
       // 4
       // 'https://www.sec.gov/Archives/edgar/data/1487718/000149315225010524/0001493152-25-010524-index.htm',
-      'https://www.sec.gov/Archives/edgar/data/1610520/000161052025000013/xslF345X05/primary_doc.xml',
+      // 'https://www.sec.gov/Archives/edgar/data/1610520/000161052025000013/xslF345X05/primary_doc.xml',
       // 'https://www.sec.gov/Archives/edgar/data/1671927/000141588925004602/xslF345X05/form4-02192025_090204.xml',
       // 'https://www.sec.gov/Archives/edgar/data/753308/000106299325002690/xslF345X05/form4.xml',
       // 'https://www.sec.gov/Archives/edgar/data/1574197/000157419725000028/0001574197-25-000028-index.htm',
 
       // 엄청 긴거
       // 'https://www.sec.gov/Archives/edgar/data/1114446/000183988225016087/ubs_424b2-08361.htm',
+
+      // 10-K
+      // 'https://www.sec.gov/Archives/edgar/data/1571123/000157112325000022/0001571123-25-000022-index.htm',
+      // 'https://www.sec.gov/Archives/edgar/data/1747068/000155837020002934/mcbs-20191231x10k.htm',
     );
     const html = parseHTML(document);
     const body = html.querySelector('body');
