@@ -30,6 +30,10 @@ export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
       filterQuery.where.date = { $gte: from, $lte: to };
     }
 
-    return await this.repo.find({ ...filterQuery, take: this.QUERY_LIMIT });
+    return await this.repo.find({
+      ...filterQuery,
+      take: this.QUERY_LIMIT,
+      order: { _id: -1 },
+    });
   }
 }

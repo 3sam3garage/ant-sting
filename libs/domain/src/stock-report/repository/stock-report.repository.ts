@@ -32,7 +32,11 @@ export class StockReportRepository extends MongoRepository<StockReport> {
       filterQuery.where.date = { $gte: from, $lte: to };
     }
 
-    return await this.repo.find({ ...filterQuery, take: this.QUERY_LIMIT });
+    return await this.repo.find({
+      ...filterQuery,
+      take: this.QUERY_LIMIT,
+      order: { _id: -1 },
+    });
   }
 
   async countByDate(query: FindStockByDate) {

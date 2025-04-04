@@ -44,6 +44,12 @@ export class FilingRepository extends MongoRepository<Filing> {
       filterQuery.where = { ...filterQuery.where, analysis: { $exists: true } };
     }
 
-    return await this.repo.find({ ...filterQuery, take: this.QUERY_LIMIT });
+    console.log(filterQuery);
+
+    return await this.repo.find({
+      ...filterQuery,
+      take: this.QUERY_LIMIT,
+      order: { _id: -1 },
+    });
   }
 }
