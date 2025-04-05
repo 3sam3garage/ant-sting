@@ -23,7 +23,10 @@ export class FilingRepository extends MongoRepository<Filing> {
     };
 
     if (from && to) {
-      filterQuery.where.date = { $gte: from, $lte: to };
+      filterQuery.where.date = {
+        $gte: from.toISOString(),
+        $lte: to.toISOString(),
+      };
     }
 
     if (tickers.length > 0) {

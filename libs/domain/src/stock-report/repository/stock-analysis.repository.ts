@@ -27,7 +27,10 @@ export class StockAnalysisRepository extends MongoRepository<StockAnalysis> {
     }
 
     if (from && to) {
-      filterQuery.where.date = { $gte: from, $lte: to };
+      filterQuery.where.date = {
+        $gte: from.toISOString(),
+        $lte: to.toISOString(),
+      };
     }
 
     return await this.repo.find({
