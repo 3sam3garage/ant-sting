@@ -26,7 +26,7 @@ export class EconomicInformationConsumer extends BaseConsumer {
       joinUrl(this.N_PAY_RESEARCH_URL, url),
     );
     const content = html
-      .querySelectorAll('table td.view_cnt p')
+      .querySelectorAll('.view_cnt p')
       .map((item) => item?.innerText?.trim())
       .join('\n');
 
