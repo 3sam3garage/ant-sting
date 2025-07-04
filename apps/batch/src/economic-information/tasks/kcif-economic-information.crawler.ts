@@ -1,9 +1,8 @@
 import { Queue } from 'bull';
-import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
 import { format } from 'date-fns';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { joinUrl, today } from '@libs/common';
 import {
   ECONOMIC_INFO_SOURCE,
@@ -11,26 +10,19 @@ import {
   EconomicInformationRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { KCIF_RESEARCH_URL } from '@libs/external-api';
+import { KCIF_RESEARCH_URL, KcifApi } from '@libs/external-api';
+import { flatten } from 'lodash';
 
 /**
- * 매크로 환경 정보 - 국제금융센터(KCIF)
- * - 국제금융속보
- * - 주간보고서
- * - 특별일보
+ * 국제금융센터(KCIF)
  */
 @Injectable()
 export class KcifEconomicInformationCrawler {
-  private readonly DETAIL_URLS = [
-    '/annual/newsflashList',
-    '/annual/weeklyList',
-    '/annual/dailyList',
-  ];
-
   constructor(
     @InjectQueue(QUEUE_NAME.ECONOMIC_INFORMATION)
     private readonly queue: Queue,
     private readonly repo: EconomicInformationRepository,
+    private readonly kcifApi: KcifApi,
   ) {}
 
   async exec() {
@@ -40,10 +32,15 @@ export class KcifEconomicInformationCrawler {
       entity = await this.repo.createOne(EconomicInformation.create({ date }));
     }
 
-    for (const detailUrl of this.DETAIL_URLS) {
-      const url = joinUrl(KCIF_RESEARCH_URL, detailUrl);
-      const response = await axios.get(url);
-      const html = parseToHTML(response.data);
+    const infos = await Promise.all([
+      this.kcifApi.scrapeWeekly(),
+      this.kcifApi.scrapeDaily(),
+      this.kcifApi.scrapeNewsFlash(),
+    ]);
+    const htmlTexts = flatten(infos);
+
+    for (const text of htmlTexts) {
+      const html = parseToHTML(text);
 
       const rows = html.querySelectorAll(
         'div.page_list_wrap > ul.page_list > li',
@@ -67,16 +64,17 @@ export class KcifEconomicInformationCrawler {
         }
       }
 
-      await this.queue.addBulk(
-        urls.map((url) => ({
-          data: {
-            url,
-            documentId: entity._id,
-            source: ECONOMIC_INFO_SOURCE.KCIF,
-          },
-          opts: { removeOnComplete: true, removeOnFail: true },
-        })),
-      );
+      for (const url of urls) {
+        const payload = {
+          url,
+          documentId: entity._id.toString(),
+          source: ECONOMIC_INFO_SOURCE.KCIF,
+        };
+
+        await this.queue.add(payload, { removeOnComplete: true }).catch((e) => {
+          Logger.error(e);
+        });
+      }
     }
   }
 }

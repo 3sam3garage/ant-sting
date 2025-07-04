@@ -1,19 +1,16 @@
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  formatSixDigitDate,
-  joinUrl,
-  requestAndParseEucKr,
-  today,
-} from '@libs/common';
+import { parse as parseToHTML } from 'node-html-parser';
+import { formatSixDigitDate, today } from '@libs/common';
+import { flatten } from 'lodash';
 import {
   ECONOMIC_INFO_SOURCE,
   EconomicInformation,
   EconomicInformationRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { N_PAY_BASE_URL } from '@libs/external-api';
+import { NaverPayApi } from '@libs/external-api';
 
 /**
  * 매크로 환경
@@ -24,16 +21,10 @@ import { N_PAY_BASE_URL } from '@libs/external-api';
  */
 @Injectable()
 export class NaverEconomicInformationCrawler {
-  private readonly DETAIL_URLS = [
-    'research/market_info_list.naver',
-    'research/invest_list.naver',
-    'research/economy_list.naver',
-    'research/debenture_list.naver',
-  ];
-
   constructor(
     @InjectQueue(QUEUE_NAME.ECONOMIC_INFORMATION)
     private readonly queue: Queue,
+    private readonly naverPayApi: NaverPayApi,
     private readonly repo: EconomicInformationRepository,
   ) {}
 
@@ -44,11 +35,16 @@ export class NaverEconomicInformationCrawler {
       entity = await this.repo.createOne(EconomicInformation.create({ date }));
     }
 
-    // crawl data and add to queue
-    for (const detailUrl of this.DETAIL_URLS) {
-      const url = joinUrl(N_PAY_BASE_URL, detailUrl);
+    const groupedInfos = await Promise.all([
+      this.naverPayApi.scrapeDebentureInfo(),
+      this.naverPayApi.scrapeEconomyInfo(),
+      this.naverPayApi.scrapeInvestInfo(),
+      this.naverPayApi.scrapeMarketInfo(),
+    ]);
 
-      const html = await requestAndParseEucKr(url);
+    const htmlTexts: string[] = flatten(groupedInfos);
+    for (const text of htmlTexts) {
+      const html = parseToHTML(text);
       const rows = html
         .querySelectorAll(
           '#contentarea_left > div.box_type_m > table.type_1 tr',
@@ -61,7 +57,7 @@ export class NaverEconomicInformationCrawler {
         const dateInfo = row.querySelector('td.date');
         const currentDate = formatSixDigitDate(dateInfo.textContent);
         if (currentDate !== date) {
-          Logger.debug('Skipping previous data');
+          // Logger.debug('Skipping previous data');
           continue;
         }
 
@@ -69,16 +65,20 @@ export class NaverEconomicInformationCrawler {
         const detailUrl = titleAnchor.getAttribute('href');
         urls.push(detailUrl);
       }
-      await this.queue.addBulk(
-        urls.map((url) => ({
-          data: {
-            url,
-            documentId: entity._id,
-            source: ECONOMIC_INFO_SOURCE.NAVER,
-          },
-          opts: { removeOnComplete: true, removeOnFail: true },
-        })),
-      );
+
+      for (const url of urls) {
+        const payload = {
+          url,
+          documentId: entity._id.toString(),
+          source: ECONOMIC_INFO_SOURCE.NAVER,
+        };
+
+        await this.queue
+          .add(payload, { removeOnComplete: true })
+          .catch((error) => {
+            Logger.error(error);
+          });
+      }
     }
   }
 }

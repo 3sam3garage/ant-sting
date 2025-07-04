@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { parse as parseToHTML } from 'node-html-parser';
 import { ObjectId } from 'mongodb';
 import { Job } from 'bull';
@@ -9,22 +8,23 @@ import {
   EconomicInformationRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { joinUrl, requestAndParseEucKr } from '@libs/common';
-import { N_PAY_BASE_URL } from '@libs/external-api';
+import { KcifApi, NaverPayApi } from '@libs/external-api';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ECONOMIC_INFORMATION)
 export class EconomicInformationConsumer extends BaseConsumer {
-  private N_PAY_RESEARCH_URL = joinUrl(N_PAY_BASE_URL, '/research');
-
-  constructor(private readonly repo: EconomicInformationRepository) {
+  constructor(
+    private readonly repo: EconomicInformationRepository,
+    private readonly naverPayApi: NaverPayApi,
+    private readonly kcifApi: KcifApi,
+  ) {
     super();
   }
 
   private async scrapeNaver(url: string): Promise<string> {
-    const html = await requestAndParseEucKr(
-      joinUrl(this.N_PAY_RESEARCH_URL, url),
-    );
+    const response = await this.naverPayApi.scrapeDetailPage(url);
+    const html = parseToHTML(response);
+
     const content = html
       .querySelectorAll('.view_cnt p')
       .map((item) => item?.innerText?.trim())
@@ -34,8 +34,8 @@ export class EconomicInformationConsumer extends BaseConsumer {
   }
 
   private async scrapeKCIF(url: string): Promise<string> {
-    const response = await axios.get(url);
-    const html = parseToHTML(response.data);
+    const response = await this.kcifApi.scrapeDetailPage(url);
+    const html = parseToHTML(response);
 
     const text = html.querySelector('div.cont_area').innerText;
     const content = text
