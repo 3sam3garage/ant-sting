@@ -7,10 +7,10 @@ import {
   ECONOMIC_INFO_SOURCE,
   EconomicInformationMessage,
   EconomicInformationRepository,
-  N_PAY_BASE_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { joinUrl, requestAndParseEucKr } from '@libs/common';
+import { N_PAY_BASE_URL } from '@libs/external-api';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ECONOMIC_INFORMATION)

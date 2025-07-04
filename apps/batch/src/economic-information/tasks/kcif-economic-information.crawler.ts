@@ -9,9 +9,9 @@ import {
   ECONOMIC_INFO_SOURCE,
   EconomicInformation,
   EconomicInformationRepository,
-  KCIF_RESEARCH_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
+import { KCIF_RESEARCH_URL } from '@libs/external-api';
 
 /**
  * 매크로 환경 정보 - 국제금융센터(KCIF)

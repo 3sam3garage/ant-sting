@@ -11,9 +11,9 @@ import {
   ECONOMIC_INFO_SOURCE,
   EconomicInformation,
   EconomicInformationRepository,
-  N_PAY_BASE_URL,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
+import { N_PAY_BASE_URL } from '@libs/external-api';
 
 /**
  * 매크로 환경

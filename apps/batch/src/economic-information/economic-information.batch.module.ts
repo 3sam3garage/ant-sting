@@ -1,12 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import {
-  BondYieldDomainModule,
-  EconomicInformationDomainModule,
-  ExchangeRateDomainModule,
-  InterestRateDomainModule,
-  StockIndexDomainModule,
-} from '@libs/domain';
+import { EconomicInformationDomainModule } from '@libs/domain';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { EconomicInformationCommand } from './commands';
@@ -14,11 +8,6 @@ import {
   NaverEconomicInformationCrawler,
   AnalyzeEconomicInformationTask,
   KcifEconomicInformationCrawler,
-  ExchangeRateFetcher,
-  BondYieldFetcher,
-  InterestRateFetcher,
-  StockIndexFetcher,
-  AverageExchangeRateFetcher,
 } from './tasks';
 import { ExternalApiModule } from '@libs/external-api';
 
@@ -27,10 +16,6 @@ import { ExternalApiModule } from '@libs/external-api';
     AiModule,
     ExternalApiModule,
     EconomicInformationDomainModule,
-    ExchangeRateDomainModule,
-    BondYieldDomainModule,
-    InterestRateDomainModule,
-    StockIndexDomainModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ECONOMIC_INFORMATION,
       inject: [RedisConfigService],
@@ -44,11 +29,6 @@ import { ExternalApiModule } from '@libs/external-api';
     NaverEconomicInformationCrawler,
     AnalyzeEconomicInformationTask,
     KcifEconomicInformationCrawler,
-    ExchangeRateFetcher,
-    BondYieldFetcher,
-    InterestRateFetcher,
-    StockIndexFetcher,
-    AverageExchangeRateFetcher,
   ],
 })
 export class EconomicInformationBatchModule {}

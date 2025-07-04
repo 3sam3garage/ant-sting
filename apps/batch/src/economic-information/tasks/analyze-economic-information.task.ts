@@ -10,7 +10,7 @@ import {
 } from '@libs/ai';
 import {
   fromEconomicInfoToSlackMessage,
-  SlackService,
+  SlackApi,
 } from '@libs/external-api';
 import { today } from '@libs/common';
 
@@ -23,7 +23,7 @@ export class AnalyzeEconomicInformationTask {
     private readonly infoRepo: EconomicInformationRepository,
     private readonly analysisRepo: EconomicInformationAnalysisRepository,
     private readonly geminiService: GeminiService,
-    private readonly slackService: SlackService,
+    private readonly slackService: SlackApi,
   ) {}
 
   async exec() {
