@@ -15,6 +15,7 @@ interface Text {
 export interface SlackMessageBlock {
   type:
     | 'section'
+    | 'context'
     | 'text'
     | 'mrkdwn'
     | 'header'

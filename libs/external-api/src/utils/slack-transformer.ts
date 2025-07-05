@@ -117,3 +117,42 @@ export const fromEconomicInfoToSlackMessage = (
 
   return message;
 };
+
+export const fromPolyMarketToSlackMessage = (outcomes) => {
+  const items: SlackMessageBlock[] = [];
+  for (const outcome of outcomes) {
+    const { question, Yes, No } = outcome;
+
+    items.push({
+      type: 'rich_text',
+      elements: [
+        {
+          type: 'rich_text_quote',
+          elements: [{ type: 'text', text: question, style: { bold: true } }],
+        },
+      ],
+    });
+
+    items.push({
+      type: 'context',
+      elements: [
+        { type: 'mrkdwn', text: `- *YES* : \`${Yes} %\`` },
+        { type: 'mrkdwn', text: `- *No*: ${No} %` },
+      ],
+    });
+
+    items.push({ type: 'divider' });
+  }
+
+  const message: SlackMessage = {
+    blocks: [
+      {
+        type: 'header',
+        text: { type: 'plain_text', text: 'PolyMarket Digest' },
+      },
+      ...items,
+    ],
+  };
+
+  return message;
+};
