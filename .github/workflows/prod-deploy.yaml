@@ -6,21 +6,21 @@ on:
       - main
 
 jobs:
-  api:
-    uses: "./.github/workflows/build-and-deploy.yaml"
-    with:
-      serviceName: ant-sting-api
-      deployEnv: prod
-      buildServiceName: api
-    secrets: inherit
-
-  agent:
-    uses: "./.github/workflows/build-and-deploy.yaml"
-    with:
-      serviceName: ant-sting-agent
-      deployEnv: prod
-      buildServiceName: agent
-    secrets: inherit
+#  api:
+#    uses: "./.github/workflows/build-and-deploy.yaml"
+#    with:
+#      serviceName: ant-sting-api
+#      deployEnv: prod
+#      buildServiceName: api
+#    secrets: inherit
+#
+#  agent:
+#    uses: "./.github/workflows/build-and-deploy.yaml"
+#    with:
+#      serviceName: ant-sting-agent
+#      deployEnv: prod
+#      buildServiceName: agent
+#    secrets: inherit
 
   batch:
     uses: "./.github/workflows/build-and-deploy.yaml"
