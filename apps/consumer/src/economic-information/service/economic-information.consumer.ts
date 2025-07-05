@@ -27,7 +27,7 @@ export class EconomicInformationConsumer extends BaseConsumer {
   })
   async naver({ data }: Job<EconomicInformationMessage>) {
     const { documentId, url } = data;
-    const response = await this.naverPayApi.scrapeDetailPage(url);
+    const response = await this.naverPayApi.detailPage(url);
     const html = parseToHTML(response);
 
     const content = html
@@ -47,7 +47,7 @@ export class EconomicInformationConsumer extends BaseConsumer {
   })
   async kcif({ data }: Job<EconomicInformationMessage>) {
     const { documentId, url } = data;
-    const response = await this.kcifApi.scrapeDetailPage(url);
+    const response = await this.kcifApi.detailPage(url);
     const html = parseToHTML(response);
 
     const text = html.querySelector('div.cont_area').innerText;

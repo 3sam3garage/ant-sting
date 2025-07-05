@@ -33,9 +33,9 @@ export class KcifEconomicInformationCrawler {
     }
 
     const infos = await Promise.all([
-      this.kcifApi.scrapeWeekly(),
-      this.kcifApi.scrapeDaily(),
-      this.kcifApi.scrapeNewsFlash(),
+      this.kcifApi.weekly(),
+      this.kcifApi.daily(),
+      this.kcifApi.newsFlash(),
     ]);
     const htmlTexts = flatten(infos);
 

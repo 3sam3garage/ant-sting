@@ -8,7 +8,7 @@ import {
 } from '@libs/external-api';
 
 @Injectable()
-export class ScrapePolyMarketTask {
+export class ScrapePollTask {
   constructor(
     private readonly slackApi: SlackApi,
     private readonly polyMarketApi: PolyMarketApi,
@@ -51,12 +51,10 @@ export class ScrapePolyMarketTask {
 
       if (marketItems.length > 0) {
         outComes.push(...marketItems);
-        //   polls.push({ title: item.title, marketItems });
       }
     }
 
     const message = fromPolyMarketToSlackMessage(outComes);
-    console.log(message);
     await this.slackApi.sendMessage(message);
   }
 }

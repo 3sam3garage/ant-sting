@@ -1,6 +1,6 @@
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { parse as parseToHTML } from 'node-html-parser';
 import { formatSixDigitDate, today } from '@libs/common';
 import { flatten } from 'lodash';
@@ -36,10 +36,10 @@ export class NaverEconomicInformationCrawler {
     }
 
     const groupedInfos = await Promise.all([
-      this.naverPayApi.scrapeDebentureInfo(),
-      this.naverPayApi.scrapeEconomyInfo(),
-      this.naverPayApi.scrapeInvestInfo(),
-      this.naverPayApi.scrapeMarketInfo(),
+      this.naverPayApi.debentureInfo(),
+      this.naverPayApi.economyInfo(),
+      this.naverPayApi.investInfo(),
+      this.naverPayApi.marketInfo(),
     ]);
 
     const htmlTexts: string[] = flatten(groupedInfos);

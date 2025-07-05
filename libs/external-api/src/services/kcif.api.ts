@@ -8,7 +8,7 @@ export class KcifApi {
 
   constructor() {}
 
-  async scrapeDetailPage(fullPath: string): Promise<string> {
+  async detailPage(fullPath: string): Promise<string> {
     const response = await axios.get(fullPath);
     return response.data;
   }
@@ -16,7 +16,7 @@ export class KcifApi {
   /**
    * 국제금융속보
    */
-  async scrapeNewsFlash(): Promise<string> {
+  async newsFlash(): Promise<string> {
     const url = joinUrl(this.BASE_URL, '/annual/newsflashList');
     const response = await axios.get(url);
     return response.data;
@@ -25,7 +25,7 @@ export class KcifApi {
   /**
    * 주간보고서
    */
-  async scrapeWeekly(): Promise<string> {
+  async weekly(): Promise<string> {
     const url = joinUrl(this.BASE_URL, '/annual/weeklyList');
     const response = await axios.get(url);
     return response.data;
@@ -34,7 +34,7 @@ export class KcifApi {
   /**
    * 특별일보
    */
-  async scrapeDaily(): Promise<string> {
+  async daily(): Promise<string> {
     const url = joinUrl(this.BASE_URL, '/annual/dailyList');
     const response = await axios.get(url);
     return response.data;

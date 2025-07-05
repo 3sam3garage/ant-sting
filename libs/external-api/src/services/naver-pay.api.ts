@@ -20,7 +20,7 @@ export class NaverPayApi {
     return Buffer.from(modifiedBuffer).toString('utf-8');
   }
 
-  async scrapeMarketInfo() {
+  async marketInfo() {
     const url = joinUrl(this.BASE_URL, 'research/market_info_list.naver');
 
     const response = await axios.get(url, {
@@ -31,7 +31,7 @@ export class NaverPayApi {
     return this.eucKR2utf8(response.data);
   }
 
-  async scrapeInvestInfo() {
+  async investInfo() {
     const url = joinUrl(this.BASE_URL, 'research/invest_list.naver');
 
     const response = await axios.get(url, {
@@ -42,7 +42,7 @@ export class NaverPayApi {
     return this.eucKR2utf8(response.data);
   }
 
-  async scrapeEconomyInfo() {
+  async economyInfo() {
     const url = joinUrl(this.BASE_URL, 'research/economy_list.naver');
 
     const response = await axios.get(url, {
@@ -53,7 +53,7 @@ export class NaverPayApi {
     return this.eucKR2utf8(response.data);
   }
 
-  async scrapeDebentureInfo() {
+  async debentureInfo() {
     const url = joinUrl(this.BASE_URL, 'research/debenture_list.naver');
 
     const response = await axios.get(url, {
@@ -64,7 +64,7 @@ export class NaverPayApi {
     return this.eucKR2utf8(response.data);
   }
 
-  async scrapeDetailPage(path: string) {
+  async detailPage(path: string) {
     const url = joinUrl(this.BASE_URL, 'research', path);
 
     const response = await axios.get(url, {
