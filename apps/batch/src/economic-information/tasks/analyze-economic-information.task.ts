@@ -8,10 +8,7 @@ import {
   ANALYZE_GEMMA_ECONOMIC_INFORMATION_PROMPT,
   GeminiService,
 } from '@libs/ai';
-import {
-  fromEconomicInfoToSlackMessage,
-  SlackApi,
-} from '@libs/external-api';
+import { fromEconomicInfoToSlackMessage, SlackApi } from '@libs/external-api';
 import { today } from '@libs/common';
 
 /**

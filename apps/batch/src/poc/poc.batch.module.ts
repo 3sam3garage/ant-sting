@@ -1,0 +1,12 @@
+import { Module } from '@nestjs/common';
+import { EconomicInformationDomainModule } from '@libs/domain';
+import { AiModule } from '@libs/ai';
+import { ExternalApiModule } from '@libs/external-api';
+import { PocCommand } from './commands';
+import { GraphEconomicInformationTask } from './tasks';
+
+@Module({
+  imports: [AiModule, ExternalApiModule, EconomicInformationDomainModule],
+  providers: [PocCommand, GraphEconomicInformationTask],
+})
+export class PocBatchModule {}
