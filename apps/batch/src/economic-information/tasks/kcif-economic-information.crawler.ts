@@ -2,7 +2,7 @@ import { Queue } from 'bull';
 import { parse as parseToHTML } from 'node-html-parser';
 import { format } from 'date-fns';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { joinUrl, today } from '@libs/common';
 import {
   ECONOMIC_INFO_SOURCE,
@@ -65,15 +65,9 @@ export class KcifEconomicInformationCrawler {
       }
 
       for (const url of urls) {
-        const payload = {
-          url,
-          documentId: entity._id.toString(),
-          source: ECONOMIC_INFO_SOURCE.KCIF,
-        };
+        const payload = { url, documentId: entity._id.toString() };
 
-        await this.queue.add(payload, { removeOnComplete: true }).catch((e) => {
-          Logger.error(e);
-        });
+        await this.queue.add(ECONOMIC_INFO_SOURCE.KCIF, payload);
       }
     }
   }

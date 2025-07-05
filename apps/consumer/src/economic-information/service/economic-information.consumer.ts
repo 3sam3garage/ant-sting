@@ -21,7 +21,12 @@ export class EconomicInformationConsumer extends BaseConsumer {
     super();
   }
 
-  private async scrapeNaver(url: string): Promise<string> {
+  @Process({
+    name: ECONOMIC_INFO_SOURCE.NAVER,
+    concurrency: 1,
+  })
+  async naver({ data }: Job<EconomicInformationMessage>) {
+    const { documentId, url } = data;
     const response = await this.naverPayApi.scrapeDetailPage(url);
     const html = parseToHTML(response);
 
@@ -30,10 +35,18 @@ export class EconomicInformationConsumer extends BaseConsumer {
       .map((item) => item?.innerText?.trim())
       .join('\n');
 
-    return content;
+    const entity = await this.repo.findOneById(new ObjectId(documentId));
+    return await this.repo.updateOne(entity, {
+      items: [...entity.items, content],
+    });
   }
 
-  private async scrapeKCIF(url: string): Promise<string> {
+  @Process({
+    name: ECONOMIC_INFO_SOURCE.KCIF,
+    concurrency: 1,
+  })
+  async kcif({ data }: Job<EconomicInformationMessage>) {
+    const { documentId, url } = data;
     const response = await this.kcifApi.scrapeDetailPage(url);
     const html = parseToHTML(response);
 
@@ -43,25 +56,6 @@ export class EconomicInformationConsumer extends BaseConsumer {
       .replaceAll(/&amp;/g, '&')
       .replaceAll(/&nbsp;/g, ' ')
       .trim();
-
-    return content;
-  }
-
-  @Process({ concurrency: 1 })
-  async run({ data }: Job<EconomicInformationMessage>) {
-    const { documentId, url, source } = data;
-
-    let content: string;
-    switch (source) {
-      case ECONOMIC_INFO_SOURCE.NAVER:
-        content = await this.scrapeNaver(url);
-        break;
-      case ECONOMIC_INFO_SOURCE.KCIF:
-        content = await this.scrapeKCIF(url);
-        break;
-      default:
-        return;
-    }
 
     const entity = await this.repo.findOneById(new ObjectId(documentId));
     return await this.repo.updateOne(entity, {

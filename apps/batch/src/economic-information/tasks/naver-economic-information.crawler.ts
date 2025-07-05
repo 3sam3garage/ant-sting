@@ -67,17 +67,9 @@ export class NaverEconomicInformationCrawler {
       }
 
       for (const url of urls) {
-        const payload = {
-          url,
-          documentId: entity._id.toString(),
-          source: ECONOMIC_INFO_SOURCE.NAVER,
-        };
+        const payload = { url, documentId: entity._id.toString() };
 
-        await this.queue
-          .add(payload, { removeOnComplete: true })
-          .catch((error) => {
-            Logger.error(error);
-          });
+        await this.queue.add(ECONOMIC_INFO_SOURCE.NAVER, payload);
       }
     }
   }
