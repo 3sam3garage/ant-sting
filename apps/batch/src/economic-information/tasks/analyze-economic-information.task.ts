@@ -44,7 +44,6 @@ export class AnalyzeEconomicInformationTask {
     );
 
     const response = await this.geminiService.invoke({ contents: prompt });
-    console.log(response);
 
     const analysis = EconomicInformationAnalysis.create({ ...response, date });
     await this.analysisRepo.save(analysis);
