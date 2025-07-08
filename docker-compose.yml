@@ -76,6 +76,16 @@ services:
     environment:
       - BUILD_SERVICE_NAME=consumer
 
+  ant-sting-agent:
+    image: iamdap91/ant-sting-agent
+    platform: linux/amd64
+    networks:
+      network:
+    env_file:
+      - .env
+    environment:
+      - BUILD_SERVICE_NAME=agent
+
 
   kroki:
     image: yuzutech/kroki

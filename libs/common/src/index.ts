@@ -5,3 +5,4 @@ export * from './only-number';
 export * from './only-digits';
 export * from './omit-is-nil';
 export * from './today';
+export * from './error-to-json';

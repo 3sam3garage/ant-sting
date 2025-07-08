@@ -19,6 +19,24 @@
         "tsConfigPath": "apps/batch/tsconfig.app.json"
       }
     },
+    "agent": {
+      "type": "application",
+      "root": "apps/agent",
+      "entryFile": "main",
+      "sourceRoot": "apps/agent/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/agent/tsconfig.app.json"
+      }
+    },
+    "consumer": {
+      "type": "application",
+      "root": "apps/consumer",
+      "entryFile": "main",
+      "sourceRoot": "apps/consumer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/consumer/tsconfig.app.json"
+      }
+    },
     "common": {
       "type": "library",
       "root": "libs/common",
@@ -53,15 +71,6 @@
       "sourceRoot": "libs/config/src",
       "compilerOptions": {
         "tsConfigPath": "libs/config/tsconfig.lib.json"
-      }
-    },
-    "consumer": {
-      "type": "application",
-      "root": "apps/consumer",
-      "entryFile": "main",
-      "sourceRoot": "apps/consumer/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/consumer/tsconfig.app.json"
       }
     },
     "ai": {

@@ -16,6 +16,8 @@ export enum DB_NAME {
 export enum QUEUE_NAME {
   // 네이버 증권 (시황, 투자, 경제, 채권)
   ECONOMIC_INFORMATION = 'ECONOMIC_INFORMATION',
+  // sec filing (13-F 분석)
+  ANALYZE_13F = 'ANALYZE_13F',
 }
 
 export enum REDIS_NAME {
