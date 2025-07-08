@@ -33,7 +33,6 @@
     "@nestjs/schedule": "^4.1.0",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/typeorm": "^10.0.2",
-    "@slack/web-api": "^7.7.0",
     "axios": "^1.8.3",
     "bull": "^4.16.0",
     "class-transformer": "^0.5.1",
