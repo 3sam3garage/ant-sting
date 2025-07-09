@@ -3,6 +3,7 @@ import {
   SecFiling,
   SecFilingRepository,
   SecCompanyRepository,
+  AnalyzeSec13fMessage,
 } from '@libs/domain';
 import { SecApiService } from '@libs/external-api';
 import { QUEUE_NAME } from '@libs/config';
@@ -59,7 +60,7 @@ export class ScrapeRssJob {
       const result = await this.filingRepository.save(entity);
 
       await this.queue.add(
-        { filingId: result._id.toString() },
+        { filingId: result._id.toString() } as AnalyzeSec13fMessage,
         { removeOnComplete: true, removeOnFail: false },
       );
     }
