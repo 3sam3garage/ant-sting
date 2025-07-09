@@ -4,6 +4,7 @@ import { parseStringPromise } from 'xml2js';
 import axios from 'axios';
 import { FilingRss, SecFiling, SecTickerResponse } from '../intefaces';
 import { DATA_SEC_GOV_HEADERS, SEC_FAIR_ACCESS_HEADERS } from '../constants';
+import { toTenDigitCIK } from '@libs/common';
 
 @Injectable()
 export class SecApiService {
@@ -20,9 +21,11 @@ export class SecApiService {
     return response.data;
   }
 
-  async fetchSubmission(tenDigitCIK: string): Promise<SecFiling> {
+  async fetchSubmission(cik: string): Promise<SecFiling> {
+    const formattedCIK = 'CIK' + toTenDigitCIK(cik);
+
     const response = await axios.get<SecFiling>(
-      `https://data.sec.gov/submissions/${tenDigitCIK}.json`,
+      `https://data.sec.gov/submissions/${formattedCIK}.json`,
       { headers: DATA_SEC_GOV_HEADERS },
     );
 
@@ -34,7 +37,7 @@ export class SecApiService {
       headers: SEC_FAIR_ACCESS_HEADERS,
     });
 
-    return response.data;
+    return response;
   }
 
   async fetchRSS(start = 0, count = 100): Promise<FilingRss> {

@@ -35,7 +35,7 @@ services:
       - 27017:27017
 
   batch:
-    image: ant-sting-batch
+    image: batch:latest
     networks:
       network:
     env_file:
@@ -43,23 +43,26 @@ services:
     command:
       - 'node'
       - './apps/batch/src/main.js'
-      - ${BATCH_COMMAND}
-      - ${BATCH_SUBCOMMAND}
-#
+
   consumer:
-    image: ant-sting-consumer
+    image: consumer:latest
     networks:
       network:
     env_file:
       - .env
+    command:
+      - 'node'
+      - './apps/consumer/src/main.js'
 
   agent:
-    image: ant-sting-agent:latest
+    image: agent:latest
     networks:
       network:
     env_file:
       - .env
-
+    command:
+      - 'node'
+      - './apps/agent/src/main.js'
 
   kroki:
     image: yuzutech/kroki

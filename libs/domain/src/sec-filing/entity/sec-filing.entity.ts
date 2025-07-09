@@ -2,28 +2,10 @@ import { Column, Entity, Index } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { BaseEntity } from '../../base.entity';
 
-export class FilingAnalysis {
-  @Column()
-  score: number;
-
-  @Column()
-  reason: string;
-
-  @Column()
-  summaries: string[] = [];
-
-  static create(data: Partial<FilingAnalysis>) {
-    return plainToInstance(FilingAnalysis, data);
-  }
-}
-
 @Entity({ name: 'sec-filings', comment: 'sec 제출 보고서' })
 @Index(['url'])
 @Index(['formType'])
 export class SecFiling extends BaseEntity {
-  @Column()
-  ticker: string;
-
   @Column()
   formType: string;
 
@@ -35,9 +17,6 @@ export class SecFiling extends BaseEntity {
 
   @Column()
   url: string;
-
-  @Column(() => FilingAnalysis)
-  analysis?: FilingAnalysis;
 
   static create(data: Partial<SecFiling>) {
     return plainToInstance(SecFiling, data);

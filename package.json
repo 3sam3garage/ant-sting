@@ -14,6 +14,8 @@
     "batch:ei:analyze": "nest start batch -- economic-information analyze",
     "batch:poly-market:poll": "nest start batch -- poly-market poll",
     "batch:poc:graph": "nest start batch -- poc graph",
+    "batch:poc:sec-13f": "nest start batch -- poc sec-13f",
+    "batch:poc:scrape-rss": "nest start batch -- poc scrape-rss",
     "agent": "nest start agent --watch",
     "consumer": "nest start consumer --watch",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
@@ -41,6 +43,7 @@
     "class-validator": "^0.14.1",
     "csv-parse": "^5.5.6",
     "date-fns": "^3.6.0",
+    "got": "^11.8.3",
     "iconv-lite": "^0.6.3",
     "ioredis": "^5.4.2",
     "lodash": "^4.17.21",
@@ -48,10 +51,12 @@
     "node-html-parser": "^6.1.13",
     "pdf-parse": "^1.1.1",
     "pdf2pic": "^3.1.4",
+    "puppeteer": "^24.12.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20",
     "user-agents": "^1.1.428",
+    "xml-js": "^1.6.11",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
@@ -110,7 +115,8 @@
       "^@libs/config(|/.*)$": "<rootDir>/libs/config/src/$1",
       "^@libs/ai(|/.*)$": "<rootDir>/libs/ai/src/$1",
       "^@libs/external-api(|/.*)$": "<rootDir>/libs/external-api/src/$1",
-      "^@libs/browser(|/.*)$": "<rootDir>/libs/browser/src/$1"
+      "^@libs/browser(|/.*)$": "<rootDir>/libs/browser/src/$1",
+      "^@libs/domain-redis(|/.*)$": "<rootDir>/libs/domain-redis/src/$1"
     }
   }
 }

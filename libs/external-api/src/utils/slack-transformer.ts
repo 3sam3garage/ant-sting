@@ -156,3 +156,71 @@ export const fromPolyMarketToSlackMessage = (outcomes) => {
 
   return message;
 };
+
+export const from13FtoSlackMessage = (
+  name: string,
+  blocksArray: SlackMessageBlock[][],
+): SlackMessage => {
+  const [newlyAdded = [], removed = [], comparison = []] = blocksArray;
+  for (const blocks of [newlyAdded, removed, comparison]) {
+    if (blocks.length === 0) {
+      blocks.push({
+        type: 'section',
+        text: { type: 'mrkdwn', text: ':ghost:' },
+      });
+    }
+  }
+
+  const blocks: SlackMessageBlock[] = [
+    {
+      type: 'header',
+      text: { type: 'plain_text', text: `${name} 13F-HR` },
+    },
+    {
+      type: 'rich_text',
+      elements: [
+        {
+          type: 'rich_text_quote',
+          elements: [{ type: 'text', text: '신규', style: { bold: true } }],
+        },
+      ],
+    },
+    ...newlyAdded,
+    { type: 'divider' },
+    {
+      type: 'rich_text',
+      elements: [
+        {
+          type: 'rich_text_quote',
+          elements: [{ type: 'text', text: '청산', style: { bold: true } }],
+        },
+      ],
+    },
+    ...removed,
+    { type: 'divider' },
+    {
+      type: 'rich_text',
+      elements: [
+        {
+          type: 'rich_text_quote',
+          elements: [{ type: 'text', text: '보유', style: { bold: true } }],
+        },
+      ],
+    },
+    ...comparison,
+  ];
+
+  if (blocks.length >= 50) {
+    const splicedBlocks = blocks.splice(0, 49);
+    splicedBlocks.push({
+      type: 'section',
+      text: { type: 'mrkdwn', text: '슬랙 메시지 블럭 제한으로 이하 생략.' },
+    });
+
+    return { blocks: splicedBlocks };
+  }
+
+  return {
+    blocks,
+  };
+};

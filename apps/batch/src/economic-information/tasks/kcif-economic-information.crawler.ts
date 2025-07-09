@@ -69,7 +69,9 @@ export class KcifEconomicInformationCrawler {
       for (const url of urls) {
         const payload = { url, documentId: entity._id.toString() };
 
-        await this.queue.add(ECONOMIC_INFO_SOURCE.KCIF, payload);
+        await this.queue.add(ECONOMIC_INFO_SOURCE.KCIF, payload, {
+          removeOnComplete: true,
+        });
       }
     }
   }

@@ -8,7 +8,7 @@ services:
       dockerfile: tools/Dockerfile
       args:
         - BUILD_SERVICE_NAME=agent
-    image: ant-sting-agent
+    image: agent
 
   batch:
     build:
@@ -16,7 +16,7 @@ services:
       dockerfile: tools/Dockerfile
       args:
         - BUILD_SERVICE_NAME=batch
-    image: ant-sting-batch
+    image: batch
 
   consumer:
     build:
@@ -24,4 +24,4 @@ services:
       dockerfile: tools/Dockerfile
       args:
         - BUILD_SERVICE_NAME=consumer
-    image: ant-sting-consumer
+    image: consumer

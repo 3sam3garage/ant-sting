@@ -90,6 +90,24 @@
       "compilerOptions": {
         "tsConfigPath": "libs/external-api/tsconfig.lib.json"
       }
+    },
+    "browser": {
+      "type": "library",
+      "root": "libs/browser",
+      "entryFile": "index",
+      "sourceRoot": "libs/browser/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/browser/tsconfig.lib.json"
+      }
+    },
+    "domain-redis": {
+      "type": "library",
+      "root": "libs/domain-redis",
+      "entryFile": "index",
+      "sourceRoot": "libs/domain-redis/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/domain-redis/tsconfig.lib.json"
+      }
     }
   }
 }
