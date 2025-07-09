@@ -1,0 +1,27 @@
+# build 테스트용 도커 컴포즈
+version: '3.8'
+
+services:
+  agent:
+    build:
+      context: ..
+      dockerfile: tools/Dockerfile
+      args:
+        - BUILD_SERVICE_NAME=agent
+    image: ant-sting-agent
+
+  batch:
+    build:
+      context: ..
+      dockerfile: tools/Dockerfile
+      args:
+        - BUILD_SERVICE_NAME=batch
+    image: ant-sting-batch
+
+  consumer:
+    build:
+      context: ..
+      dockerfile: tools/Dockerfile
+      args:
+        - BUILD_SERVICE_NAME=consumer
+    image: ant-sting-consumer

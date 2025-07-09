@@ -37,14 +37,13 @@ export class SecApiService {
     return response.data;
   }
 
-  /**
-   * @deprecated
-   */
   async fetchRSS(start = 0, count = 100): Promise<FilingRss> {
     const response = await axios.get(
-      'https://www.sec.gov/cgi-bin/browse-edgar?company=&CIK=&type=13F&owner=include&count=40&action=getcurrent',
-      // 'https://www.sec.gov/Archives/edgar/usgaap.rss.xml',
-      { params: { start, count }, headers: SEC_FAIR_ACCESS_HEADERS },
+      'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&output=atom',
+      {
+        params: { start, count },
+        headers: SEC_FAIR_ACCESS_HEADERS,
+      },
     );
 
     const json: FilingRss = await parseStringPromise(response.data, {

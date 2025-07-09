@@ -4,12 +4,8 @@ networks:
   network:
 
 volumes:
-#  service_grafana:
   service_redis:
   service_mongo:
-#  service_ollama:
-#  service_open_webui:
-#  service_s3:
 
 services:
   redis:
@@ -35,56 +31,34 @@ services:
       - network
     volumes:
       - service_mongo:/data/db
-#      - ./mongo/mongodb.key:/etc/mongodb.key
     ports:
       - 27017:27017
 
-#  open-webui:
-#    image: ghcr.io/open-webui/open-webui:main
-#    container_name: open-webui
-#    networks:
-#      - network
-#    ports:
-#      - 3000:8080
-#    environment:
-#      OLLAMA_BASE_URL: "http://192.168.1.109:11434"
-#    volumes:
-#      - service_open_webui:/app/backend/data
-
-  ant-sting-batch:
-    image: iamdap91/ant-sting-batch
-    platform: linux/amd64
+  batch:
+    image: ant-sting-batch
     networks:
       network:
     env_file:
       - .env
-    environment:
-      - BUILD_SERVICE_NAME=batch
     command:
       - 'node'
       - './apps/batch/src/main.js'
       - ${BATCH_COMMAND}
       - ${BATCH_SUBCOMMAND}
-
-  ant-sting-consumer:
-    image: iamdap91/ant-sting-consumer
-    platform: linux/amd64
+#
+  consumer:
+    image: ant-sting-consumer
     networks:
       network:
     env_file:
       - .env
-    environment:
-      - BUILD_SERVICE_NAME=consumer
 
-  ant-sting-agent:
-    image: iamdap91/ant-sting-agent
-    platform: linux/amd64
+  agent:
+    image: ant-sting-agent:latest
     networks:
       network:
     env_file:
       - .env
-    environment:
-      - BUILD_SERVICE_NAME=agent
 
 
   kroki:
