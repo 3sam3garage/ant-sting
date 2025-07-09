@@ -86,7 +86,7 @@ $ nest start batch -- stock-market-news scrape-list
 ### Scraping SEC
 
 ```bash
-$ nest start batch -- stock scrape-sec-ticker
+$ nest start batch -- stock scrape-sec-sec-company
 ```
 
 ### Scraping Finra Short Interest

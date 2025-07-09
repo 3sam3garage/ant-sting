@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Filing, FilingRepository, TickerRepository } from '@libs/domain';
+import { Filing, FilingRepository, SecCompanyRepository } from '@libs/domain';
 import { SecApiService } from '@libs/external-api';
 import { QUEUE_NAME } from '@libs/config';
 import { format } from 'date-fns';
@@ -15,7 +15,7 @@ export class ScrapeRssJob {
   constructor(
     @InjectQueue(QUEUE_NAME.ANALYZE_13F)
     private readonly queue: Queue,
-    private readonly tickerRepository: TickerRepository,
+    private readonly tickerRepository: SecCompanyRepository,
     private readonly filingRepository: FilingRepository,
     private readonly secApiService: SecApiService,
   ) {}
@@ -45,7 +45,7 @@ export class ScrapeRssJob {
       switch (true) {
         // `filing`이 이미 존재하는 경우
         case !!foundFiling:
-        // `ticker`가 없는 종목일 경우
+        // `sec-company`가 없는 종목일 경우
         case !foundTickerEntity:
           continue;
       }

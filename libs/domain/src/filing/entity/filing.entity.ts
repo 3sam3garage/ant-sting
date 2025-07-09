@@ -17,8 +17,9 @@ export class FilingAnalysis {
   }
 }
 
-@Entity({ name: 'filings', comment: '티커' })
+@Entity({ name: 'filings', comment: 'sec 제출 보고서' })
 @Index(['url'])
+@Index(['formType'])
 export class Filing extends BaseEntity {
   @Column()
   ticker: string;

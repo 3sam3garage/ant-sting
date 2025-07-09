@@ -2,10 +2,10 @@ import { Column, Entity, Index } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { BaseEntity } from '../../base.entity';
 
-@Entity({ name: 'tickers', comment: '티커' })
+@Entity({ name: 'sec-companies' })
 @Index(['ticker'], { unique: true })
 @Index(['cik'], { unique: true })
-export class Ticker extends BaseEntity {
+export class SecCompanyEntity extends BaseEntity {
   @Column()
   stockName: string;
 
@@ -15,8 +15,8 @@ export class Ticker extends BaseEntity {
   @Column()
   cik: number;
 
-  static create(data: Partial<Ticker>) {
-    return plainToInstance(Ticker, data);
+  static create(data: Partial<SecCompanyEntity>) {
+    return plainToInstance(SecCompanyEntity, data);
   }
 
   get tenDigitCIK(): string {
