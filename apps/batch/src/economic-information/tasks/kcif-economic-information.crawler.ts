@@ -10,7 +10,7 @@ import {
   EconomicInformationRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
-import { KCIF_RESEARCH_URL, KcifApi } from '@libs/external-api';
+import { KcifApi } from '@libs/external-api';
 import { flatten } from 'lodash';
 
 /**
@@ -18,6 +18,8 @@ import { flatten } from 'lodash';
  */
 @Injectable()
 export class KcifEconomicInformationCrawler {
+  private readonly BASE_URL = 'https://www.kcif.or.kr';
+
   constructor(
     @InjectQueue(QUEUE_NAME.ECONOMIC_INFORMATION)
     private readonly queue: Queue,
@@ -60,7 +62,7 @@ export class KcifEconomicInformationCrawler {
         );
 
         if (date === reportDate) {
-          urls.push(joinUrl(KCIF_RESEARCH_URL, href));
+          urls.push(joinUrl(this.BASE_URL, href));
         }
       }
 
