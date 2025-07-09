@@ -3,13 +3,13 @@ import { ObjectId } from 'mongodb';
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
 import {
-  ECONOMIC_INFO_SOURCE,
   EconomicInformationMessage,
   EconomicInformationRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { KcifApi, NaverPayApi } from '@libs/external-api';
 import { BaseConsumer } from '../../base.consumer';
+import { ECONOMIC_INFO_SOURCE } from '@libs/core';
 
 @Processor(QUEUE_NAME.ECONOMIC_INFORMATION)
 export class EconomicInformationConsumer extends BaseConsumer {

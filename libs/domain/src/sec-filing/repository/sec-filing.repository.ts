@@ -1,24 +1,24 @@
 import { FilterOperators, MongoRepository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Filing } from '../entity';
-import { FindFilingQuery } from '@libs/domain/filing/interfaces';
+import { SecFiling } from '../entity';
+import { FindFilingQuery } from '../interfaces';
 
 @Injectable()
-export class FilingRepository extends MongoRepository<Filing> {
+export class SecFilingRepository extends MongoRepository<SecFiling> {
   private readonly QUERY_LIMIT = 1000;
 
   constructor(
-    @InjectRepository(Filing)
-    private readonly repo: MongoRepository<Filing>,
+    @InjectRepository(SecFiling)
+    private readonly repo: MongoRepository<SecFiling>,
   ) {
-    super(Filing, repo.manager);
+    super(SecFiling, repo.manager);
   }
 
   async findByDate(query: FindFilingQuery) {
     const { from, to, tickers, formTypes, withAnalysis } = query;
 
-    const filterQuery: FilterOperators<Filing> = {
+    const filterQuery: FilterOperators<SecFiling> = {
       where: {},
     };
 

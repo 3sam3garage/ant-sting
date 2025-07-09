@@ -17,10 +17,10 @@ export class FilingAnalysis {
   }
 }
 
-@Entity({ name: 'filings', comment: 'sec 제출 보고서' })
+@Entity({ name: 'sec-filings', comment: 'sec 제출 보고서' })
 @Index(['url'])
 @Index(['formType'])
-export class Filing extends BaseEntity {
+export class SecFiling extends BaseEntity {
   @Column()
   ticker: string;
 
@@ -39,7 +39,7 @@ export class Filing extends BaseEntity {
   @Column(() => FilingAnalysis)
   analysis?: FilingAnalysis;
 
-  static create(data: Partial<Filing>) {
-    return plainToInstance(Filing, data);
+  static create(data: Partial<SecFiling>) {
+    return plainToInstance(SecFiling, data);
   }
 }

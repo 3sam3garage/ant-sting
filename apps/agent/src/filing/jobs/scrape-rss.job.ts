@@ -1,5 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Filing, FilingRepository, SecCompanyRepository } from '@libs/domain';
+import {
+  SecFiling,
+  SecFilingRepository,
+  SecCompanyRepository,
+} from '@libs/domain';
 import { SecApiService } from '@libs/external-api';
 import { QUEUE_NAME } from '@libs/config';
 import { format } from 'date-fns';
@@ -16,7 +20,7 @@ export class ScrapeRssJob {
     @InjectQueue(QUEUE_NAME.ANALYZE_13F)
     private readonly queue: Queue,
     private readonly tickerRepository: SecCompanyRepository,
-    private readonly filingRepository: FilingRepository,
+    private readonly filingRepository: SecFilingRepository,
     private readonly secApiService: SecApiService,
   ) {}
 
@@ -43,7 +47,7 @@ export class ScrapeRssJob {
       });
 
       switch (true) {
-        // `filing`이 이미 존재하는 경우
+        // `sec-filing`이 이미 존재하는 경우
         case !!foundFiling:
         // `sec-company`가 없는 종목일 경우
         case !foundTickerEntity:
@@ -51,7 +55,7 @@ export class ScrapeRssJob {
       }
 
       const ticker = foundTickerEntity?.ticker;
-      const entity = Filing.create({ url, cik, ticker, formType, date });
+      const entity = SecFiling.create({ url, cik, ticker, formType, date });
       const result = await this.filingRepository.save(entity);
 
       await this.queue.add(

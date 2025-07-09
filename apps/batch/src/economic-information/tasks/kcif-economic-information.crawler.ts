@@ -5,13 +5,13 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { joinUrl, today } from '@libs/common';
 import {
-  ECONOMIC_INFO_SOURCE,
   EconomicInformation,
   EconomicInformationRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { KcifApi } from '@libs/external-api';
 import { flatten } from 'lodash';
+import { ECONOMIC_INFO_SOURCE } from '@libs/core';
 
 /**
  * 국제금융센터(KCIF)

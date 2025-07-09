@@ -5,12 +5,12 @@ import { parse as parseToHTML } from 'node-html-parser';
 import { formatSixDigitDate, today } from '@libs/common';
 import { flatten } from 'lodash';
 import {
-  ECONOMIC_INFO_SOURCE,
   EconomicInformation,
   EconomicInformationRepository,
 } from '@libs/domain';
 import { QUEUE_NAME } from '@libs/config';
 import { NaverPayApi } from '@libs/external-api';
+import { ECONOMIC_INFO_SOURCE } from '@libs/core';
 
 /**
  * 매크로 환경
