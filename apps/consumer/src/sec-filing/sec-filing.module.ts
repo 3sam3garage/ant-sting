@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { ExternalApiModule } from '@libs/external-api';
-import { SecCompanyDomainModule, SecFilingDomainModule } from '@libs/domain';
+import {
+  SecCompanyDomainModule,
+  SecFilingDomainModule,
+} from '@libs/domain-mongo';
 import { SecFilingConsumer } from './service';
 
 @Module({

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import { EconomicInformationDomainModule } from '@libs/domain';
+import { EconomicInformationDomainModule } from '@libs/domain-mongo';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { AiModule } from '@libs/ai';
 import { EconomicInformationCommand } from './commands';

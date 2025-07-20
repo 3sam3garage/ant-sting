@@ -12,7 +12,7 @@ import {
   Portfolio,
   PortfolioItem,
 } from '../interface';
-import { Dictionary, groupBy, remove } from 'lodash';
+import { Dictionary, groupBy } from 'lodash';
 import { parseStringPromise } from 'xml2js';
 import { InvestmentRedisRepository } from '@libs/domain-redis';
 
@@ -86,7 +86,7 @@ export class Sec13fTask {
         name: nameMap.get(cusip),
         cusip,
         value,
-        portion: parseFloat(portion.toFixed(2)),
+        portion: parseFloat(portion.toFixed(3)),
       });
     }
 
@@ -128,16 +128,27 @@ export class Sec13fTask {
   ) {
     const blocks: SlackMessageBlock[] = [];
 
-    for (const cusip of cusips) {
-      const [item] = groupedItems[cusip];
-      const { shareAmount, value, portion, name } = item;
+    const items = cusips
+      .map((cusip) => groupedItems?.[cusip]?.[0])
+      .sort((a, b) => {
+        return b?.portion - a?.portion; // 내림차순 정렬
+      });
+
+    for (const item of items.slice(0, 10)) {
+      const { shareAmount, value, portion, name, cusip } = item;
       blocks.push(
         {
           type: 'rich_text',
           elements: [
             {
               type: 'rich_text_section',
-              elements: [{ type: 'text', text: name, style: { bold: true } }],
+              elements: [
+                {
+                  type: 'text',
+                  text: `${name} (cusip: ${cusip})`,
+                  style: { bold: true },
+                },
+              ],
             },
           ],
         },
@@ -162,52 +173,6 @@ export class Sec13fTask {
     return blocks;
   }
 
-  private buildDifferenceMessageBlock(
-    groupedItems: Dictionary<PortfolioItem[]>,
-  ): SlackMessageBlock[] {
-    const blocks: SlackMessageBlock[] = [];
-    for (const [, portfolioItems] of Object.entries(groupedItems)) {
-      const [prev, current] = portfolioItems;
-      blocks.push(
-        {
-          type: 'rich_text',
-          elements: [
-            {
-              type: 'rich_text_section',
-              elements: [
-                { type: 'text', text: prev.name, style: { bold: true } },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'context',
-          elements: [
-            {
-              type: 'mrkdwn',
-              text: `- *shareAmount* : \`${prev.shareAmount.toLocaleString()} -> ${current.shareAmount.toLocaleString()}\``,
-            },
-            {
-              type: 'mrkdwn',
-              text: `- *value*: \`\$${prev.value.toLocaleString()} -> \$${current.value.toLocaleString()}\``,
-            },
-            {
-              type: 'mrkdwn',
-              text: `- *portion*: \`${prev.portion} % -> ${current.portion} %\``,
-            },
-          ],
-        },
-      );
-    }
-
-    return blocks;
-  }
-
-  /**
-   * @todo
-   * 1. portion 이 높은 순으로 각각 10개씩. 나머지는 생략.
-   * 2. 신규, 청산 수는 레디스에 집계. (추후 1주일에 한번씩 상위 하위 알림 배치 예정)
-   */
   async exec() {
     const path =
       'https://www.sec.gov/Archives/edgar/data/1940917/000194091725000004/0001940917-25-000004-index.htm';
@@ -221,6 +186,7 @@ export class Sec13fTask {
       investmentInfos.push({ items, url, date: info.date });
     }
 
+    // new, removed
     const [current, prev] = investmentInfos;
     const curPortfolio = this.figurePortfolio(current);
     const prevPortfolio = this.figurePortfolio(prev);
@@ -236,6 +202,7 @@ export class Sec13fTask {
       }
     }
 
+    // 레디스에 신규, 청산 수 집계
     const groupedItems = groupBy(
       [...prevPortfolio.items, ...curPortfolio.items],
       'cusip',
@@ -255,11 +222,10 @@ export class Sec13fTask {
       await this.investmentRedisRepo.addDivestmentCount(cusip, item.name);
     }
 
-    // block
+    // slack message
     const blockArray: SlackMessageBlock[][] = [
       this.buildLoneMessageBlock([...newSet], groupedItems),
       this.buildLoneMessageBlock([...removedSet], groupedItems),
-      // this.buildDifferenceMessageBlock(groupedItems),
     ];
 
     const message = from13FtoSlackMessage(
@@ -267,8 +233,8 @@ export class Sec13fTask {
       blockArray,
     );
 
-    // await this.slackApi.sendMessage(message).catch((error) => {
-    //   Logger.error(error);
-    // });
+    await this.slackApi.sendMessage(message).catch((error) => {
+      Logger.error(error);
+    });
   }
 }

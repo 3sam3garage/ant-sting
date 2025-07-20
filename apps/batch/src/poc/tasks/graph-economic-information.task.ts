@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EconomicInformationRepository } from '@libs/domain';
+import { EconomicInformationRepository } from '@libs/domain-mongo';
 import { GeminiService, GRAPH_ECONOMIC_INFORMATION_PROMPT } from '@libs/ai';
 import { SlackApi } from '@libs/external-api';
 import { flatten } from 'lodash';

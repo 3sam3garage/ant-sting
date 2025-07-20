@@ -1,6 +1,6 @@
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
-import { AnalyzeSec13fMessage } from '@libs/domain';
+import { AnalyzeSec13fMessage } from '@libs/domain-mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { FILING_SOURCE } from '@libs/core';
 import { BaseConsumer } from '../../base.consumer';

@@ -111,7 +111,7 @@
     "moduleNameMapper": {
       "^@libs/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@libs/core(|/.*)$": "<rootDir>/libs/core/src/$1",
-      "^@libs/domain(|/.*)$": "<rootDir>/libs/domain/src/$1",
+      "^@libs/domain-mongo(|/.*)$": "<rootDir>/libs/domain/src/$1",
       "^@libs/config(|/.*)$": "<rootDir>/libs/config/src/$1",
       "^@libs/ai(|/.*)$": "<rootDir>/libs/ai/src/$1",
       "^@libs/external-api(|/.*)$": "<rootDir>/libs/external-api/src/$1",

@@ -31,11 +31,11 @@
       "@libs/core/*": [
         "libs/core/src/*"
       ],
-      "@libs/domain": [
-        "libs/domain/src"
+      "@libs/domain-mongo": [
+        "libs/domain-mongo/src"
       ],
-      "@libs/domain/*": [
-        "libs/domain/src/*"
+      "@libs/domain-mongo/*": [
+        "libs/domain-mongo/src/*"
       ],
       "@libs/config": [
         "libs/config/src"

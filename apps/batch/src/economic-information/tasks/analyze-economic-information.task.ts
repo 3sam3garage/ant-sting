@@ -3,7 +3,7 @@ import {
   EconomicInformationAnalysis,
   EconomicInformationAnalysisRepository,
   EconomicInformationRepository,
-} from '@libs/domain';
+} from '@libs/domain-mongo';
 import {
   ANALYZE_GEMMA_ECONOMIC_INFORMATION_PROMPT,
   GeminiService,

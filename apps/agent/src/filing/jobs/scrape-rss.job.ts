@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SecFilingRepository, AnalyzeSec13fMessage } from '@libs/domain';
+import { SecFilingRepository, AnalyzeSec13fMessage } from '@libs/domain-mongo';
 import { SecApiService } from '@libs/external-api';
 import { QUEUE_NAME } from '@libs/config';
 import { Cron } from '@nestjs/schedule';

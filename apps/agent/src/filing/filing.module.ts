@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
-import { SecFilingDomainModule, SecCompanyDomainModule } from '@libs/domain';
+import {
+  SecFilingDomainModule,
+  SecCompanyDomainModule,
+} from '@libs/domain-mongo';
 import { ExternalApiModule } from '@libs/external-api';
 import { ScrapeRssJob } from './jobs';
 

@@ -7,7 +7,7 @@ import { joinUrl, today } from '@libs/common';
 import {
   EconomicInformation,
   EconomicInformationRepository,
-} from '@libs/domain';
+} from '@libs/domain-mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { KcifApi } from '@libs/external-api';
 import { flatten } from 'lodash';
@@ -69,9 +69,7 @@ export class KcifEconomicInformationCrawler {
       for (const url of urls) {
         const payload = { url, documentId: entity._id.toString() };
 
-        await this.queue.add(ECONOMIC_INFO_SOURCE.KCIF, payload, {
-          removeOnComplete: true,
-        });
+        await this.queue.add(ECONOMIC_INFO_SOURCE.KCIF, payload);
       }
     }
   }

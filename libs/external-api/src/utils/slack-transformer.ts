@@ -1,4 +1,4 @@
-import { EconomicInformationAnalysis } from '@libs/domain';
+import { EconomicInformationAnalysis } from '@libs/domain-mongo';
 import { SlackMessage, SlackMessageBlock } from '../intefaces';
 
 export const fromEconomicInfoToSlackMessage = (
@@ -161,8 +161,8 @@ export const from13FtoSlackMessage = (
   name: string,
   blocksArray: SlackMessageBlock[][],
 ): SlackMessage => {
-  const [newlyAdded = [], removed = [], comparison = []] = blocksArray;
-  for (const blocks of [newlyAdded, removed, comparison]) {
+  const [newlyAdded = [], removed = []] = blocksArray;
+  for (const blocks of [newlyAdded, removed]) {
     if (blocks.length === 0) {
       blocks.push({
         type: 'section',
@@ -181,7 +181,13 @@ export const from13FtoSlackMessage = (
       elements: [
         {
           type: 'rich_text_quote',
-          elements: [{ type: 'text', text: '신규', style: { bold: true } }],
+          elements: [
+            {
+              type: 'text',
+              text: '신규 (비중 상위 10)',
+              style: { bold: true },
+            },
+          ],
         },
       ],
     },
@@ -192,22 +198,17 @@ export const from13FtoSlackMessage = (
       elements: [
         {
           type: 'rich_text_quote',
-          elements: [{ type: 'text', text: '청산', style: { bold: true } }],
+          elements: [
+            {
+              type: 'text',
+              text: '청산 (비중 상위 10)',
+              style: { bold: true },
+            },
+          ],
         },
       ],
     },
     ...removed,
-    { type: 'divider' },
-    {
-      type: 'rich_text',
-      elements: [
-        {
-          type: 'rich_text_quote',
-          elements: [{ type: 'text', text: '보유', style: { bold: true } }],
-        },
-      ],
-    },
-    ...comparison,
   ];
 
   if (blocks.length >= 50) {

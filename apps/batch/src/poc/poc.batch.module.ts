@@ -5,7 +5,7 @@ import {
   EconomicInformationDomainModule,
   SecCompanyDomainModule,
   SecFilingDomainModule,
-} from '@libs/domain';
+} from '@libs/domain-mongo';
 import { AiModule } from '@libs/ai';
 import { ExternalApiModule } from '@libs/external-api';
 import { BrowserModule } from '@libs/browser';

@@ -1,13 +1,13 @@
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { parse as parseToHTML } from 'node-html-parser';
 import { formatSixDigitDate, today } from '@libs/common';
 import { flatten } from 'lodash';
 import {
   EconomicInformation,
   EconomicInformationRepository,
-} from '@libs/domain';
+} from '@libs/domain-mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { NaverPayApi } from '@libs/external-api';
 import { ECONOMIC_INFO_SOURCE } from '@libs/core';
@@ -69,9 +69,7 @@ export class NaverEconomicInformationCrawler {
       for (const url of urls) {
         const payload = { url, documentId: entity._id.toString() };
 
-        await this.queue.add(ECONOMIC_INFO_SOURCE.NAVER, payload, {
-          removeOnComplete: true,
-        });
+        await this.queue.add(ECONOMIC_INFO_SOURCE.NAVER, payload);
       }
     }
   }

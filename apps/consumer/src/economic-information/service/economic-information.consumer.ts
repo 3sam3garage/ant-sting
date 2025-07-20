@@ -5,7 +5,7 @@ import { Process, Processor } from '@nestjs/bull';
 import {
   EconomicInformationMessage,
   EconomicInformationRepository,
-} from '@libs/domain';
+} from '@libs/domain-mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { KcifApi, NaverPayApi } from '@libs/external-api';
 import { BaseConsumer } from '../../base.consumer';
