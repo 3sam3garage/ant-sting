@@ -3,6 +3,7 @@ import { RedisService } from '@liaoliaots/nestjs-redis';
 import { Module } from '@nestjs/common';
 import {
   EconomicInformationDomainModule,
+  PortfolioDomainModule,
   SecCompanyDomainModule,
   SecFilingDomainModule,
 } from '@libs/domain-mongo';
@@ -26,6 +27,7 @@ import { ScrapeRssTask } from './tasks/scrape-rss.task';
     SecFilingDomainModule,
     BrowserModule,
     InvestmentRedisModule,
+    PortfolioDomainModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ANALYZE_13F,
       inject: [RedisConfigService],

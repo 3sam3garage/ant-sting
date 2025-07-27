@@ -15,6 +15,10 @@ import {
 import { Dictionary, groupBy } from 'lodash';
 import { parseStringPromise } from 'xml2js';
 import { InvestmentRedisRepository } from '@libs/domain-redis';
+import {
+  PortfolioRepository,
+  Portfolio as PortfolioEntity,
+} from '@libs/domain-mongo';
 
 @Injectable()
 export class Sec13fTask {
@@ -23,6 +27,7 @@ export class Sec13fTask {
     private readonly chromiumService: ChromiumService,
     private readonly slackApi: SlackApi,
     private readonly investmentRedisRepo: InvestmentRedisRepository,
+    private readonly portfolioRepo: PortfolioRepository,
   ) {}
 
   private async figure13_HRUrls(cik: string) {
@@ -174,6 +179,9 @@ export class Sec13fTask {
   }
 
   async exec() {
+    /**
+     * @todo Process consumer로 분리
+     */
     const path =
       'https://www.sec.gov/Archives/edgar/data/1940917/000194091725000004/0001940917-25-000004-index.htm';
     const cik = path.split('/')[6];
@@ -191,6 +199,24 @@ export class Sec13fTask {
     const curPortfolio = this.figurePortfolio(current);
     const prevPortfolio = this.figurePortfolio(prev);
 
+    // DB에 저장
+    for (const entity of [
+      PortfolioEntity.create(curPortfolio),
+      PortfolioEntity.create(prevPortfolio),
+    ]) {
+      const prevEntity = await this.portfolioRepo.findOne({
+        where: { url: entity.url },
+      });
+
+      if (!prevEntity) {
+        await this.portfolioRepo.save(entity);
+      }
+    }
+
+    /**
+     * 비교 후 메시지 발송
+     * @todo 여기부터 analyze consumer 로 분리하는게 좋을듯
+     */
     const newSet = new Set(current.items.map((item) => item.cusip));
     const removedSet = new Set(prev.items.map((item) => item.cusip));
     for (const cusip of [...newSet]) {
