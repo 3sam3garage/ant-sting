@@ -54,7 +54,9 @@ export class ScrapePollTask {
       }
     }
 
-    const message = fromPolyMarketToSlackMessage(outComes);
+
+    // @todo 나중에 분리 발송 필요. 일단 16건만 처리되도록 함.
+    const message = fromPolyMarketToSlackMessage(outComes.slice(0, 16));
     await this.slackApi.sendMessage(message);
   }
 }
