@@ -1,3 +1,6 @@
+import { groupBy } from 'lodash';
+import { parseStringPromise } from 'xml2js';
+import { format } from 'date-fns';
 import { Job, Queue } from 'bull';
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import {
@@ -5,6 +8,8 @@ import {
   Portfolio as PortfolioEntity,
   PortfolioRepository,
 } from '@libs/domain-mongo';
+import { ChromiumService } from '@libs/browser';
+import { SecApiService } from '@libs/external-api';
 import { QUEUE_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
 import {
@@ -12,12 +17,8 @@ import {
   InvestmentItem,
   Portfolio,
   PortfolioItem,
-} from '../../../../batch/src/poc/interface';
-import { groupBy } from 'lodash';
-import { parseStringPromise } from 'xml2js';
-import { ChromiumService } from '@libs/browser';
-import { SecApiService } from '@libs/external-api';
-import { format } from 'date-fns';
+} from '../interface';
+import { Logger } from '@nestjs/common';
 
 @Processor(QUEUE_NAME.ANALYZE_13F)
 export class Analyze13fConsumer extends BaseConsumer {
@@ -133,6 +134,11 @@ export class Analyze13fConsumer extends BaseConsumer {
     const cik = url.split('/')[6];
 
     const { name, items: infos } = await this.figure13_HRUrls(cik);
+    if (infos.length === 0) {
+      Logger.debug('13F-HR filings 이 없습니다.:', cik);
+      return;
+    }
+
     const investmentInfos: InvestmentInfo[] = [];
     for (const info of infos.slice(0, 2)) {
       const url = info.url;
@@ -157,7 +163,14 @@ export class Analyze13fConsumer extends BaseConsumer {
       if (!prevEntity) {
         const result = await this.portfolioRepo.save(entity);
         if (result.date === format(new Date(), 'yyyy-MM-dd')) {
-          await this.queue.add({ _id: result._id });
+          await this.queue
+            .add(
+              { _id: result._id },
+              { removeOnComplete: true, jobId: result._id.toString() },
+            )
+            .catch((error) => {
+              Logger.error(error);
+            });
         }
       }
     }

@@ -7,7 +7,7 @@ import {
   SecCompanyDomainModule,
   SecFilingDomainModule,
 } from '@libs/domain-mongo';
-import { Analyze13fConsumer } from './service';
+import { Analyze13fConsumer, Notify13fConsumer } from './service';
 import { BrowserModule } from '@libs/browser';
 
 @Module({
@@ -32,6 +32,6 @@ import { BrowserModule } from '@libs/browser';
       },
     }),
   ],
-  providers: [Analyze13fConsumer],
+  providers: [Analyze13fConsumer, Notify13fConsumer],
 })
 export class SecFilingModule {}

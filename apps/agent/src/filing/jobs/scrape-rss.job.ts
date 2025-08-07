@@ -25,8 +25,7 @@ export class ScrapeRssJob {
     for (const feed of feeds) {
       const url = feed?.link?.$?.href || '';
       await this.queue.add({ url } as AnalyzeSec13fMessage, {
-        removeOnComplete: false,
-        removeOnFail: false,
+        removeOnComplete: true,
       });
     }
   }
