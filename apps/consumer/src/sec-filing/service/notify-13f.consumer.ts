@@ -75,12 +75,15 @@ export class Notify13fConsumer extends BaseConsumer {
 
   @Process({ concurrency: 1 })
   async run({ data: { _id } }: Job<Notify13fMessage>) {
-    const [portfolio, prevPortfolio] = await Promise.all([
-      await this.portfolioRepo.findOne({ where: new ObjectId(_id) }),
-      await this.portfolioRepo.findOne({
-        where: { _id: { $lt: new ObjectId(_id) } },
-      }),
-    ]);
+    const portfolio = await this.portfolioRepo.findOne({
+      where: new ObjectId(_id),
+    });
+    const prevPortfolio = await this.portfolioRepo.findOne({
+      where: {
+        issuer: portfolio?.issuer,
+        _id: { $lt: new ObjectId(_id) },
+      },
+    });
 
     if (!portfolio || !prevPortfolio) {
       Logger.error('포트폴리오 또는 이전 포트폴리오를 찾을 수 없습니다.');

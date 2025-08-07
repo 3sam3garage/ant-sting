@@ -125,6 +125,9 @@ export class Analyze13fConsumer extends BaseConsumer {
         emptyTag: () => null,
       });
     const investmentItems = parsed.informationTable?.infoTable || [];
+    if (!Array.isArray(investmentItems)) {
+      return [];
+    }
 
     return investmentItems;
   }
@@ -163,14 +166,10 @@ export class Analyze13fConsumer extends BaseConsumer {
       if (!prevEntity) {
         const result = await this.portfolioRepo.save(entity);
         if (result.date === format(new Date(), 'yyyy-MM-dd')) {
-          await this.queue
-            .add(
-              { _id: result._id },
-              { removeOnComplete: true, jobId: result._id.toString() },
-            )
-            .catch((error) => {
-              Logger.error(error);
-            });
+          await this.queue.add(
+            { _id: result._id.toString() },
+            { removeOnComplete: true },
+          );
         }
       }
     }

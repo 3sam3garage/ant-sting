@@ -24,13 +24,20 @@ export class ScrapeRssJob {
 
     for (const feed of feeds) {
       const url = feed?.link?.$?.href || '';
+      const entity = await this.filingRepository.findOne({ where: { url } });
+
+      if (entity) {
+        Logger.log(`이미 처리된 URL: ${url}`);
+        continue;
+      }
+
       await this.queue.add({ url } as AnalyzeSec13fMessage, {
         removeOnComplete: true,
       });
     }
   }
 
-  @Cron('* * * * *', { timeZone: 'Asia/Seoul' })
+  @Cron('*/5 * * * *', { timeZone: 'Asia/Seoul' })
   async handle(): Promise<void> {
     Logger.log(`${new Date()} scrape-sec-rss scheduler start`);
 

@@ -42,7 +42,7 @@ export class SecApiService {
 
   async fetchRSS(start = 0, count = 100): Promise<FilingRss> {
     const response = await axios.get(
-      'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&output=atom',
+      'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=13F-HR&company=&dateb=&owner=include&output=atom',
       {
         params: { start, count },
         headers: SEC_FAIR_ACCESS_HEADERS,
