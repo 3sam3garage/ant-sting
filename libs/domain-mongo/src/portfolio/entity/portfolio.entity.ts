@@ -25,6 +25,9 @@ export class PortfolioItem {
 @Entity({ name: 'portfolios' })
 export class Portfolio extends BaseEntity {
   @Column()
+  issuer: string;
+
+  @Column()
   url: string;
 
   @Column()

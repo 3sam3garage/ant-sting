@@ -1,1 +1,1 @@
-export * from './sec-filing.consumer';
+export * from './analyze-13f.consumer';

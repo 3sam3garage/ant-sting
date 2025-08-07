@@ -228,7 +228,6 @@ export class Sec13fTask {
       }
     }
 
-    // 레디스에 신규, 청산 수 집계
     const groupedItems = groupBy(
       [...prevPortfolio.items, ...curPortfolio.items],
       'cusip',

@@ -18,6 +18,8 @@ export enum QUEUE_NAME {
   ECONOMIC_INFORMATION = 'ECONOMIC_INFORMATION',
   // sec sec-filing (13-F 분석)
   ANALYZE_13F = 'ANALYZE_13F',
+  // send 13-F analysis result to slack
+  NOTIFY_13F = 'NOTIFY_13F',
 }
 
 export enum REDIS_NAME {
