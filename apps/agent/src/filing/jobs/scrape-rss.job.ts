@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SecFilingRepository, AnalyzeSec13fMessage } from '@libs/domain-mongo';
 import { SecApiService } from '@libs/external-api';
 import { QUEUE_NAME } from '@libs/config';
 import { Cron } from '@nestjs/schedule';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { errorToJson } from '@libs/common';
+import { SecFeedRedisRepository } from '@libs/domain-redis';
 
 @Injectable()
 export class ScrapeRssJob {
@@ -14,8 +14,8 @@ export class ScrapeRssJob {
   constructor(
     @InjectQueue(QUEUE_NAME.ANALYZE_13F)
     private readonly queue: Queue,
-    private readonly filingRepository: SecFilingRepository,
     private readonly secApiService: SecApiService,
+    private readonly secFeedRedisRepository: SecFeedRedisRepository,
   ) {}
 
   async run() {
@@ -24,16 +24,17 @@ export class ScrapeRssJob {
 
     for (const feed of feeds) {
       const url = feed?.link?.$?.href || '';
-      const entity = await this.filingRepository.findOne({ where: { url } });
 
-      if (entity) {
+      const processed = await this.secFeedRedisRepository.exists(url);
+      if (processed) {
         Logger.log(`이미 처리된 URL: ${url}`);
         continue;
       }
 
-      await this.queue.add({ url } as AnalyzeSec13fMessage, {
-        removeOnComplete: true,
-      });
+      await Promise.all([
+        this.queue.add({ url }, { removeOnComplete: true }),
+        this.secFeedRedisRepository.addToSet(url),
+      ]);
     }
   }
 

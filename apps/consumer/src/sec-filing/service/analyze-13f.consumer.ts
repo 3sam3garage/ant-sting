@@ -156,8 +156,8 @@ export class Analyze13fConsumer extends BaseConsumer {
 
     // DB에 저장
     for (const entity of [
-      PortfolioEntity.create({ issuer: name, ...curPortfolio }),
       PortfolioEntity.create({ issuer: name, ...prevPortfolio }),
+      PortfolioEntity.create({ issuer: name, ...curPortfolio }),
     ]) {
       const prevEntity = await this.portfolioRepo.findOne({
         where: { url: entity.url },
@@ -167,7 +167,7 @@ export class Analyze13fConsumer extends BaseConsumer {
         const result = await this.portfolioRepo.save(entity);
         if (
           result.date === format(new Date(), 'yyyy-MM-dd') &&
-          result.totalValue > 10_000_000_000
+          result.totalValue > 10_000_000_000 / 2
         ) {
           await this.queue.add(
             { _id: result._id.toString(), issuer: result.issuer },

@@ -82,9 +82,13 @@ export class Notify13fConsumer extends BaseConsumer {
       }),
     ]);
 
-    if (!portfolio || !prevPortfolio) {
-      Logger.error('포트폴리오 또는 이전 포트폴리오를 찾을 수 없습니다.');
-      return;
+    switch (true) {
+      case !portfolio:
+        Logger.error('포트폴리오를 찾을 수 없습니다.');
+        return;
+      case !prevPortfolio:
+        Logger.error('이전 포트폴리오를 찾을 수 없습니다.');
+        return;
     }
 
     const newSet = new Set(portfolio.items.map((item) => item.cusip));

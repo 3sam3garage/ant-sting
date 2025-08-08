@@ -2,18 +2,16 @@ import { Module } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
-import {
-  SecFilingDomainModule,
-  SecCompanyDomainModule,
-} from '@libs/domain-mongo';
+import { PortfolioDomainModule } from '@libs/domain-mongo';
+import { InvestmentRedisModule } from '@libs/domain-redis';
 import { ExternalApiModule } from '@libs/external-api';
 import { ScrapeRssJob } from './jobs';
 
 @Module({
   imports: [
-    SecFilingDomainModule,
-    SecCompanyDomainModule,
+    PortfolioDomainModule,
     ExternalApiModule,
+    InvestmentRedisModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ANALYZE_13F,
       inject: [RedisConfigService],
