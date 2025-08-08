@@ -165,9 +165,12 @@ export class Analyze13fConsumer extends BaseConsumer {
 
       if (!prevEntity) {
         const result = await this.portfolioRepo.save(entity);
-        if (result.date === format(new Date(), 'yyyy-MM-dd')) {
+        if (
+          result.date === format(new Date(), 'yyyy-MM-dd') &&
+          result.totalValue > 10_000_000_000
+        ) {
           await this.queue.add(
-            { _id: result._id.toString() },
+            { _id: result._id.toString(), issuer: result.issuer },
             { removeOnComplete: true },
           );
         }
