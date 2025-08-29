@@ -6,7 +6,7 @@ import {
   PortfolioDomainModule,
   SecCompanyDomainModule,
   SecFilingDomainModule,
-} from '@libs/domain-mongo';
+} from '@libs/mongo';
 import { Analyze13fConsumer, Notify13fConsumer } from './service';
 import { BrowserModule } from '@libs/browser';
 

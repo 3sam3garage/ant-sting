@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { SecApiService, SlackApi } from '@libs/external-api';
 import { ChromiumService } from '@libs/browser';
 import { parseStringPromise } from 'xml2js';
-import { InvestmentRedisRepository } from '@libs/domain-redis';
-import { PortfolioRepository, Portfolio } from '@libs/domain-mongo';
+import { InvestmentRedisRepository } from '@libs/redis';
+import { PortfolioRepository, Portfolio } from '@libs/mongo';
 import { plainToInstance } from 'class-transformer';
 import { StockInventory } from '../interface';
 

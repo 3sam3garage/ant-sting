@@ -1,6 +1,6 @@
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
-import { PortfolioItem, PortfolioRepository } from '@libs/domain-mongo';
+import { PortfolioItem, PortfolioRepository } from '@libs/mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
 import { Notify13fMessage } from '../interface';

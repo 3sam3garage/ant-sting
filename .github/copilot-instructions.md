@@ -20,11 +20,11 @@ This is a monorepo using NestJS. The structure is divided into `apps` and `libs`
 
 -   Before adding a new dependency, check if a similar functionality is already provided by an existing library in the `libs` folder or in `package.json`.
 -   Use the existing libraries for common tasks:
-    -   `@app/config`: For application configuration.
-    -   `@app/common`: For shared utilities.
-    -   `@app/domain-mongo`: For MongoDB domain entities and repositories.
-    -   `@app/domain-redis`: For Redis-based data storage.
-    -   `@app/external-api`: For communication with external APIs.
+    -   `@libs/config`: For application configuration.
+    -   `@libs/common`: For shared utilities.
+    -   `@libs/mongo`: For MongoDB domain entities and repositories.
+    -   `@libs/redis`: For Redis-based data storage.
+    -   `@libs/external-api`: For communication with external APIs.
 
 ## 4. Testing
 

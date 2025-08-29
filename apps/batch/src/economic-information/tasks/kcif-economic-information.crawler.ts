@@ -7,7 +7,7 @@ import { joinUrl, today } from '@libs/common';
 import {
   EconomicInformation,
   EconomicInformationRepository,
-} from '@libs/domain-mongo';
+} from '@libs/mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { KcifApi } from '@libs/external-api';
 import { flatten } from 'lodash';

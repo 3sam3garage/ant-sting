@@ -6,12 +6,12 @@ import {
   PortfolioDomainModule,
   SecCompanyDomainModule,
   SecFilingDomainModule,
-} from '@libs/domain-mongo';
+} from '@libs/mongo';
 import { AiModule } from '@libs/ai';
 import { ExternalApiModule } from '@libs/external-api';
 import { BrowserModule } from '@libs/browser';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
-import { InvestmentRedisModule } from '@libs/domain-redis';
+import { InvestmentRedisModule } from '@libs/redis';
 
 import { PocCommand } from './commands';
 import { GraphEconomicInformationTask } from './tasks/graph-economic-information.task';

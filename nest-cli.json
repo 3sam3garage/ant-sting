@@ -57,11 +57,11 @@
     },
     "domain": {
       "type": "library",
-      "root": "libs/domain-mongo",
+      "root": "libs/mongo",
       "entryFile": "index",
-      "sourceRoot": "libs/domain-mongo/src",
+      "sourceRoot": "libs/mongo/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/domain-mongo/tsconfig.lib.json"
+        "tsConfigPath": "libs/mongo/tsconfig.lib.json"
       }
     },
     "config": {
@@ -100,13 +100,13 @@
         "tsConfigPath": "libs/browser/tsconfig.lib.json"
       }
     },
-    "domain-redis": {
+    "redis": {
       "type": "library",
-      "root": "libs/domain-redis",
+      "root": "libs/redis",
       "entryFile": "index",
-      "sourceRoot": "libs/domain-redis/src",
+      "sourceRoot": "libs/redis/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/domain-redis/tsconfig.lib.json"
+        "tsConfigPath": "libs/redis/tsconfig.lib.json"
       }
     }
   }

@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
-import { PortfolioDomainModule } from '@libs/domain-mongo';
-import { InvestmentRedisModule } from '@libs/domain-redis';
+import { PortfolioDomainModule } from '@libs/mongo';
+import { InvestmentRedisModule } from '@libs/redis';
 import { ExternalApiModule } from '@libs/external-api';
 import { ScrapeRssJob } from './jobs';
 

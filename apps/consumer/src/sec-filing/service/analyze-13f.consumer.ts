@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { parseStringPromise } from 'xml2js';
 import { Job, Queue } from 'bull';
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
-import { Portfolio, PortfolioRepository } from '@libs/domain-mongo';
+import { Portfolio, PortfolioRepository } from '@libs/mongo';
 import { AnalyzeSec13fMessage } from '@libs/core';
 import { ChromiumService } from '@libs/browser';
 import { SecApiService } from '@libs/external-api';

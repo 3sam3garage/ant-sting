@@ -2,7 +2,7 @@ import * as htmlParser from 'node-html-parser';
 import { ObjectId } from 'mongodb';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EconomicInformationConsumer } from '../economic-information.consumer';
-import { EconomicInformationRepository } from '@libs/domain-mongo';
+import { EconomicInformationRepository } from '@libs/mongo';
 import { NaverPayApi, KcifApi } from '@libs/external-api';
 import { Logger } from '@nestjs/common';
 

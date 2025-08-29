@@ -7,7 +7,7 @@ import { flatten } from 'lodash';
 import {
   EconomicInformation,
   EconomicInformationRepository,
-} from '@libs/domain-mongo';
+} from '@libs/mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { NaverPayApi } from '@libs/external-api';
 import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';

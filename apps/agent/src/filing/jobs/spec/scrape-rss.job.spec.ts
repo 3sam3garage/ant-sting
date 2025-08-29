@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ScrapeRssJob } from '../scrape-rss.job';
 import { SecApiService } from '@libs/external-api';
-import { SecFeedRedisRepository } from '@libs/domain-redis';
+import { SecFeedRedisRepository } from '@libs/redis';
 import { QUEUE_NAME } from '@libs/config';
 import { Queue } from 'bull';
 import { Logger } from '@nestjs/common';

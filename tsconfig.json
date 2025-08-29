@@ -19,54 +19,22 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@libs/common": [
-        "libs/common/src"
-      ],
-      "@libs/common/*": [
-        "libs/common/src/*"
-      ],
-      "@libs/core": [
-        "libs/core/src"
-      ],
-      "@libs/core/*": [
-        "libs/core/src/*"
-      ],
-      "@libs/domain-mongo": [
-        "libs/domain-mongo/src"
-      ],
-      "@libs/domain-mongo/*": [
-        "libs/domain-mongo/src/*"
-      ],
-      "@libs/config": [
-        "libs/config/src"
-      ],
-      "@libs/config/*": [
-        "libs/config/src/*"
-      ],
-      "@libs/ai": [
-        "libs/ai/src"
-      ],
-      "@libs/ai/*": [
-        "libs/ai/src/*"
-      ],
-      "@libs/external-api": [
-        "libs/external-api/src"
-      ],
-      "@libs/external-api/*": [
-        "libs/external-api/src/*"
-      ],
-      "@libs/browser": [
-        "libs/browser/src"
-      ],
-      "@libs/browser/*": [
-        "libs/browser/src*"
-      ],
-      "@libs/domain-redis": [
-        "libs/domain-redis/src"
-      ],
-      "@libs/domain-redis/*": [
-        "libs/domain-redis/src/*"
-      ]
+      "@libs/common": ["libs/common/src"],
+      "@libs/common/*": ["libs/common/src/*"],
+      "@libs/core": ["libs/core/src"],
+      "@libs/core/*": ["libs/core/src/*"],
+      "@libs/config": ["libs/config/src"],
+      "@libs/config/*": ["libs/config/src/*"],
+      "@libs/browser": ["libs/data-layer/browser/src"],
+      "@libs/browser/*": ["libs/data-layer/browser/src*"],
+      "@libs/ai": ["libs/data-layer/ai/src"],
+      "@libs/ai/*": ["libs/data-layer/ai/src/*"],
+      "@libs/mongo": ["libs/data-layer/mongo/src"],
+      "@libs/mongo/*": ["libs/data-layer/mongo/src/*"],
+      "@libs/redis": ["libs/data-layer/redis/src"],
+      "@libs/redis/*": ["libs/data-layer/redis/src/*"],
+      "@libs/external-api": ["libs/data-layer/external-api/src"],
+      "@libs/external-api/*": ["libs/data-layer/external-api/src/*"]
     }
   }
 }

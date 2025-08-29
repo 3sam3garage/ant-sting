@@ -5,7 +5,7 @@ import { Cron } from '@nestjs/schedule';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { errorToJson } from '@libs/common';
-import { SecFeedRedisRepository } from '@libs/domain-redis';
+import { SecFeedRedisRepository } from '@libs/redis';
 import { AnalyzeSec13fMessage } from '@libs/core';
 
 @Injectable()
