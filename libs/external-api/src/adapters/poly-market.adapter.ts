@@ -1,4 +1,4 @@
-export interface MarketItem {
+export class MarketItem {
   id: string;
   question: string;
   conditionId: string;
@@ -80,7 +80,7 @@ export interface MarketItem {
   rfqEnabled: boolean;
 }
 
-interface TagItem {
+class TagItem {
   id: string;
   label: string;
   slug: string;
@@ -90,7 +90,7 @@ interface TagItem {
   updatedAt: string;
 }
 
-export interface PollItem {
+export class PollItem {
   id: string;
   ticker: string;
   slug: string;
@@ -134,14 +134,14 @@ export interface PollItem {
   tags: TagItem[];
 }
 
-export interface PolyMarketResponse {
+export class PolyMarketResponse {
   data: PollItem[];
   pagination: {
     hasMore: boolean;
   };
 }
 
-export interface Outcome {
+export class Outcome {
   question: string;
   Yes: number;
   No: number;

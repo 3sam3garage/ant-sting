@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { joinUrl } from '@libs/common';
-import { PolyMarketResponse } from '../interfaces';
+import { PolyMarketResponse } from '../adapters';
 
 @Injectable()
 export class PolyMarketApi {

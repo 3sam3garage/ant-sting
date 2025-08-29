@@ -1,10 +1,10 @@
-export interface FormerName {
+export class FormerName {
   name: string;
   from: string;
   to: string;
 }
 
-interface Address {
+class Address {
   street1: string;
   street2: string | null;
   city: string;
@@ -13,7 +13,7 @@ interface Address {
   stateOrCountryDescription: string;
 }
 
-export interface SecFiling {
+export class SecFiling {
   cik: string;
   entityType: 'operating';
   sic: string;

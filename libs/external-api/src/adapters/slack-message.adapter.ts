@@ -6,13 +6,13 @@
 //   RICH_TEXT_SECTION = 'rich_text_section',
 // }
 
-interface Text {
+class Text {
   type: 'plain_text' | 'text' | 'mrkdwn';
   text: string;
   emoji?: boolean;
 }
 
-export interface SlackMessageBlock {
+export class SlackMessageBlock {
   type:
     | 'section'
     | 'context'
@@ -33,6 +33,6 @@ export interface SlackMessageBlock {
   fields?: SlackMessageBlock[] | Text[];
 }
 
-export interface SlackMessage {
+export class SlackMessage {
   blocks: SlackMessageBlock[];
 }
