@@ -8,4 +8,7 @@ import { SecCompanyEntity } from './entity';
   providers: [SecCompanyRepository],
   exports: [SecCompanyRepository],
 })
+/**
+ * @deprecated
+ */
 export class SecCompanyDomainModule {}

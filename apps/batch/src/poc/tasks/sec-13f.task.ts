@@ -1,24 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  from13FtoSlackMessage,
-  SecApiService,
-  SlackApi,
-  SlackMessageBlock,
-} from '@libs/external-api';
+import { SecApiService, SlackApi } from '@libs/external-api';
 import { ChromiumService } from '@libs/browser';
-import {
-  InvestmentInfo,
-  InvestmentItem,
-  Portfolio,
-  PortfolioItem,
-} from '../interface';
-import { Dictionary, groupBy } from 'lodash';
 import { parseStringPromise } from 'xml2js';
 import { InvestmentRedisRepository } from '@libs/domain-redis';
-import {
-  PortfolioRepository,
-  Portfolio as PortfolioEntity,
-} from '@libs/domain-mongo';
+import { PortfolioRepository, Portfolio } from '@libs/domain-mongo';
+import { StockInventory } from '../../../../consumer/src/sec-filing/interface';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class Sec13fTask {
@@ -30,80 +17,7 @@ export class Sec13fTask {
     private readonly portfolioRepo: PortfolioRepository,
   ) {}
 
-  private async figure13_HRUrls(cik: string) {
-    const submissions = await this.secApi.fetchSubmission(cik);
-    if (!submissions) {
-      return;
-    }
-
-    const {
-      name,
-      filings: {
-        recent: { accessionNumber = [], form = [], filingDate = [] },
-      },
-    } = submissions;
-
-    const items: { url: string; date: string }[] = [];
-    for (const [index, value] of Object.entries(form)) {
-      if (value === '13F-HR') {
-        const name = accessionNumber[index];
-        const date = filingDate[index];
-
-        items.push({
-          url: `https://www.sec.gov/Archives/edgar/data/${cik}/${name.replaceAll('-', '')}/${name}.txt`,
-          date,
-        });
-      }
-    }
-
-    return { name, items };
-  }
-
-  private figurePortfolio({
-    url,
-    date,
-    items: investmentItems,
-  }: InvestmentInfo): Portfolio {
-    const grouped = groupBy(investmentItems, 'cusip');
-
-    const nameMap = new Map<string, string>();
-    let totalValue = 0;
-    for (const investmentItem of investmentItems) {
-      const { cusip, value, nameOfIssuer } = investmentItem;
-      totalValue += +value;
-      nameMap.set(cusip, nameOfIssuer);
-    }
-
-    const items: PortfolioItem[] = [];
-    for (const [cusip, investments] of Object.entries(grouped)) {
-      const value = investments.reduce((acc, item) => {
-        return acc + (+item.value || 0);
-      }, 0);
-      const shareAmount = investments.reduce((acc, item) => {
-        return (acc += +(item?.shrsOrPrnAmt?.sshPrnamt || 0));
-      }, 0);
-
-      const portion = (value / totalValue) * 100;
-
-      items.push({
-        shareAmount,
-        date,
-        name: nameMap.get(cusip),
-        cusip,
-        value,
-        portion: parseFloat(portion.toFixed(3)),
-      });
-    }
-
-    return {
-      url,
-      date,
-      totalValue,
-      items,
-    };
-  }
-
-  async figureInvestments(url: string) {
+  private async figureInvestments(url: string): Promise<StockInventory[]> {
     const page = await this.chromiumService.getPage();
 
     await page.goto(url);
@@ -116,150 +30,64 @@ export class Sec13fTask {
       .replaceAll('ns1:', '')
       .match(/<informationTable[^>]*>([\s\S]*?)<\/informationTable>/);
 
-    const parsed: { informationTable: { infoTable: InvestmentItem[] } } =
+    const parsed: { informationTable: { infoTable: StockInventory[] } } =
       await parseStringPromise(match, {
         trim: true,
         explicitArray: false,
         emptyTag: () => null,
       });
     const investmentItems = parsed.informationTable?.infoTable || [];
-
-    return investmentItems;
-  }
-
-  private buildLoneMessageBlock(
-    cusips: string[],
-    groupedItems: Dictionary<PortfolioItem[]>,
-  ) {
-    const blocks: SlackMessageBlock[] = [];
-
-    const items = cusips
-      .map((cusip) => groupedItems?.[cusip]?.[0])
-      .sort((a, b) => {
-        return b?.portion - a?.portion; // 내림차순 정렬
-      });
-
-    for (const item of items.slice(0, 10)) {
-      const { shareAmount, value, portion, name, cusip } = item;
-      blocks.push(
-        {
-          type: 'rich_text',
-          elements: [
-            {
-              type: 'rich_text_section',
-              elements: [
-                {
-                  type: 'text',
-                  text: `${name} (cusip: ${cusip})`,
-                  style: { bold: true },
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'context',
-          elements: [
-            {
-              type: 'mrkdwn',
-              text: `- *shareAmount* : \`${shareAmount.toLocaleString()}\``,
-            },
-            {
-              type: 'mrkdwn',
-              text: `- *value*: \`\$${value.toLocaleString()}\``,
-            },
-            { type: 'mrkdwn', text: `- *portion*: \`${portion} %\`` },
-          ],
-        },
-      );
-      delete groupedItems[cusip];
+    if (!Array.isArray(investmentItems)) {
+      return [];
     }
 
-    return blocks;
+    return investmentItems.map((item) => plainToInstance(StockInventory, item));
   }
 
   async exec() {
     /**
      * @todo Process consumer로 분리
      */
-    const path =
+    const url =
       'https://www.sec.gov/Archives/edgar/data/1940917/000194091725000004/0001940917-25-000004-index.htm';
-    const cik = path.split('/')[6];
+    const cik = url.split('/')[6];
 
-    const { name, items: infos } = await this.figure13_HRUrls(cik);
-    const investmentInfos: InvestmentInfo[] = [];
-    for (const info of infos.slice(0, 2)) {
-      const url = info.url;
-      const items = await this.figureInvestments(url);
-      investmentInfos.push({ items, url, date: info.date });
+    const filing = await this.secApi.fetchSubmission(cik);
+    const { issuer, items } = filing.filterBut13FHRs();
+    if (items.length === 0) {
+      Logger.debug('13F-HR filings 이 없습니다.:', cik);
+      return;
     }
 
-    // new, removed
-    const [current, prev] = investmentInfos;
-    const curPortfolio = this.figurePortfolio(current);
-    const prevPortfolio = this.figurePortfolio(prev);
+    const entities: Portfolio[] = [];
+    for (const info of items.slice(0, 2)) {
+      const { url, date } = info;
+      const items = await this.figureInvestments(url);
+      const totalValue = items.reduce(
+        (acc, item) => acc + Number(item.value),
+        0,
+      );
 
-    // DB에 저장
-    for (const entity of [
-      PortfolioEntity.create(curPortfolio),
-      PortfolioEntity.create(prevPortfolio),
-    ]) {
+      entities.push(
+        plainToInstance(Portfolio, {
+          issuer,
+          url,
+          date,
+          totalValue,
+          items: items.map((item) =>
+            item.toPortfolioItem(date, totalValue, item),
+          ),
+        }),
+      );
+    }
+
+    // 오래된 포트폴리오 정보부터 생성 (비교데이터 있는지 확인 위해)
+    for (const entity of entities) {
       const prevEntity = await this.portfolioRepo.findOne({
         where: { url: entity.url },
       });
 
-      if (!prevEntity) {
-        await this.portfolioRepo.save(entity);
-      }
+      console.log(prevEntity);
     }
-
-    /**
-     * 비교 후 메시지 발송
-     * @todo 여기부터 analyze consumer 로 분리하는게 좋을듯
-     */
-    const newSet = new Set(current.items.map((item) => item.cusip));
-    const removedSet = new Set(prev.items.map((item) => item.cusip));
-    for (const cusip of [...newSet]) {
-      const currentIncludes = newSet.has(cusip);
-      const prevIncludes = removedSet.has(cusip);
-      if (currentIncludes && prevIncludes) {
-        newSet.delete(cusip);
-        removedSet.delete(cusip);
-      }
-    }
-
-    const groupedItems = groupBy(
-      [...prevPortfolio.items, ...curPortfolio.items],
-      'cusip',
-    );
-    for (const cusip of [...newSet]) {
-      const item = groupedItems[cusip]?.[0];
-      if (!item) {
-        continue;
-      }
-      await this.investmentRedisRepo.addAcquisitionCount(cusip, item.name);
-    }
-    for (const cusip of [...removedSet]) {
-      const item = groupedItems[cusip]?.[0];
-      if (!item) {
-        continue;
-      }
-      await this.investmentRedisRepo.addDivestmentCount(cusip, item.name);
-    }
-
-    // slack message
-    const blockArray: SlackMessageBlock[][] = [
-      this.buildLoneMessageBlock([...newSet], groupedItems),
-      this.buildLoneMessageBlock([...removedSet], groupedItems),
-    ];
-
-    const message = from13FtoSlackMessage(
-      `${name} (${prevPortfolio.date} -> ${curPortfolio.date})`,
-      blockArray,
-    );
-
-    await this.slackApi.sendMessage(message).catch((error) => {
-      Logger.error(error);
-    });
   }
 }

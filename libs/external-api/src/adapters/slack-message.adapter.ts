@@ -1,11 +1,3 @@
-// export enum SLACK_MESSAGE_TYPE {
-//   HEADER = 'header',
-//   DIVIDER = 'divider',
-//   RICH_TEXT = 'rich_text',
-//   RICH_TEXT_LIST = 'rich_text_list',
-//   RICH_TEXT_SECTION = 'rich_text_section',
-// }
-
 class Text {
   type: 'plain_text' | 'text' | 'mrkdwn';
   text: string;

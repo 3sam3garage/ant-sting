@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { joinUrl } from '@libs/common';
-import { PolyMarketResponse } from '../adapters';
+import { PolyMarketTendingPollResponse } from '../adapters';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PolyMarketApi {
@@ -9,12 +10,12 @@ export class PolyMarketApi {
 
   constructor() {}
 
-  async trendingPolls(): Promise<PolyMarketResponse> {
+  async trendingPolls(): Promise<PolyMarketTendingPollResponse> {
     const url = joinUrl(this.BASE_URL, '/events/pagination');
     const queries =
       'limit=20&active=true&archived=false&closed=false&order=volume24hr&ascending=false&offset=0';
 
     const response = await axios.get(`${url}?${queries}`);
-    return response?.data;
+    return plainToInstance(PolyMarketTendingPollResponse, response?.data);
   }
 }

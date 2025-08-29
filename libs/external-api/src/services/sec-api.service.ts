@@ -5,21 +5,13 @@ import axios from 'axios';
 import { FilingRss, SecFiling, SecTickerResponse } from '../adapters';
 import { DATA_SEC_GOV_HEADERS, SEC_FAIR_ACCESS_HEADERS } from '../constants';
 import { toTenDigitCIK } from '@libs/common';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class SecApiService {
   constructor(
     private readonly externalApiConfigService: ExternalApiConfigService,
   ) {}
-
-  async fetchCompanyTickers(): Promise<SecTickerResponse> {
-    const response = await axios.get<SecTickerResponse>(
-      'https://www.sec.gov/files/company_tickers.json',
-      { headers: SEC_FAIR_ACCESS_HEADERS },
-    );
-
-    return response.data;
-  }
 
   async fetchSubmission(cik: string): Promise<SecFiling> {
     const formattedCIK = 'CIK' + toTenDigitCIK(cik);
@@ -29,15 +21,7 @@ export class SecApiService {
       { headers: DATA_SEC_GOV_HEADERS },
     );
 
-    return response.data;
-  }
-
-  async fetchFilingDocument(url: string) {
-    const response = await axios.get(url, {
-      headers: SEC_FAIR_ACCESS_HEADERS,
-    });
-
-    return response;
+    return plainToInstance(SecFiling, response.data);
   }
 
   async fetchRSS(start = 0, count = 100): Promise<FilingRss> {
@@ -55,6 +39,29 @@ export class SecApiService {
       emptyTag: () => null,
     });
 
-    return json;
+    return plainToInstance(FilingRss, json);
+  }
+
+  /**
+   * @deprecated
+   */
+  async fetchFilingDocument(url: string) {
+    const response = await axios.get(url, {
+      headers: SEC_FAIR_ACCESS_HEADERS,
+    });
+
+    return response;
+  }
+
+  /**
+   * @deprecated
+   */
+  async fetchCompanyTickers(): Promise<SecTickerResponse> {
+    const response = await axios.get<SecTickerResponse>(
+      'https://www.sec.gov/files/company_tickers.json',
+      { headers: SEC_FAIR_ACCESS_HEADERS },
+    );
+
+    return plainToInstance(SecTickerResponse, response.data);
   }
 }

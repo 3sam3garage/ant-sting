@@ -5,6 +5,9 @@ import { BaseEntity } from '../../base.entity';
 @Entity({ name: 'sec-companies' })
 @Index(['ticker'], { unique: true })
 @Index(['cik'], { unique: true })
+/**
+ * @deprecated
+ */
 export class SecCompanyEntity extends BaseEntity {
   @Column()
   stockName: string;

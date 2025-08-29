@@ -4,6 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SecCompanyEntity } from '../entity';
 
 @Injectable()
+/**
+ * @deprecated
+ */
 export class SecCompanyRepository extends MongoRepository<SecCompanyEntity> {
   constructor(
     @InjectRepository(SecCompanyEntity)

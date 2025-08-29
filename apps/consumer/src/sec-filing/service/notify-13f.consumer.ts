@@ -1,9 +1,9 @@
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
-import { PortfolioRepository } from '@libs/domain-mongo';
+import { PortfolioItem, PortfolioRepository } from '@libs/domain-mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
-import { Notify13fMessage, PortfolioItem } from '../interface';
+import { Notify13fMessage } from '../interface';
 import { ObjectId } from 'mongodb';
 import { Logger } from '@nestjs/common';
 import { Dictionary, groupBy } from 'lodash';

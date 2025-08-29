@@ -1,3 +1,5 @@
+import { Type } from 'class-transformer';
+
 export class MarketItem {
   id: string;
   question: string;
@@ -130,19 +132,53 @@ export class PollItem {
   pendingDeployment: boolean;
   deploying: boolean;
 
+  @Type(() => MarketItem)
   markets: MarketItem[];
+
+  @Type(() => TagItem)
   tags: TagItem[];
+
+  filterButActiveOutcomes(): Array<{
+    question: string;
+    Yes: number;
+    No: number;
+  }> {
+    const polls = [];
+    for (const marketItem of this.markets) {
+      const { active, closed } = marketItem;
+      if (!active || closed) {
+        continue;
+      }
+
+      // eslint-disable-next-line prefer-const
+      let { question, outcomes, outcomePrices } = marketItem;
+      outcomes = JSON.parse(outcomes);
+      outcomePrices = JSON.parse(outcomePrices);
+      const outcomeLengths = outcomes.length || 0;
+
+      const poll = { question };
+      for (let i = 0; i < +outcomeLengths; i++) {
+        const percentage = +outcomePrices[i] * 100;
+        poll[outcomes[i]] = parseFloat(percentage.toFixed(2));
+      }
+
+      polls.push(poll);
+    }
+
+    return polls;
+  }
 }
 
-export class PolyMarketResponse {
+export class PolyMarketTendingPollResponse {
+  @Type(() => PollItem)
   data: PollItem[];
   pagination: {
     hasMore: boolean;
   };
 }
 
-export class Outcome {
-  question: string;
-  Yes: number;
-  No: number;
-}
+// export class Outcome {
+//   question: string;
+//   Yes: number;
+//   No: number;
+// }

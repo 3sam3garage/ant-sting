@@ -18,7 +18,7 @@ export class StockInventory {
     None: string;
   };
 
-  static toPortfolioItem(
+  toPortfolioItem(
     date: string,
     totalValue: number,
     inventory: StockInventory,
@@ -27,7 +27,7 @@ export class StockInventory {
     const portion = (+value / totalValue) * 100;
 
     return {
-      shareAmount: +shrsOrPrnAmt,
+      shareAmount: +shrsOrPrnAmt.sshPrnamt,
       date,
       name: nameOfIssuer,
       cusip,

@@ -1,24 +1,19 @@
-import { groupBy } from 'lodash';
 import { parseStringPromise } from 'xml2js';
-import { format } from 'date-fns';
 import { Job, Queue } from 'bull';
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import {
   AnalyzeSec13fMessage,
-  Portfolio as PortfolioEntity,
+  Portfolio,
   PortfolioRepository,
 } from '@libs/domain-mongo';
 import { ChromiumService } from '@libs/browser';
 import { SecApiService } from '@libs/external-api';
 import { QUEUE_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
-import {
-  InvestmentInfo,
-  InvestmentItem,
-  Portfolio,
-  PortfolioItem,
-} from '../interface';
+import { StockInventory } from '../interface';
 import { Logger } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { format } from 'date-fns';
 
 @Processor(QUEUE_NAME.ANALYZE_13F)
 export class Analyze13fConsumer extends BaseConsumer {
@@ -32,80 +27,7 @@ export class Analyze13fConsumer extends BaseConsumer {
     super();
   }
 
-  private async figure13_HRUrls(cik: string) {
-    const submissions = await this.secApi.fetchSubmission(cik);
-    if (!submissions) {
-      return;
-    }
-
-    const {
-      name,
-      filings: {
-        recent: { accessionNumber = [], form = [], filingDate = [] },
-      },
-    } = submissions;
-
-    const items: { url: string; date: string }[] = [];
-    for (const [index, value] of Object.entries(form)) {
-      if (value === '13F-HR') {
-        const name = accessionNumber[index];
-        const date = filingDate[index];
-
-        items.push({
-          url: `https://www.sec.gov/Archives/edgar/data/${cik}/${name.replaceAll('-', '')}/${name}.txt`,
-          date,
-        });
-      }
-    }
-
-    return { name, items };
-  }
-
-  private figurePortfolio({
-    url,
-    date,
-    items: investmentItems,
-  }: InvestmentInfo): Portfolio {
-    const grouped = groupBy(investmentItems, 'cusip');
-
-    const nameMap = new Map<string, string>();
-    let totalValue = 0;
-    for (const investmentItem of investmentItems) {
-      const { cusip, value, nameOfIssuer } = investmentItem;
-      totalValue += +value;
-      nameMap.set(cusip, nameOfIssuer);
-    }
-
-    const items: PortfolioItem[] = [];
-    for (const [cusip, investments] of Object.entries(grouped)) {
-      const value = investments.reduce((acc, item) => {
-        return acc + (+item.value || 0);
-      }, 0);
-      const shareAmount = investments.reduce((acc, item) => {
-        return (acc += +(item?.shrsOrPrnAmt?.sshPrnamt || 0));
-      }, 0);
-
-      const portion = (value / totalValue) * 100;
-
-      items.push({
-        shareAmount,
-        date,
-        name: nameMap.get(cusip),
-        cusip,
-        value,
-        portion: parseFloat(portion.toFixed(3)),
-      });
-    }
-
-    return {
-      url,
-      date,
-      totalValue,
-      items,
-    };
-  }
-
-  async figureInvestments(url: string) {
+  private async figureInvestments(url: string): Promise<StockInventory[]> {
     const page = await this.chromiumService.getPage();
 
     await page.goto(url);
@@ -118,7 +40,7 @@ export class Analyze13fConsumer extends BaseConsumer {
       .replaceAll('ns1:', '')
       .match(/<informationTable[^>]*>([\s\S]*?)<\/informationTable>/);
 
-    const parsed: { informationTable: { infoTable: InvestmentItem[] } } =
+    const parsed: { informationTable: { infoTable: StockInventory[] } } =
       await parseStringPromise(match, {
         trim: true,
         explicitArray: false,
@@ -129,36 +51,44 @@ export class Analyze13fConsumer extends BaseConsumer {
       return [];
     }
 
-    return investmentItems;
+    return investmentItems.map((item) => plainToInstance(StockInventory, item));
   }
 
   @Process({ concurrency: 1 })
   async run({ data: { url } }: Job<AnalyzeSec13fMessage>) {
     const cik = url.split('/')[6];
 
-    const { name, items: infos } = await this.figure13_HRUrls(cik);
-    if (infos.length === 0) {
+    const filing = await this.secApi.fetchSubmission(cik);
+    const { issuer, items } = filing.filterBut13FHRs();
+    if (items.length === 0) {
       Logger.debug('13F-HR filings 이 없습니다.:', cik);
       return;
     }
 
-    const investmentInfos: InvestmentInfo[] = [];
-    for (const info of infos.slice(0, 2)) {
-      const url = info.url;
+    const entities: Portfolio[] = [];
+    for (const info of items.slice(0, 2)) {
+      const { url, date } = info;
       const items = await this.figureInvestments(url);
-      investmentInfos.push({ items, url, date: info.date });
+      const totalValue = items.reduce(
+        (acc, item) => acc + Number(item.value),
+        0,
+      );
+
+      entities.push(
+        plainToInstance(Portfolio, {
+          issuer,
+          url,
+          date,
+          totalValue,
+          items: items.map((item) =>
+            item.toPortfolioItem(date, totalValue, item),
+          ),
+        }),
+      );
     }
 
-    // new, removed
-    const [current, prev] = investmentInfos;
-    const curPortfolio = this.figurePortfolio(current);
-    const prevPortfolio = this.figurePortfolio(prev);
-
-    // DB에 저장
-    for (const entity of [
-      PortfolioEntity.create({ issuer: name, ...prevPortfolio }),
-      PortfolioEntity.create({ issuer: name, ...curPortfolio }),
-    ]) {
+    // 오래된 포트폴리오 정보부터 생성 (비교데이터 있는지 확인 위해)
+    for (const entity of entities.reverse()) {
       const prevEntity = await this.portfolioRepo.findOne({
         where: { url: entity.url },
       });
