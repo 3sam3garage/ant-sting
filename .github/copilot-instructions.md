@@ -36,3 +36,7 @@ This is a monorepo using NestJS. The structure is divided into `apps` and `libs`
 -   Follow the conventional commit format for your commit messages. Example: `feat(consumer): add new feature`.
 
 By following these guidelines, you can help ensure that Copilot's suggestions are aligned with the project's standards.
+
+
+## 6. Answer MUST BE IN KOREAN.
+When inferring or thinking, it doesn't matter, but when answering, please use Korean.
