@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Injectable } from '@nestjs/common';
 import { ExternalApiConfigService } from '@libs/config';
-import { SlackMessage } from '../intefaces';
+import { SlackMessage } from '../interfaces';
 
 @Injectable()
 export class SlackApi {

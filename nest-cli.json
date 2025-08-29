@@ -57,11 +57,11 @@
     },
     "domain": {
       "type": "library",
-      "root": "libs/domain",
+      "root": "libs/domain-mongo",
       "entryFile": "index",
-      "sourceRoot": "libs/domain/src",
+      "sourceRoot": "libs/domain-mongo/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/domain/tsconfig.lib.json"
+        "tsConfigPath": "libs/domain-mongo/tsconfig.lib.json"
       }
     },
     "config": {

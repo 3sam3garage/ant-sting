@@ -29,7 +29,7 @@ This is a monorepo using NestJS. The structure is divided into `apps` and `libs`
 ## 4. Testing
 
 -   When adding new features, also add corresponding tests.
--   Look at existing `.spec.ts` files to understand the testing style and conventions.
+-   Look at existing `./spec/*.spec.ts` files to understand the testing style and conventions.
 
 ## 5. Commit Messages
 

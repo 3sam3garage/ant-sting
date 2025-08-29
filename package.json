@@ -111,11 +111,11 @@
     "moduleNameMapper": {
       "^@libs/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@libs/core(|/.*)$": "<rootDir>/libs/core/src/$1",
-      "^@libs/domain-mongo(|/.*)$": "<rootDir>/libs/domain/src/$1",
       "^@libs/config(|/.*)$": "<rootDir>/libs/config/src/$1",
       "^@libs/ai(|/.*)$": "<rootDir>/libs/ai/src/$1",
       "^@libs/external-api(|/.*)$": "<rootDir>/libs/external-api/src/$1",
       "^@libs/browser(|/.*)$": "<rootDir>/libs/browser/src/$1",
+      "^@libs/domain-mongo(|/.*)$": "<rootDir>/libs/domain-mongo/src/$1",
       "^@libs/domain-redis(|/.*)$": "<rootDir>/libs/domain-redis/src/$1"
     }
   }

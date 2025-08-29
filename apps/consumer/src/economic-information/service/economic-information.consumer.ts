@@ -1,6 +1,7 @@
 import { parse as parseToHTML } from 'node-html-parser';
 import { ObjectId } from 'mongodb';
 import { Job } from 'bull';
+import { Logger } from '@nestjs/common';
 import { Process, Processor } from '@nestjs/bull';
 import {
   EconomicInformationMessage,
@@ -8,8 +9,8 @@ import {
 } from '@libs/domain-mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { KcifApi, NaverPayApi } from '@libs/external-api';
-import { BaseConsumer } from '../../base.consumer';
 import { ECONOMIC_INFO_SOURCE } from '@libs/core';
+import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ECONOMIC_INFORMATION)
 export class EconomicInformationConsumer extends BaseConsumer {
@@ -50,7 +51,12 @@ export class EconomicInformationConsumer extends BaseConsumer {
     const response = await this.kcifApi.detailPage(url);
     const html = parseToHTML(response);
 
-    const text = html.querySelector('div.cont_area').innerText;
+    const text = html.querySelector('div.cont_area')?.innerText;
+    if (!text) {
+      Logger.warn('컨텐츠가 없습니다.');
+      return;
+    }
+
     const content = text
       .replaceAll(/&middot;/g, '•')
       .replaceAll(/&amp;/g, '&')
