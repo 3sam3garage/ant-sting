@@ -1,6 +1,6 @@
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { parse as parseToHTML } from 'node-html-parser';
 import { formatSixDigitDate, today } from '@libs/common';
 import { flatten } from 'lodash';
