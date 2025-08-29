@@ -4,6 +4,9 @@ import UserAgent from 'user-agents';
 import { DEFAULT_FIREFOX_OPTIONS_ARGS } from '../constants';
 
 @Injectable()
+/**
+ * @deprecated
+ */
 export class FirefoxService implements OnModuleInit, OnModuleDestroy {
   private browser: Browser;
 
