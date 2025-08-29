@@ -11,7 +11,7 @@ import {
 import { QUEUE_NAME } from '@libs/config';
 import { KcifApi } from '@libs/external-api';
 import { flatten } from 'lodash';
-import { ECONOMIC_INFO_SOURCE } from '@libs/core';
+import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';
 
 /**
  * 국제금융센터(KCIF)
@@ -67,7 +67,10 @@ export class KcifEconomicInformationCrawler {
       }
 
       for (const url of urls) {
-        const payload = { url, documentId: entity._id.toString() };
+        const payload: EconomicInformationMessage = {
+          url,
+          documentId: entity._id.toString(),
+        };
 
         await this.queue.add(ECONOMIC_INFO_SOURCE.KCIF, payload);
       }

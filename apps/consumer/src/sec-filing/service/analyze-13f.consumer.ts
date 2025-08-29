@@ -1,19 +1,16 @@
+import { Logger } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { format } from 'date-fns';
 import { parseStringPromise } from 'xml2js';
 import { Job, Queue } from 'bull';
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
-import {
-  AnalyzeSec13fMessage,
-  Portfolio,
-  PortfolioRepository,
-} from '@libs/domain-mongo';
+import { Portfolio, PortfolioRepository } from '@libs/domain-mongo';
+import { AnalyzeSec13fMessage } from '@libs/core';
 import { ChromiumService } from '@libs/browser';
 import { SecApiService } from '@libs/external-api';
 import { QUEUE_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
 import { StockInventory } from '../interface';
-import { Logger } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { format } from 'date-fns';
 
 @Processor(QUEUE_NAME.ANALYZE_13F)
 export class Analyze13fConsumer extends BaseConsumer {

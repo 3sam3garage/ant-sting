@@ -6,6 +6,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { errorToJson } from '@libs/common';
 import { SecFeedRedisRepository } from '@libs/domain-redis';
+import { AnalyzeSec13fMessage } from '@libs/core';
 
 @Injectable()
 export class ScrapeRssJob {
@@ -32,7 +33,9 @@ export class ScrapeRssJob {
       }
 
       await Promise.all([
-        this.queue.add({ url }, { removeOnComplete: true }),
+        this.queue.add({ url } as AnalyzeSec13fMessage, {
+          removeOnComplete: true,
+        }),
         this.secFeedRedisRepository.addToSet(url),
       ]);
     }

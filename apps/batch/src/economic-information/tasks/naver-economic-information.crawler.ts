@@ -10,7 +10,7 @@ import {
 } from '@libs/domain-mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { NaverPayApi } from '@libs/external-api';
-import { ECONOMIC_INFO_SOURCE } from '@libs/core';
+import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';
 
 /**
  * 매크로 환경
@@ -67,7 +67,10 @@ export class NaverEconomicInformationCrawler {
       }
 
       for (const url of urls) {
-        const payload = { url, documentId: entity._id.toString() };
+        const payload: EconomicInformationMessage = {
+          url,
+          documentId: entity._id.toString(),
+        };
 
         await this.queue.add(ECONOMIC_INFO_SOURCE.NAVER, payload);
       }

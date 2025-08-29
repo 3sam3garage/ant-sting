@@ -3,13 +3,10 @@ import { ObjectId } from 'mongodb';
 import { Job } from 'bull';
 import { Logger } from '@nestjs/common';
 import { Process, Processor } from '@nestjs/bull';
-import {
-  EconomicInformationMessage,
-  EconomicInformationRepository,
-} from '@libs/domain-mongo';
+import { EconomicInformationRepository } from '@libs/domain-mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { KcifApi, NaverPayApi } from '@libs/external-api';
-import { ECONOMIC_INFO_SOURCE } from '@libs/core';
+import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';
 import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ECONOMIC_INFORMATION)
