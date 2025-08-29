@@ -18,7 +18,7 @@ export class StockInventory {
     None: string;
   };
 
-  static toPortfolioItem(
+  toPortfolioItem(
     date: string,
     totalValue: number,
     inventory: StockInventory,

@@ -4,8 +4,8 @@ import { ChromiumService } from '@libs/browser';
 import { parseStringPromise } from 'xml2js';
 import { InvestmentRedisRepository } from '@libs/domain-redis';
 import { PortfolioRepository, Portfolio } from '@libs/domain-mongo';
-import { StockInventory } from '../../../../consumer/src/sec-filing/interface';
 import { plainToInstance } from 'class-transformer';
+import { StockInventory } from '../interface';
 
 @Injectable()
 export class Sec13fTask {
