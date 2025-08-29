@@ -55,7 +55,16 @@
         "tsConfigPath": "libs/core/tsconfig.lib.json"
       }
     },
-    "domain": {
+    "config": {
+      "type": "library",
+      "root": "libs/config",
+      "entryFile": "index",
+      "sourceRoot": "libs/config/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config/tsconfig.lib.json"
+      }
+    },
+    "mongo": {
       "type": "library",
       "root": "libs/mongo",
       "entryFile": "index",
@@ -64,13 +73,13 @@
         "tsConfigPath": "libs/mongo/tsconfig.lib.json"
       }
     },
-    "config": {
+    "redis": {
       "type": "library",
-      "root": "libs/config",
+      "root": "libs/redis",
       "entryFile": "index",
-      "sourceRoot": "libs/config/src",
+      "sourceRoot": "libs/redis/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/config/tsconfig.lib.json"
+        "tsConfigPath": "libs/redis/tsconfig.lib.json"
       }
     },
     "ai": {
@@ -100,13 +109,13 @@
         "tsConfigPath": "libs/browser/tsconfig.lib.json"
       }
     },
-    "redis": {
+    "domain": {
       "type": "library",
-      "root": "libs/redis",
+      "root": "libs/domain",
       "entryFile": "index",
-      "sourceRoot": "libs/redis/src",
+      "sourceRoot": "libs/domain/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/redis/tsconfig.lib.json"
+        "tsConfigPath": "libs/domain/tsconfig.lib.json"
       }
     }
   }

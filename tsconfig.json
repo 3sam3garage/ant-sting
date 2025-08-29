@@ -34,7 +34,9 @@
       "@libs/redis": ["libs/data-layer/redis/src"],
       "@libs/redis/*": ["libs/data-layer/redis/src/*"],
       "@libs/external-api": ["libs/data-layer/external-api/src"],
-      "@libs/external-api/*": ["libs/data-layer/external-api/src/*"]
+      "@libs/external-api/*": ["libs/data-layer/external-api/src/*"],
+      "@libs/domain": ["libs/domain/src"],
+      "@libs/domain/*": ["libs/domain/src/*"]
     }
   }
 }

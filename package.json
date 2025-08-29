@@ -117,7 +117,8 @@
       "^@libs/ai(|/.*)$": "<rootDir>/libs/data-layer/ai/src/$1",
       "^@libs/external-api(|/.*)$": "<rootDir>/libs/data-layer/external-api/src/$1",
       "^@libs/mongo(|/.*)$": "<rootDir>/libs/data-layer/mongo/src/$1",
-      "^@libs/redis(|/.*)$": "<rootDir>/libs/data-layer/redis/src/$1"
+      "^@libs/redis(|/.*)$": "<rootDir>/libs/data-layer/redis/src/$1",
+      "^@libs/domain(|/.*)$": "<rootDir>/libs/domain/src/$1"
     }
   }
 }

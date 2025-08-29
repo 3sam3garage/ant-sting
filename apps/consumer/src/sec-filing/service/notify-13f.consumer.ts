@@ -3,7 +3,6 @@ import { Process, Processor } from '@nestjs/bull';
 import { PortfolioItem, PortfolioRepository } from '@libs/mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
-import { Notify13fMessage } from '../interface';
 import { ObjectId } from 'mongodb';
 import { Logger } from '@nestjs/common';
 import { Dictionary, groupBy } from 'lodash';
@@ -12,6 +11,7 @@ import {
   SlackApi,
   SlackMessageBlock,
 } from '@libs/external-api';
+import { Notify13fMessage } from '@libs/core';
 
 @Processor(QUEUE_NAME.NOTIFY_13F)
 export class Notify13fConsumer extends BaseConsumer {
