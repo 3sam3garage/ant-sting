@@ -9,6 +9,7 @@
     "build:agent": "nest build agent",
     "build:batch": "nest build batch",
     "build:consumer": "nest build consumer",
+    "batch": "nest start batch",
     "batch:ei:naver": "nest start batch -- economic-information scrape-naver",
     "batch:ei:kcif": "nest start batch -- economic-information scrape-kcif",
     "batch:ei:analyze": "nest start batch -- economic-information analyze",

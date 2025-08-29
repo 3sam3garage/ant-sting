@@ -4,19 +4,17 @@ import { PortfolioItem, PortfolioRepository } from '@libs/mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
 import { ObjectId } from 'mongodb';
-import { Logger } from '@nestjs/common';
-import { Dictionary, groupBy } from 'lodash';
-import {
-  from13FtoSlackMessage,
-  SlackApi,
-  SlackMessageBlock,
-} from '@libs/external-api';
+import { Inject, Logger } from '@nestjs/common';
+import { Dictionary } from 'lodash';
+import { SlackApi, SlackMessageBlock } from '@libs/external-api';
 import { Notify13fMessage } from '@libs/core';
+import { Portfolio, PortfolioRepositoryImpl } from '@libs/domain';
 
 @Processor(QUEUE_NAME.NOTIFY_13F)
 export class Notify13fConsumer extends BaseConsumer {
   constructor(
-    private readonly portfolioRepo: PortfolioRepository,
+    @Inject(PortfolioRepository)
+    private readonly portfolioRepo: PortfolioRepositoryImpl,
     private readonly slackApi: SlackApi,
   ) {
     super();
@@ -76,10 +74,11 @@ export class Notify13fConsumer extends BaseConsumer {
   @Process({ concurrency: 1 })
   async run({ data: { _id, issuer } }: Job<Notify13fMessage>) {
     const [portfolio, prevPortfolio] = await Promise.all([
-      this.portfolioRepo.findOne({ where: new ObjectId(_id) }),
-      this.portfolioRepo.findOne({
-        where: { issuer, _id: { $lt: new ObjectId(_id) } },
-      }),
+      this.portfolioRepo.findOneById(new ObjectId(_id)),
+      this.portfolioRepo.findOnePreviousByIdAndIssuer(
+        new ObjectId(_id),
+        issuer,
+      ),
     ]);
 
     switch (true) {
@@ -91,35 +90,26 @@ export class Notify13fConsumer extends BaseConsumer {
         return;
     }
 
-    const newSet = new Set(portfolio.items.map((item) => item.cusip));
-    const removedSet = new Set(prevPortfolio.items.map((item) => item.cusip));
-    for (const cusip of [...newSet]) {
-      const currentIncludes = newSet.has(cusip);
-      const prevIncludes = removedSet.has(cusip);
-      if (currentIncludes && prevIncludes) {
-        newSet.delete(cusip);
-        removedSet.delete(cusip);
-      }
-    }
-
-    const groupedItems = groupBy(
-      [...prevPortfolio.items, ...portfolio.items],
-      'cusip',
+    const { added, removed } = Portfolio.figureAddedAndRemoved(
+      portfolio,
+      prevPortfolio,
     );
+
+    console.log(added, removed);
 
     // slack message
-    const blockArray: SlackMessageBlock[][] = [
-      this.buildLoneMessageBlock([...newSet], groupedItems),
-      this.buildLoneMessageBlock([...removedSet], groupedItems),
-    ];
-
-    const message = from13FtoSlackMessage(
-      `${portfolio.issuer} (${prevPortfolio.date} -> ${portfolio.date})`,
-      blockArray,
-    );
-
-    await this.slackApi.sendMessage(message).catch((error) => {
-      Logger.error(error);
-    });
+    // const blockArray: SlackMessageBlock[][] = [
+    //   this.buildLoneMessageBlock([...newSet], groupedItems),
+    //   this.buildLoneMessageBlock([...removedSet], groupedItems),
+    // ];
+    //
+    // const message = from13FtoSlackMessage(
+    //   `${portfolio.issuer} (${prevPortfolio.date} -> ${portfolio.date})`,
+    //   blockArray,
+    // );
+    //
+    // await this.slackApi.sendMessage(message).catch((error) => {
+    //   Logger.error(error);
+    // });
   }
 }

@@ -1,22 +1,27 @@
-import { Logger } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { format } from 'date-fns';
 import { parseStringPromise } from 'xml2js';
 import { Job, Queue } from 'bull';
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
-import { Portfolio, PortfolioRepository } from '@libs/mongo';
 import { AnalyzeSec13fMessage } from '@libs/core';
+import { QUEUE_NAME } from '@libs/config';
 import { ChromiumService } from '@libs/browser';
 import { SecApiService } from '@libs/external-api';
-import { QUEUE_NAME } from '@libs/config';
+import {
+  StockInventory,
+  Portfolio,
+  PortfolioRepositoryImpl,
+} from '@libs/domain';
 import { BaseConsumer } from '../../base.consumer';
-import { StockInventory } from '../interface';
+import { PortfolioRepository } from '@libs/mongo';
 
 @Processor(QUEUE_NAME.ANALYZE_13F)
 export class Analyze13fConsumer extends BaseConsumer {
   constructor(
     private readonly chromiumService: ChromiumService,
-    private readonly portfolioRepo: PortfolioRepository,
+    @Inject(PortfolioRepository)
+    private readonly portfolioRepo: PortfolioRepositoryImpl,
     private readonly secApi: SecApiService,
     @InjectQueue(QUEUE_NAME.NOTIFY_13F)
     private readonly queue: Queue,
@@ -24,7 +29,7 @@ export class Analyze13fConsumer extends BaseConsumer {
     super();
   }
 
-  private async figureInvestments(url: string): Promise<StockInventory[]> {
+  private async figureStockInventory(url: string): Promise<StockInventory[]> {
     const page = await this.chromiumService.getPage();
 
     await page.goto(url);
@@ -56,7 +61,7 @@ export class Analyze13fConsumer extends BaseConsumer {
     const cik = url.split('/')[6];
 
     const filing = await this.secApi.fetchSubmission(cik);
-    const { issuer, items } = filing.filterBut13FHRs();
+    const { issuer, items } = filing.filterBut13FHR();
     if (items.length === 0) {
       Logger.debug('13F-HR filings 이 없습니다.:', cik);
       return;
@@ -65,7 +70,7 @@ export class Analyze13fConsumer extends BaseConsumer {
     const entities: Portfolio[] = [];
     for (const info of items.slice(0, 2)) {
       const { url, date } = info;
-      const items = await this.figureInvestments(url);
+      const items = await this.figureStockInventory(url);
       const totalValue = items.reduce(
         (acc, item) => acc + Number(item.value),
         0,
@@ -86,9 +91,7 @@ export class Analyze13fConsumer extends BaseConsumer {
 
     // 오래된 포트폴리오 정보부터 생성 (비교데이터 있는지 확인 위해)
     for (const entity of entities.reverse()) {
-      const prevEntity = await this.portfolioRepo.findOne({
-        where: { url: entity.url },
-      });
+      const prevEntity = await this.portfolioRepo.findOneByUrl(entity.url);
 
       if (!prevEntity) {
         const result = await this.portfolioRepo.save(entity);

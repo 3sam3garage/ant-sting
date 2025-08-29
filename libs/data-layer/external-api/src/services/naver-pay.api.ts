@@ -15,12 +15,12 @@ export class NaverPayApi {
 
   constructor() {}
 
-  private eucKR2utf8(buffer: Buffer) {
+  private eucKR2utf8(buffer: Buffer): string {
     const modifiedBuffer = iconv.decode(buffer, 'EUC-KR');
     return Buffer.from(modifiedBuffer).toString('utf-8');
   }
 
-  async marketInfo() {
+  async marketInfo(): Promise<string> {
     const url = joinUrl(this.BASE_URL, 'research/market_info_list.naver');
 
     const response = await axios.get(url, {
@@ -31,7 +31,7 @@ export class NaverPayApi {
     return this.eucKR2utf8(response.data);
   }
 
-  async investInfo() {
+  async investInfo(): Promise<string> {
     const url = joinUrl(this.BASE_URL, 'research/invest_list.naver');
 
     const response = await axios.get(url, {
@@ -42,7 +42,7 @@ export class NaverPayApi {
     return this.eucKR2utf8(response.data);
   }
 
-  async economyInfo() {
+  async economyInfo(): Promise<string> {
     const url = joinUrl(this.BASE_URL, 'research/economy_list.naver');
 
     const response = await axios.get(url, {
@@ -53,7 +53,7 @@ export class NaverPayApi {
     return this.eucKR2utf8(response.data);
   }
 
-  async debentureInfo() {
+  async debentureInfo(): Promise<string> {
     const url = joinUrl(this.BASE_URL, 'research/debenture_list.naver');
 
     const response = await axios.get(url, {
@@ -64,7 +64,7 @@ export class NaverPayApi {
     return this.eucKR2utf8(response.data);
   }
 
-  async detailPage(path: string) {
+  async detailPage(path: string): Promise<string> {
     const url = joinUrl(this.BASE_URL, 'research', path);
 
     const response = await axios.get(url, {

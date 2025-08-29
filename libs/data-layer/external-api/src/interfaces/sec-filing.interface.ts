@@ -1,10 +1,10 @@
-export class FormerName {
+export interface FormerName {
   name: string;
   from: string;
   to: string;
 }
 
-class Address {
+interface Address {
   street1: string;
   street2: string | null;
   city: string;
@@ -13,7 +13,7 @@ class Address {
   stateOrCountryDescription: string;
 }
 
-export class SecFiling {
+export interface SecFiling {
   cik: string;
   entityType: 'operating';
   sic: string;
@@ -59,36 +59,4 @@ export class SecFiling {
     };
     files: string[];
   };
-
-  /**
-   * 13F-HR 필터링
-   * - url
-   * - filingDate
-   */
-  filterBut13FHRs(): {
-    issuer: string;
-    items: Array<{ url: string; date: string }>;
-  } {
-    const {
-      name,
-      filings: {
-        recent: { accessionNumber = [], form = [], filingDate = [] },
-      },
-    } = this;
-
-    const items: { url: string; date: string }[] = [];
-    for (const [index, value] of Object.entries(form)) {
-      if (value === '13F-HR') {
-        const name = accessionNumber[index];
-        const date = filingDate[index];
-
-        items.push({
-          url: `https://www.sec.gov/Archives/edgar/data/${this.cik}/${name.replaceAll('-', '')}/${name}.txt`,
-          date,
-        });
-      }
-    }
-
-    return { issuer: name, items };
-  }
 }

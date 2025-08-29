@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   EconomicInformationAnalysis,
   EconomicInformationAnalysisRepository,
@@ -10,6 +10,7 @@ import {
 } from '@libs/ai';
 import { fromEconomicInfoToSlackMessage, SlackApi } from '@libs/external-api';
 import { today } from '@libs/common';
+import { EconomicInformationRepositoryImpl } from '@libs/domain';
 
 /**
  * @poc
@@ -17,7 +18,8 @@ import { today } from '@libs/common';
 @Injectable()
 export class AnalyzeEconomicInformationTask {
   constructor(
-    private readonly infoRepo: EconomicInformationRepository,
+    @Inject(EconomicInformationRepository)
+    private readonly infoRepo: EconomicInformationRepositoryImpl,
     private readonly analysisRepo: EconomicInformationAnalysisRepository,
     private readonly geminiService: GeminiService,
     private readonly slackService: SlackApi,

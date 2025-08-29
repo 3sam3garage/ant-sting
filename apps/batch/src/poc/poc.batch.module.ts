@@ -4,8 +4,6 @@ import { Module } from '@nestjs/common';
 import {
   EconomicInformationDomainModule,
   PortfolioDomainModule,
-  SecCompanyDomainModule,
-  SecFilingDomainModule,
 } from '@libs/mongo';
 import { AiModule } from '@libs/ai';
 import { ExternalApiModule } from '@libs/external-api';
@@ -14,7 +12,6 @@ import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
 import { InvestmentRedisModule } from '@libs/redis';
 
 import { PocCommand } from './commands';
-import { GraphEconomicInformationTask } from './tasks/graph-economic-information.task';
 import { Sec13fTask } from './tasks/sec-13f.task';
 import { ScrapeRssTask } from './tasks/scrape-rss.task';
 
@@ -23,8 +20,6 @@ import { ScrapeRssTask } from './tasks/scrape-rss.task';
     AiModule,
     ExternalApiModule,
     EconomicInformationDomainModule,
-    SecCompanyDomainModule,
-    SecFilingDomainModule,
     BrowserModule,
     InvestmentRedisModule,
     PortfolioDomainModule,
@@ -38,7 +33,6 @@ import { ScrapeRssTask } from './tasks/scrape-rss.task';
   ],
   providers: [
     PocCommand,
-    GraphEconomicInformationTask,
     Sec13fTask,
     ScrapeRssTask,
     {

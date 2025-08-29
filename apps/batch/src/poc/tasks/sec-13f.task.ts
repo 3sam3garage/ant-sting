@@ -1,10 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { SecApiService, SlackApi } from '@libs/external-api';
-import { ChromiumService } from '@libs/browser';
-import { parseStringPromise } from 'xml2js';
-import { InvestmentRedisRepository } from '@libs/redis';
-import { PortfolioRepository, Portfolio } from '@libs/mongo';
 import { plainToInstance } from 'class-transformer';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { parseStringPromise } from 'xml2js';
+import { ChromiumService } from '@libs/browser';
+import { SecApiService, SlackApi } from '@libs/external-api';
+import { InvestmentRedisRepository } from '@libs/redis';
+import { PortfolioRepository } from '@libs/mongo';
+import { PortfolioRepositoryImpl, Portfolio } from '@libs/domain';
 import { StockInventory } from '../interface';
 
 @Injectable()
@@ -14,7 +15,8 @@ export class Sec13fTask {
     private readonly chromiumService: ChromiumService,
     private readonly slackApi: SlackApi,
     private readonly investmentRedisRepo: InvestmentRedisRepository,
-    private readonly portfolioRepo: PortfolioRepository,
+    @Inject(PortfolioRepository)
+    private readonly portfolioRepo: PortfolioRepositoryImpl,
   ) {}
 
   private async figureInvestments(url: string): Promise<StockInventory[]> {
@@ -53,7 +55,7 @@ export class Sec13fTask {
     const cik = url.split('/')[6];
 
     const filing = await this.secApi.fetchSubmission(cik);
-    const { issuer, items } = filing.filterBut13FHRs();
+    const { issuer, items } = filing.filterBut13FHR();
     if (items.length === 0) {
       Logger.debug('13F-HR filings 이 없습니다.:', cik);
       return;
@@ -81,13 +83,22 @@ export class Sec13fTask {
       );
     }
 
-    // 오래된 포트폴리오 정보부터 생성 (비교데이터 있는지 확인 위해)
-    for (const entity of entities) {
-      const prevEntity = await this.portfolioRepo.findOne({
-        where: { url: entity.url },
-      });
+    const [portfolio, prevPortfolio] = entities;
 
-      console.log(prevEntity);
+    switch (true) {
+      case !portfolio:
+        Logger.error('포트폴리오를 찾을 수 없습니다.');
+        return;
+      case !prevPortfolio:
+        Logger.error('이전 포트폴리오를 찾을 수 없습니다.');
+        return;
     }
+
+    const { added, removed } = Portfolio.figureAddedAndRemoved(
+      portfolio,
+      prevPortfolio,
+    );
+
+    console.log(added, removed);
   }
 }

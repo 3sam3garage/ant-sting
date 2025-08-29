@@ -1,4 +1,4 @@
-import { PortfolioItem } from '@libs/mongo';
+import { PortfolioItem } from './portfolio.entity';
 
 export class StockInventory {
   // 투자한 회사명

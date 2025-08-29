@@ -1,18 +1,20 @@
 import { parse as parseToHTML } from 'node-html-parser';
 import { ObjectId } from 'mongodb';
 import { Job } from 'bull';
-import { Logger } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Process, Processor } from '@nestjs/bull';
 import { EconomicInformationRepository } from '@libs/mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { KcifApi, NaverPayApi } from '@libs/external-api';
 import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';
 import { BaseConsumer } from '../../base.consumer';
+import { EconomicInformationRepositoryImpl } from '@libs/domain';
 
 @Processor(QUEUE_NAME.ECONOMIC_INFORMATION)
 export class EconomicInformationConsumer extends BaseConsumer {
   constructor(
-    private readonly repo: EconomicInformationRepository,
+    @Inject(EconomicInformationRepository)
+    private readonly repo: EconomicInformationRepositoryImpl,
     private readonly naverPayApi: NaverPayApi,
     private readonly kcifApi: KcifApi,
   ) {
@@ -34,9 +36,8 @@ export class EconomicInformationConsumer extends BaseConsumer {
       .join('\n');
 
     const entity = await this.repo.findOneById(new ObjectId(documentId));
-    return await this.repo.updateOne(entity, {
-      items: [...entity.items, content],
-    });
+    entity.addItem(content);
+    return await this.repo.save(entity);
   }
 
   @Process({
@@ -61,8 +62,7 @@ export class EconomicInformationConsumer extends BaseConsumer {
       .trim();
 
     const entity = await this.repo.findOneById(new ObjectId(documentId));
-    return await this.repo.updateOne(entity, {
-      items: [...entity.items, content],
-    });
+    entity.addItem(content);
+    return await this.repo.save(entity);
   }
 }

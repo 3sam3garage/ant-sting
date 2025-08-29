@@ -1,4 +1,4 @@
-class Link {
+interface Link {
   $: {
     type?: string;
     rel: string;
@@ -6,7 +6,7 @@ class Link {
   };
 }
 
-class Category {
+interface Category {
   $: {
     scheme: string;
     label: string;
@@ -14,7 +14,7 @@ class Category {
   };
 }
 
-class Entry {
+interface Entry {
   title: string; //'4 - Cake Cindy L. (0001788023) (Reporting)';
   link: Link;
   summary: {
@@ -27,7 +27,7 @@ class Entry {
   id: string;
 }
 
-export class FilingRss {
+export interface FilingRss {
   feed: {
     $: { xmlns: string };
     title: string;

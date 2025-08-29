@@ -2,19 +2,13 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
 import { ExternalApiModule } from '@libs/external-api';
-import {
-  PortfolioDomainModule,
-  SecCompanyDomainModule,
-  SecFilingDomainModule,
-} from '@libs/mongo';
-import { Analyze13fConsumer, Notify13fConsumer } from './service';
+import { PortfolioDomainModule } from '@libs/mongo';
 import { BrowserModule } from '@libs/browser';
+import { Analyze13fConsumer, Notify13fConsumer } from './service';
 
 @Module({
   imports: [
     ExternalApiModule,
-    SecFilingDomainModule,
-    SecCompanyDomainModule,
     BrowserModule,
     PortfolioDomainModule,
     BullModule.registerQueueAsync({

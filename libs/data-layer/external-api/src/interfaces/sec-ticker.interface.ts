@@ -1,4 +1,4 @@
-export class SecTickerResponse {
+export interface SecTickerResponse {
   [key: string]: {
     cik_str: number;
     ticker: string;

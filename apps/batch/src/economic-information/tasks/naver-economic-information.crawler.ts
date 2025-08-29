@@ -1,16 +1,17 @@
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { parse as parseToHTML } from 'node-html-parser';
 import { formatSixDigitDate, today } from '@libs/common';
 import { flatten } from 'lodash';
-import {
-  EconomicInformation,
-  EconomicInformationRepository,
-} from '@libs/mongo';
+import { EconomicInformationRepository } from '@libs/mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { NaverPayApi } from '@libs/external-api';
 import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';
+import {
+  EconomicInformation,
+  EconomicInformationRepositoryImpl,
+} from '@libs/domain';
 
 /**
  * 매크로 환경
@@ -25,7 +26,8 @@ export class NaverEconomicInformationCrawler {
     @InjectQueue(QUEUE_NAME.ECONOMIC_INFORMATION)
     private readonly queue: Queue,
     private readonly naverPayApi: NaverPayApi,
-    private readonly repo: EconomicInformationRepository,
+    @Inject(EconomicInformationRepository)
+    private readonly repo: EconomicInformationRepositoryImpl,
   ) {}
 
   async exec() {

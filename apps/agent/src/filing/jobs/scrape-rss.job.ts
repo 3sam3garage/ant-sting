@@ -21,10 +21,8 @@ export class ScrapeRssJob {
 
   async run() {
     const rss = await this.secApiService.fetchRSS();
-    const feeds = rss?.feed?.entry || [];
-
-    for (const feed of feeds) {
-      const url = feed?.link?.$?.href || '';
+    for (const feed of rss.feedsEntries) {
+      const url = feed.href;
 
       const processed = await this.secFeedRedisRepository.exists(url);
       if (processed) {

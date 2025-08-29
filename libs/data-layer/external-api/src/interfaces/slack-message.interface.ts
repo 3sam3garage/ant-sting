@@ -1,10 +1,10 @@
-class Text {
+interface Text {
   type: 'plain_text' | 'text' | 'mrkdwn';
   text: string;
   emoji?: boolean;
 }
 
-export class SlackMessageBlock {
+export interface SlackMessageBlock {
   type:
     | 'section'
     | 'context'
@@ -25,6 +25,6 @@ export class SlackMessageBlock {
   fields?: SlackMessageBlock[] | Text[];
 }
 
-export class SlackMessage {
+export interface SlackMessage {
   blocks: SlackMessageBlock[];
 }

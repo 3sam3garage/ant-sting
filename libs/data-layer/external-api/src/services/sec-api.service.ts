@@ -1,11 +1,12 @@
+import { plainToInstance } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
 import { ExternalApiConfigService } from '@libs/config';
 import { parseStringPromise } from 'xml2js';
 import axios from 'axios';
-import { FilingRss, SecFiling, SecTickerResponse } from '../adapters';
+import { SecTickerResponse } from '../interfaces';
 import { DATA_SEC_GOV_HEADERS, SEC_FAIR_ACCESS_HEADERS } from '../constants';
 import { toTenDigitCIK } from '@libs/common';
-import { plainToInstance } from 'class-transformer';
+import { FilingRss, SecFiling } from '@libs/domain';
 
 @Injectable()
 export class SecApiService {
@@ -62,6 +63,6 @@ export class SecApiService {
       { headers: SEC_FAIR_ACCESS_HEADERS },
     );
 
-    return plainToInstance(SecTickerResponse, response.data);
+    return response.data;
   }
 }

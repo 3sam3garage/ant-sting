@@ -27,7 +27,7 @@ export class StockInventory {
     const portion = (+value / totalValue) * 100;
 
     return {
-      shareAmount: +shrsOrPrnAmt,
+      shareAmount: +shrsOrPrnAmt.sshPrnamt,
       date,
       name: nameOfIssuer,
       cusip,
