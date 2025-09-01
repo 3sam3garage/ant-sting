@@ -114,11 +114,11 @@
       "^@libs/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@libs/core(|/.*)$": "<rootDir>/libs/core/src/$1",
       "^@libs/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^@libs/browser(|/.*)$": "<rootDir>/libs/data-layer/browser/src/$1",
-      "^@libs/ai(|/.*)$": "<rootDir>/libs/data-layer/ai/src/$1",
-      "^@libs/external-api(|/.*)$": "<rootDir>/libs/data-layer/external-api/src/$1",
-      "^@libs/mongo(|/.*)$": "<rootDir>/libs/data-layer/mongo/src/$1",
-      "^@libs/redis(|/.*)$": "<rootDir>/libs/data-layer/redis/src/$1",
+      "^@libs/browser(|/.*)$": "<rootDir>/libs/infrastructure/browser/src/$1",
+      "^@libs/ai(|/.*)$": "<rootDir>/libs/infrastructure/ai/src/$1",
+      "^@libs/external-api(|/.*)$": "<rootDir>/libs/infrastructure/external-api/src/$1",
+      "^@libs/mongo(|/.*)$": "<rootDir>/libs/infrastructure/mongo/src/$1",
+      "^@libs/redis(|/.*)$": "<rootDir>/libs/infrastructure/redis/src/$1",
       "^@libs/domain(|/.*)$": "<rootDir>/libs/domain/src/$1"
     }
   }
