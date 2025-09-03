@@ -16,16 +16,16 @@ This project strictly follows the **Clean Architecture** pattern. The most criti
 The layers are structured as follows:
 
 1.  **`libs/domain` (Entities - Innermost)**
-    *   **Contains**: Core business entities (e.g., `Portfolio`, `EconomicInformation`), value objects, and repository *interfaces* (e.g., `IPortfolioRepository`).
-    *   **Rules**: Has **zero** dependencies on any other layer or framework. It is pure, application-agnostic business logic.
+    *   **Contains**: Core business entities (e.g., `Portfolio`, `EconomicInformation`), value objects, and repository abstractions (typically `abstract class` which act as both an interface and a DI token).
+    *   **Rules**: The domain layer should be kept as pure as possible, with minimal framework-specific code. It defines the contracts for the outer layers.
 
 2.  **`libs/application` (Use Cases)**
     *   **Contains**: Application-specific business logic (Use Cases/Interactors, e.g., `ScrapeRssUseCase`).
-    *   **Rules**: Depends only on the `domain` layer. It orchestrates data flow by using the repository interfaces defined in the domain. It knows nothing about the database or web frameworks.
+    *   **Rules**: Depends only on the `domain` layer. It orchestrates data flow by using the repository abstractions defined in the domain. It knows nothing about the database or web frameworks.
 
 3.  **`libs/infrastructure` (Frameworks & Drivers)**
-    *   **Contains**: Concrete implementations for repository interfaces (e.g., `PortfolioMongoRepository`), clients for external APIs, database connection logic (`mongo`, `redis`), etc.
-    *   **Rules**: Implements the interfaces from the `domain` layer. This is where all external tools and frameworks are handled.
+    *   **Contains**: Concrete implementations for repository abstractions (e.g., `PortfolioMongoRepository`), clients for external APIs, database connection logic (`mongo`, `redis`), etc.
+    *   **Rules**: Implements the abstractions from the `domain` layer. This is where all external tools and frameworks are handled.
 
 4.  **`apps/*` (Presentation - Outermost)**
     *   **Contains**: Entry points to the application (e.g., NestJS controllers, cron jobs, CLI commands, message consumers).
@@ -37,14 +37,14 @@ The layers are structured as follows:
 
 - **Monorepo Structure**: Code is organized into `apps` (runnable applications) and `libs` (shared libraries). New generic logic should go into a `lib`.
 - **NestJS First**: Utilize NestJS features and conventions. Use the CLI (`nest g module|service|...`) to scaffold new components.
-- **Dependency Injection**: Always use NestJS's DI container to provide dependencies. Inject use cases into controllers/jobs, and inject repository interfaces into use cases.
+- **Dependency Injection**: Always use NestJS's DI container to provide dependencies. Inject use cases into controllers/jobs, and inject repository abstractions into use cases.
 - **Configuration**: All configuration is managed in the `libs/config` library. Use the `ConfigService` to access environment variables.
 - **Coding Style**: This project uses ESLint and Prettier. Ensure all code is formatted and linted before committing.
 - **Naming**:
     - Modules: `*.module.ts`
     - Services/Use Cases: `*.service.ts` / `*.use-case.ts`
     - Controllers/Jobs: `*.controller.ts` / `*.job.ts`
-    - Repository Interfaces: `i-*.repository.ts` or `*.repository.interface.ts`
+    - Repository Abstractions: `*.repository.impl.ts`
 
 ## 4. Testing
 

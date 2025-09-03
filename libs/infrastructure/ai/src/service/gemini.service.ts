@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalApiConfigService } from '@libs/shared/config';
-import { GoogleGenAI } from '@google/genai';
+import { ContentListUnion, GoogleGenAI } from '@google/genai';
 import { BASE_SYSTEM_PROMPT } from '../constants';
-import { GeminiInvokeQuery } from '../index';
 
 @Injectable()
 export class GeminiService {
@@ -23,7 +22,10 @@ export class GeminiService {
     });
   }
 
-  async invoke(query: GeminiInvokeQuery): Promise<Record<string, any>> {
+  async invoke(query: {
+    model?: string;
+    contents: ContentListUnion;
+  }): Promise<Record<string, any>> {
     const { contents } = query;
 
     const response = await this.ai.models.generateContent({
