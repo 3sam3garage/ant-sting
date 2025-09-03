@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import { EconomicInformationDomainModule } from '@libs/mongo';
+import { EconomicInformationDomainModule } from '@libs/infrastructure/mongo';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
-import { AiModule } from '@libs/ai';
+import { AiModule } from '@libs/infrastructure/ai';
 import { EconomicInformationCommand } from './commands';
 import {
   NaverEconomicInformationCrawler,
   AnalyzeEconomicInformationTask,
   KcifEconomicInformationCrawler,
 } from './tasks';
-import { ExternalApiModule } from '@libs/external-api';
+import { ExternalApiModule } from '@libs/infrastructure/external-api';
 
 @Module({
   imports: [

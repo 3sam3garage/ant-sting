@@ -6,15 +6,15 @@ import { Job, Queue } from 'bull';
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import { AnalyzeSec13fMessage } from '@libs/core';
 import { QUEUE_NAME } from '@libs/config';
-import { ChromiumService } from '@libs/browser';
-import { SecApiService } from '@libs/external-api';
+import { ChromiumService } from '@libs/infrastructure/browser';
+import { SecApiService } from '@libs/infrastructure/external-api';
 import {
   StockInventory,
   Portfolio,
   PortfolioRepositoryImpl,
 } from '@libs/domain';
 import { BaseConsumer } from '../../base.consumer';
-import { PortfolioRepository } from '@libs/mongo';
+import { PortfolioRepository } from '@libs/infrastructure/mongo';
 
 @Processor(QUEUE_NAME.ANALYZE_13F)
 export class Analyze13fConsumer extends BaseConsumer {

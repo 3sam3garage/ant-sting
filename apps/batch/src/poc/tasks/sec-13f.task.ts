@@ -1,10 +1,10 @@
 import { plainToInstance } from 'class-transformer';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { parseStringPromise } from 'xml2js';
-import { ChromiumService } from '@libs/browser';
-import { SecApiService, SlackApi } from '@libs/external-api';
-import { InvestmentRedisRepository } from '@libs/redis';
-import { PortfolioRepository } from '@libs/mongo';
+import { ChromiumService } from '@libs/infrastructure/browser';
+import { SecApiService, SlackApi } from '@libs/infrastructure/external-api';
+import { InvestmentRedisRepository } from '@libs/infrastructure/redis';
+import { PortfolioRepository } from '@libs/infrastructure/mongo';
 import { PortfolioRepositoryImpl, Portfolio } from '@libs/domain';
 import { StockInventory } from '../interface';
 

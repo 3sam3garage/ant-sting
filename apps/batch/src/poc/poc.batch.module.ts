@@ -4,12 +4,12 @@ import { Module } from '@nestjs/common';
 import {
   EconomicInformationDomainModule,
   PortfolioDomainModule,
-} from '@libs/mongo';
-import { AiModule } from '@libs/ai';
-import { ExternalApiModule } from '@libs/external-api';
-import { BrowserModule } from '@libs/browser';
+} from '@libs/infrastructure/mongo';
+import { AiModule } from '@libs/infrastructure/ai';
+import { ExternalApiModule } from '@libs/infrastructure/external-api';
+import { BrowserModule } from '@libs/infrastructure/browser';
 import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
-import { InvestmentRedisModule } from '@libs/redis';
+import { InvestmentRedisModule } from '@libs/infrastructure/redis';
 
 import { PocCommand } from './commands';
 import { Sec13fTask } from './tasks/sec-13f.task';

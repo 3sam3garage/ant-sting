@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME, RedisConfigService } from '@libs/config';
-import { ExternalApiModule } from '@libs/external-api';
-import { PortfolioDomainModule } from '@libs/mongo';
-import { BrowserModule } from '@libs/browser';
+import { ExternalApiModule } from '@libs/infrastructure/external-api';
+import { PortfolioDomainModule } from '@libs/infrastructure/mongo';
+import { BrowserModule } from '@libs/infrastructure/browser';
 import { Analyze13fConsumer, Notify13fConsumer } from './service';
 
 @Module({

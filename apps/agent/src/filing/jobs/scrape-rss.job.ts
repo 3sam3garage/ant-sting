@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SecApiService } from '@libs/external-api';
+import { SecApiService } from '@libs/infrastructure/external-api';
 import { QUEUE_NAME } from '@libs/config';
 import { Cron } from '@nestjs/schedule';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { errorToJson } from '@libs/common';
-import { SecFeedRedisRepository } from '@libs/redis';
+import { SecFeedRedisRepository } from '@libs/infrastructure/redis';
 import { AnalyzeSec13fMessage } from '@libs/core';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { FilingRss, SecApiService } from '@libs/external-api';
-import { ChromiumService } from '@libs/browser';
+import { FilingRss, SecApiService } from '@libs/infrastructure/external-api';
+import { ChromiumService } from '@libs/infrastructure/browser';
 import { InjectQueue } from '@nestjs/bull';
 import { QUEUE_NAME } from '@libs/config';
 import { Queue } from 'bull';

@@ -4,9 +4,9 @@ import { format } from 'date-fns';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable } from '@nestjs/common';
 import { joinUrl, today } from '@libs/common';
-import { EconomicInformationRepository } from '@libs/mongo';
+import { EconomicInformationRepository } from '@libs/infrastructure/mongo';
 import { QUEUE_NAME } from '@libs/config';
-import { KcifApi } from '@libs/external-api';
+import { KcifApi } from '@libs/infrastructure/external-api';
 import { flatten } from 'lodash';
 import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';
 import {

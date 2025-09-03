@@ -3,12 +3,15 @@ import {
   EconomicInformationAnalysis,
   EconomicInformationAnalysisRepository,
   EconomicInformationRepository,
-} from '@libs/mongo';
+} from '@libs/infrastructure/mongo';
 import {
   ANALYZE_GEMMA_ECONOMIC_INFORMATION_PROMPT,
   GeminiService,
-} from '@libs/ai';
-import { fromEconomicInfoToSlackMessage, SlackApi } from '@libs/external-api';
+} from '@libs/infrastructure/ai';
+import {
+  fromEconomicInfoToSlackMessage,
+  SlackApi,
+} from '@libs/infrastructure/external-api';
 import { today } from '@libs/common';
 import { EconomicInformationRepositoryImpl } from '@libs/domain';
 

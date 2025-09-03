@@ -1,12 +1,12 @@
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
-import { PortfolioItem, PortfolioRepository } from '@libs/mongo';
+import { PortfolioItem, PortfolioRepository } from '@libs/infrastructure/mongo';
 import { QUEUE_NAME } from '@libs/config';
 import { BaseConsumer } from '../../base.consumer';
 import { ObjectId } from 'mongodb';
 import { Inject, Logger } from '@nestjs/common';
 import { Dictionary } from 'lodash';
-import { SlackApi, SlackMessageBlock } from '@libs/external-api';
+import { SlackApi, SlackMessageBlock } from '@libs/infrastructure/external-api';
 import { Notify13fMessage } from '@libs/core';
 import { Portfolio, PortfolioRepositoryImpl } from '@libs/domain';
 

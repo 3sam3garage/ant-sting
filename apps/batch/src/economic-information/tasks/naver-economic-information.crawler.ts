@@ -4,9 +4,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { parse as parseToHTML } from 'node-html-parser';
 import { formatSixDigitDate, today } from '@libs/common';
 import { flatten } from 'lodash';
-import { EconomicInformationRepository } from '@libs/mongo';
+import { EconomicInformationRepository } from '@libs/infrastructure/mongo';
 import { QUEUE_NAME } from '@libs/config';
-import { NaverPayApi } from '@libs/external-api';
+import { NaverPayApi } from '@libs/infrastructure/external-api';
 import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';
 import {
   EconomicInformation,

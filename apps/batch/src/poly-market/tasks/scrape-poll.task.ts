@@ -3,7 +3,7 @@ import {
   fromPolyMarketToSlackMessage,
   PolyMarketApi,
   SlackApi,
-} from '@libs/external-api';
+} from '@libs/infrastructure/external-api';
 
 @Injectable()
 export class ScrapePollTask {
