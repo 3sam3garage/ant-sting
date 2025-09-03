@@ -1,0 +1,7 @@
+export const INJECTION_TOKEN = {
+  SLACK_API: Symbol('SLACK_API'),
+  KCIF_API: Symbol('KCIF_API'),
+  NAVER_PAY_API: Symbol('NAVER_PAY_API'),
+  POLY_MARKET_API: Symbol('POLY_MARKET_API'),
+  SEC_API_SERVICE: Symbol('SEC_API_SERVICE'),
+};
