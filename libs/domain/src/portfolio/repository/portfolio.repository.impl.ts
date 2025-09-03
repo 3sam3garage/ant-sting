@@ -1,4 +1,4 @@
-import { Portfolio } from '../portfolio.entity';
+import { Portfolio } from '../portfolio.domain';
 
 export interface PortfolioRepositoryImpl {
   findOneByUrl(url: string): Promise<Portfolio>;

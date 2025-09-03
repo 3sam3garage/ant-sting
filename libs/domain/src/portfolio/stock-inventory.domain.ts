@@ -1,4 +1,4 @@
-import { PortfolioItem } from './portfolio.entity';
+import { PortfolioItem } from './portfolio.domain';
 
 export class StockInventory {
   // 투자한 회사명

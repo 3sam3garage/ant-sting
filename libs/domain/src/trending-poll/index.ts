@@ -1,1 +1,1 @@
-export * from './trending-poll.entity';
+export * from './trending-poll.domain';

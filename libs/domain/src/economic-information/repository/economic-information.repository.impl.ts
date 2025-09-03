@@ -1,4 +1,4 @@
-import { EconomicInformation } from '../economic-information.entity';
+import { EconomicInformation } from '../economic-information.domain';
 
 export interface EconomicInformationRepositoryImpl {
   createOne(entity: EconomicInformation): Promise<EconomicInformation>;
