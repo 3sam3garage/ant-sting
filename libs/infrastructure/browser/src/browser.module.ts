@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { BROWSERS_TOKEN } from '@libs/application';
 import { ChromiumService } from './service';
 
 @Module({
-  providers: [ChromiumService],
-  exports: [ChromiumService],
+  providers: [{ provide: BROWSERS_TOKEN.CHROMIUM, useValue: ChromiumService }],
+  exports: [BROWSERS_TOKEN.CHROMIUM],
 })
 export class BrowserModule {}

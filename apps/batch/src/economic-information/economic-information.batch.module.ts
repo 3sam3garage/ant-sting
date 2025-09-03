@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import { EconomicInformationDomainModule } from '@libs/infrastructure/mongo';
-import { QUEUE_NAME, RedisConfigService } from '@libs/config';
+import { EconomicInformationMongoModule } from '@libs/infrastructure/mongo';
+import { QUEUE_NAME, RedisConfigService } from '@libs/shared/config';
 import { AiModule } from '@libs/infrastructure/ai';
 import { EconomicInformationCommand } from './commands';
 import {
@@ -15,7 +15,7 @@ import { ExternalApiModule } from '@libs/infrastructure/external-api';
   imports: [
     AiModule,
     ExternalApiModule,
-    EconomicInformationDomainModule,
+    EconomicInformationMongoModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ECONOMIC_INFORMATION,
       inject: [RedisConfigService],

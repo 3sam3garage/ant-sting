@@ -1,19 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ANALYZE_GEMMA_ECONOMIC_INFORMATION_PROMPT } from '@libs/infrastructure/ai';
+import { today } from '@libs/shared/common';
 import {
   EconomicInformationAnalysis,
-  EconomicInformationAnalysisRepository,
-  EconomicInformationRepository,
-} from '@libs/infrastructure/mongo';
+  EconomicInformationAnalysisRepositoryImpl,
+  EconomicInformationRepositoryImpl,
+} from '@libs/domain';
 import {
-  ANALYZE_GEMMA_ECONOMIC_INFORMATION_PROMPT,
-  GeminiService,
-} from '@libs/infrastructure/ai';
-import {
+  AI_TOKEN,
+  AIServiceImpl,
+  EXTERNAL_API_TOKEN,
   fromEconomicInfoToSlackMessage,
-  SlackApi,
-} from '@libs/infrastructure/external-api';
-import { today } from '@libs/common';
-import { EconomicInformationRepositoryImpl } from '@libs/domain';
+  MONGO_REPOSITORY_TOKEN,
+  SlackApiImpl,
+} from '@libs/application';
 
 /**
  * @poc
@@ -21,11 +21,14 @@ import { EconomicInformationRepositoryImpl } from '@libs/domain';
 @Injectable()
 export class AnalyzeEconomicInformationTask {
   constructor(
-    @Inject(EconomicInformationRepository)
+    @Inject(MONGO_REPOSITORY_TOKEN.ECONOMIC_INFORMATION)
     private readonly infoRepo: EconomicInformationRepositoryImpl,
-    private readonly analysisRepo: EconomicInformationAnalysisRepository,
-    private readonly geminiService: GeminiService,
-    private readonly slackService: SlackApi,
+    @Inject(MONGO_REPOSITORY_TOKEN.ECONOMIC_INFORMATION_ANALYSIS)
+    private readonly analysisRepo: EconomicInformationAnalysisRepositoryImpl,
+    @Inject(AI_TOKEN.GEMINI)
+    private readonly geminiService: AIServiceImpl,
+    @Inject(EXTERNAL_API_TOKEN.SLACK_API)
+    private readonly slackService: SlackApiImpl,
   ) {}
 
   async exec() {

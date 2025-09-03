@@ -1,18 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { FilingRss, SecApiService } from '@libs/infrastructure/external-api';
-import { ChromiumService } from '@libs/infrastructure/browser';
+import { Inject, Injectable } from '@nestjs/common';
+import { FilingRss } from '@libs/infrastructure/external-api';
 import { InjectQueue } from '@nestjs/bull';
-import { QUEUE_NAME } from '@libs/config';
+import { QUEUE_NAME } from '@libs/shared/config';
 import { Queue } from 'bull';
 import { parseStringPromise } from 'xml2js';
+import {
+  BrowserImpl,
+  BROWSERS_TOKEN,
+  EXTERNAL_API_TOKEN,
+  SecApiImpl,
+} from '@libs/application';
 
 @Injectable()
 export class ScrapeRssTask {
   constructor(
     @InjectQueue(QUEUE_NAME.ANALYZE_13F)
     private readonly queue: Queue,
-    private readonly secApi: SecApiService,
-    private readonly chromiumService: ChromiumService,
+    @Inject(EXTERNAL_API_TOKEN.SEC_API_SERVICE)
+    private readonly secApi: SecApiImpl,
+    @Inject(BROWSERS_TOKEN.CHROMIUM)
+    private readonly chromiumService: BrowserImpl,
   ) {}
 
   async exec() {

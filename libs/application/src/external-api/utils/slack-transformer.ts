@@ -1,5 +1,5 @@
-import { EconomicInformationAnalysis } from '../../../mongo/src';
-import { SlackMessage, SlackMessageBlock } from '../interfaces';
+import { EconomicInformationAnalysis } from '@libs/domain';
+import { SlackMessage, SlackMessageBlock } from '@libs/domain/slack';
 
 export const fromEconomicInfoToSlackMessage = (
   economicInfoAnalysis: EconomicInformationAnalysis,

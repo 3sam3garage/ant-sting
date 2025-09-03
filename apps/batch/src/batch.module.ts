@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CoreModule } from '@libs/core';
+import { CoreModule } from '@libs/shared/core';
 import { EconomicInformationBatchModule } from './economic-information';
 import { PocBatchModule } from './poc';
 import { PolyMarketBatchModule } from './poly-market';

@@ -6,7 +6,7 @@
     "builder": "tsc",
     "deleteOutDir": true,
     "tsConfigPath": "apps/api/tsconfig.app.json",
-    "webpack": true
+    "webpack": false
   },
   "monorepo": true,
   "root": "apps/api",
@@ -40,29 +40,29 @@
     },
     "common": {
       "type": "library",
-      "root": "libs/common",
+      "root": "libs/shared/common",
       "entryFile": "index",
-      "sourceRoot": "libs/common/src",
+      "sourceRoot": "libs/shared/common/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/common/tsconfig.lib.json"
+        "tsConfigPath": "libs/shared/common/tsconfig.lib.json"
       }
     },
     "core": {
       "type": "library",
-      "root": "libs/core",
+      "root": "libs/shared/core",
       "entryFile": "index",
-      "sourceRoot": "libs/core/src",
+      "sourceRoot": "libs/shared/core/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/core/tsconfig.lib.json"
+        "tsConfigPath": "libs/shared/core/tsconfig.lib.json"
       }
     },
     "config": {
       "type": "library",
-      "root": "libs/config",
+      "root": "libs/shared/config",
       "entryFile": "index",
-      "sourceRoot": "libs/config/src",
+      "sourceRoot": "libs/shared/config/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/config/tsconfig.lib.json"
+        "tsConfigPath": "libs/shared/config/tsconfig.lib.json"
       }
     },
     "mongo": {

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CoreModule } from '@libs/core';
+import { CoreModule } from '@libs/shared/core';
 import { FilingModule } from './filing';
 import { ScheduleModule } from '@nestjs/schedule';
 

@@ -1,10 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppConfigModule } from '@libs/config';
+import { AppConfigModule } from '@libs/shared/config';
+import { AI_TOKEN } from '@libs/application';
 import { GeminiService } from './service';
 
 @Module({
   imports: [AppConfigModule],
-  providers: [GeminiService],
-  exports: [GeminiService],
+  providers: [
+    {
+      provide: AI_TOKEN.GEMINI,
+      useValue: GeminiService,
+    },
+  ],
+  exports: [AI_TOKEN.GEMINI],
 })
 export class AiModule {}

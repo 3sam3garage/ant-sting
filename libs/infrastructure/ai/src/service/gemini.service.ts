@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ExternalApiConfigService } from '@libs/config';
-import { BASE_SYSTEM_PROMPT } from '../constants';
+import { ExternalApiConfigService } from '@libs/shared/config';
 import { GoogleGenAI } from '@google/genai';
+import { BASE_SYSTEM_PROMPT } from '../constants';
 import { GeminiInvokeQuery } from '../index';
 
 @Injectable()

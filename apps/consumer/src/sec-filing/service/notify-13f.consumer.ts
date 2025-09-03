@@ -1,21 +1,27 @@
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
-import { PortfolioItem, PortfolioRepository } from '@libs/infrastructure/mongo';
-import { QUEUE_NAME } from '@libs/config';
-import { BaseConsumer } from '../../base.consumer';
+import { PortfolioItem } from '@libs/infrastructure/mongo';
+import { QUEUE_NAME } from '@libs/shared/config';
 import { ObjectId } from 'mongodb';
 import { Inject, Logger } from '@nestjs/common';
 import { Dictionary } from 'lodash';
-import { SlackApi, SlackMessageBlock } from '@libs/infrastructure/external-api';
-import { Notify13fMessage } from '@libs/core';
+import { Notify13fMessage } from '@libs/shared/core';
 import { Portfolio, PortfolioRepositoryImpl } from '@libs/domain';
+import {
+  EXTERNAL_API_TOKEN,
+  MONGO_REPOSITORY_TOKEN,
+  SlackApiImpl,
+} from '@libs/application';
+import { SlackMessageBlock } from '@libs/domain/slack';
+import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.NOTIFY_13F)
 export class Notify13fConsumer extends BaseConsumer {
   constructor(
-    @Inject(PortfolioRepository)
+    @Inject(MONGO_REPOSITORY_TOKEN.PORTFOLIO)
     private readonly portfolioRepo: PortfolioRepositoryImpl,
-    private readonly slackApi: SlackApi,
+    @Inject(EXTERNAL_API_TOKEN.SLACK_API)
+    private readonly slackApi: SlackApiImpl,
   ) {
     super();
   }

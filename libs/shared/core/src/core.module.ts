@@ -5,7 +5,7 @@ import {
   DatabaseConfigService,
   REDIS_NAME,
   RedisConfigService,
-} from '@libs/config';
+} from '../../config/src';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 @Module({

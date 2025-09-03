@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { Injectable } from '@nestjs/common';
-import { joinUrl } from '@libs/common';
+import { joinUrl } from '@libs/shared/common';
+import { KcifApiImpl } from '@libs/application';
 
 @Injectable()
-export class KcifApi {
+export class KcifApi implements KcifApiImpl {
   private readonly BASE_URL = 'https://www.kcif.or.kr';
 
   constructor() {}

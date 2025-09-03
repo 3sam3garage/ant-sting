@@ -1,12 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { SecApiService } from '@libs/infrastructure/external-api';
-import { QUEUE_NAME } from '@libs/config';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { QUEUE_NAME } from '@libs/shared/config';
 import { Cron } from '@nestjs/schedule';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-import { errorToJson } from '@libs/common';
+import { errorToJson } from '@libs/shared/common';
 import { SecFeedRedisRepository } from '@libs/infrastructure/redis';
-import { AnalyzeSec13fMessage } from '@libs/core';
+import { AnalyzeSec13fMessage } from '@libs/shared/core';
+import {
+  EXTERNAL_API_TOKEN,
+  REDIS_REPOSITORY_TOKEN,
+  SecApiImpl,
+} from '@libs/application';
 
 @Injectable()
 export class ScrapeRssJob {
@@ -15,7 +19,9 @@ export class ScrapeRssJob {
   constructor(
     @InjectQueue(QUEUE_NAME.ANALYZE_13F)
     private readonly queue: Queue,
-    private readonly secApiService: SecApiService,
+    @Inject(EXTERNAL_API_TOKEN.SLACK_API)
+    private readonly secApiService: SecApiImpl,
+    @Inject(REDIS_REPOSITORY_TOKEN.SEC_FEED)
     private readonly secFeedRedisRepository: SecFeedRedisRepository,
   ) {}
 

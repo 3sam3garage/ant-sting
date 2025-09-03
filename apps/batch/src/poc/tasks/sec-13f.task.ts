@@ -1,21 +1,31 @@
 import { plainToInstance } from 'class-transformer';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { parseStringPromise } from 'xml2js';
-import { ChromiumService } from '@libs/infrastructure/browser';
-import { SecApiService, SlackApi } from '@libs/infrastructure/external-api';
 import { InvestmentRedisRepository } from '@libs/infrastructure/redis';
-import { PortfolioRepository } from '@libs/infrastructure/mongo';
 import { PortfolioRepositoryImpl, Portfolio } from '@libs/domain';
 import { StockInventory } from '../interface';
+import {
+  BrowserImpl,
+  BROWSERS_TOKEN,
+  EXTERNAL_API_TOKEN,
+  MONGO_REPOSITORY_TOKEN,
+  REDIS_REPOSITORY_TOKEN,
+  SecApiImpl,
+  SlackApiImpl,
+} from '@libs/application';
 
 @Injectable()
 export class Sec13fTask {
   constructor(
-    private readonly secApi: SecApiService,
-    private readonly chromiumService: ChromiumService,
-    private readonly slackApi: SlackApi,
+    @Inject(EXTERNAL_API_TOKEN.SEC_API_SERVICE)
+    private readonly secApi: SecApiImpl,
+    @Inject(BROWSERS_TOKEN.CHROMIUM)
+    private readonly chromiumService: BrowserImpl,
+    @Inject(EXTERNAL_API_TOKEN.SLACK_API)
+    private readonly slackApi: SlackApiImpl,
+    @Inject(REDIS_REPOSITORY_TOKEN.INVESTMENT)
     private readonly investmentRedisRepo: InvestmentRedisRepository,
-    @Inject(PortfolioRepository)
+    @Inject(MONGO_REPOSITORY_TOKEN.PORTFOLIO)
     private readonly portfolioRepo: PortfolioRepositoryImpl,
   ) {}
 

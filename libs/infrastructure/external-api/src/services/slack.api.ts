@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { Injectable } from '@nestjs/common';
-import { ExternalApiConfigService } from '@libs/config';
-import { SlackMessage } from '../interfaces';
+import { ExternalApiConfigService } from '@libs/shared/config';
+import { SlackApiImpl } from '@libs/application';
+import { SlackMessage } from '@libs/domain/slack';
 
 @Injectable()
-export class SlackApi {
+export class SlackApi implements SlackApiImpl {
   private readonly slackUrl: string;
 
   constructor(

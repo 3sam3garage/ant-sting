@@ -3,16 +3,22 @@ import { parse as parseToHTML } from 'node-html-parser';
 import { format } from 'date-fns';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable } from '@nestjs/common';
-import { joinUrl, today } from '@libs/common';
-import { EconomicInformationRepository } from '@libs/infrastructure/mongo';
-import { QUEUE_NAME } from '@libs/config';
-import { KcifApi } from '@libs/infrastructure/external-api';
+import { joinUrl, today } from '@libs/shared/common';
+import { QUEUE_NAME } from '@libs/shared/config';
 import { flatten } from 'lodash';
-import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';
+import {
+  ECONOMIC_INFO_SOURCE,
+  EconomicInformationMessage,
+} from '@libs/shared/core';
 import {
   EconomicInformation,
   EconomicInformationRepositoryImpl,
 } from '@libs/domain';
+import {
+  EXTERNAL_API_TOKEN,
+  KcifApiImpl,
+  MONGO_REPOSITORY_TOKEN,
+} from '@libs/application';
 
 /**
  * 국제금융센터(KCIF)
@@ -24,9 +30,10 @@ export class KcifEconomicInformationCrawler {
   constructor(
     @InjectQueue(QUEUE_NAME.ECONOMIC_INFORMATION)
     private readonly queue: Queue,
-    @Inject(EconomicInformationRepository)
+    @Inject(MONGO_REPOSITORY_TOKEN.ECONOMIC_INFORMATION)
     private readonly repo: EconomicInformationRepositoryImpl,
-    private readonly kcifApi: KcifApi,
+    @Inject(EXTERNAL_API_TOKEN.KCIF_API)
+    private readonly kcifApi: KcifApiImpl,
   ) {}
 
   async exec() {

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import iconv from 'iconv-lite';
 import axios from 'axios';
-import { joinUrl } from '@libs/common';
+import { joinUrl } from '@libs/shared/common';
+import { NaverApiImpl } from '@libs/application';
 
 @Injectable()
-export class NaverPayApi {
+export class NaverPayApi implements NaverApiImpl {
   private readonly BASE_URL = 'https://finance.naver.com';
   private readonly REQUEST_HEADERS = {
     Accept:

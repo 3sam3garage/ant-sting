@@ -3,19 +3,28 @@ import { ObjectId } from 'mongodb';
 import { Job } from 'bull';
 import { Inject, Logger } from '@nestjs/common';
 import { Process, Processor } from '@nestjs/bull';
-import { EconomicInformationRepository } from '@libs/infrastructure/mongo';
-import { QUEUE_NAME } from '@libs/config';
-import { KcifApi, NaverPayApi } from '@libs/infrastructure/external-api';
-import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/core';
+import { QUEUE_NAME } from '@libs/shared/config';
+import { KcifApi } from '@libs/infrastructure/external-api';
+import {
+  ECONOMIC_INFO_SOURCE,
+  EconomicInformationMessage,
+} from '@libs/shared/core';
 import { BaseConsumer } from '../../base.consumer';
 import { EconomicInformationRepositoryImpl } from '@libs/domain';
+import {
+  EXTERNAL_API_TOKEN,
+  MONGO_REPOSITORY_TOKEN,
+  NaverApiImpl,
+} from '@libs/application';
 
 @Processor(QUEUE_NAME.ECONOMIC_INFORMATION)
 export class EconomicInformationConsumer extends BaseConsumer {
   constructor(
-    @Inject(EconomicInformationRepository)
+    @Inject(MONGO_REPOSITORY_TOKEN.ECONOMIC_INFORMATION_ANALYSIS)
     private readonly repo: EconomicInformationRepositoryImpl,
-    private readonly naverPayApi: NaverPayApi,
+    @Inject(EXTERNAL_API_TOKEN.NAVER_PAY_API)
+    private readonly naverPayApi: NaverApiImpl,
+    @Inject(EXTERNAL_API_TOKEN.KCIF_API)
     private readonly kcifApi: KcifApi,
   ) {
     super();

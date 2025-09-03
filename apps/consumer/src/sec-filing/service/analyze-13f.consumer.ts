@@ -4,25 +4,31 @@ import { format } from 'date-fns';
 import { parseStringPromise } from 'xml2js';
 import { Job, Queue } from 'bull';
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
-import { AnalyzeSec13fMessage } from '@libs/core';
-import { QUEUE_NAME } from '@libs/config';
-import { ChromiumService } from '@libs/infrastructure/browser';
-import { SecApiService } from '@libs/infrastructure/external-api';
+import { AnalyzeSec13fMessage } from '@libs/shared/core';
+import { QUEUE_NAME } from '@libs/shared/config';
 import {
   StockInventory,
   Portfolio,
   PortfolioRepositoryImpl,
 } from '@libs/domain';
 import { BaseConsumer } from '../../base.consumer';
-import { PortfolioRepository } from '@libs/infrastructure/mongo';
+import {
+  BrowserImpl,
+  BROWSERS_TOKEN,
+  EXTERNAL_API_TOKEN,
+  MONGO_REPOSITORY_TOKEN,
+  SecApiImpl,
+} from '@libs/application';
 
 @Processor(QUEUE_NAME.ANALYZE_13F)
 export class Analyze13fConsumer extends BaseConsumer {
   constructor(
-    private readonly chromiumService: ChromiumService,
-    @Inject(PortfolioRepository)
+    @Inject(BROWSERS_TOKEN.CHROMIUM)
+    private readonly chromiumService: BrowserImpl,
+    @Inject(MONGO_REPOSITORY_TOKEN.PORTFOLIO)
     private readonly portfolioRepo: PortfolioRepositoryImpl,
-    private readonly secApi: SecApiService,
+    @Inject(EXTERNAL_API_TOKEN.SEC_API_SERVICE)
+    private readonly secApi: SecApiImpl,
     @InjectQueue(QUEUE_NAME.NOTIFY_13F)
     private readonly queue: Queue,
   ) {

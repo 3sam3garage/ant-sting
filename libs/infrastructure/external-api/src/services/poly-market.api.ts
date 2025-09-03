@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { plainToInstance } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
-import { joinUrl } from '@libs/common';
+import { joinUrl } from '@libs/shared/common';
 import { TrendingPoll } from '@libs/domain';
+import { PolyMarketApiImpl } from '@libs/application';
 
 @Injectable()
-export class PolyMarketApi {
+export class PolyMarketApi implements PolyMarketApiImpl {
   private readonly BASE_URL = 'https://gamma-api.polymarket.com';
 
   constructor() {}

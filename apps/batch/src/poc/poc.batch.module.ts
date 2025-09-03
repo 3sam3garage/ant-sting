@@ -2,13 +2,13 @@ import { BullModule } from '@nestjs/bull';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { Module } from '@nestjs/common';
 import {
-  EconomicInformationDomainModule,
-  PortfolioDomainModule,
+  EconomicInformationMongoModule,
+  PortfolioMongoModule,
 } from '@libs/infrastructure/mongo';
 import { AiModule } from '@libs/infrastructure/ai';
 import { ExternalApiModule } from '@libs/infrastructure/external-api';
 import { BrowserModule } from '@libs/infrastructure/browser';
-import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/config';
+import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/shared/config';
 import { InvestmentRedisModule } from '@libs/infrastructure/redis';
 
 import { PocCommand } from './commands';
@@ -19,10 +19,10 @@ import { ScrapeRssTask } from './tasks/scrape-rss.task';
   imports: [
     AiModule,
     ExternalApiModule,
-    EconomicInformationDomainModule,
+    EconomicInformationMongoModule,
     BrowserModule,
     InvestmentRedisModule,
-    PortfolioDomainModule,
+    PortfolioMongoModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ANALYZE_13F,
       inject: [RedisConfigService],

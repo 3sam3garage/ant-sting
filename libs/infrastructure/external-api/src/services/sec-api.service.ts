@@ -1,15 +1,15 @@
 import { plainToInstance } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
-import { ExternalApiConfigService } from '@libs/config';
+import { ExternalApiConfigService } from '@libs/shared/config';
 import { parseStringPromise } from 'xml2js';
 import axios from 'axios';
-import { SecTickerResponse } from '../interfaces';
-import { DATA_SEC_GOV_HEADERS, SEC_FAIR_ACCESS_HEADERS } from '../constants';
-import { toTenDigitCIK } from '@libs/common';
 import { FilingRss, SecFiling } from '@libs/domain';
+import { toTenDigitCIK } from '@libs/shared/common';
+import { SecApiImpl } from '@libs/application';
+import { DATA_SEC_GOV_HEADERS, SEC_FAIR_ACCESS_HEADERS } from '../constants';
 
 @Injectable()
-export class SecApiService {
+export class SecApiService implements SecApiImpl {
   constructor(
     private readonly externalApiConfigService: ExternalApiConfigService,
   ) {}
@@ -41,28 +41,5 @@ export class SecApiService {
     });
 
     return plainToInstance(FilingRss, json);
-  }
-
-  /**
-   * @deprecated
-   */
-  async fetchFilingDocument(url: string) {
-    const response = await axios.get(url, {
-      headers: SEC_FAIR_ACCESS_HEADERS,
-    });
-
-    return response;
-  }
-
-  /**
-   * @deprecated
-   */
-  async fetchCompanyTickers(): Promise<SecTickerResponse> {
-    const response = await axios.get<SecTickerResponse>(
-      'https://www.sec.gov/files/company_tickers.json',
-      { headers: SEC_FAIR_ACCESS_HEADERS },
-    );
-
-    return response.data;
   }
 }
