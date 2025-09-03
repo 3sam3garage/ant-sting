@@ -1,6 +1,6 @@
-# AI Assistant Instructions for This Repository
+# Gemini Instructions for This Repository
 
-This document provides guidelines for an AI assistant to effectively contribute to this project. Adhering to these instructions is crucial for maintaining code quality and architectural integrity.
+This document provides guidelines for the Gemini AI assistant to effectively contribute to this project. Adhering to these instructions is crucial for maintaining code quality and architectural integrity.
 
 ## 1. Project Overview
 
