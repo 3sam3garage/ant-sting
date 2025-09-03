@@ -36,10 +36,9 @@ export class ScrapeRssJob {
         continue;
       }
 
+      const message: AnalyzeSec13fMessage = { url };
       await Promise.all([
-        this.queue.add({ url } as AnalyzeSec13fMessage, {
-          removeOnComplete: true,
-        }),
+        this.queue.add(message, { removeOnComplete: true }),
         this.secFeedRedisRepository.addToSet(url),
       ]);
     }

@@ -11,7 +11,6 @@ import {
   Portfolio,
   PortfolioRepositoryImpl,
 } from '@libs/domain';
-import { BaseConsumer } from '../../base.consumer';
 import {
   BrowserImpl,
   BROWSERS_TOKEN,
@@ -19,6 +18,7 @@ import {
   MONGO_REPOSITORY_TOKEN,
   SecApiImpl,
 } from '@libs/application';
+import { BaseConsumer } from '../../base.consumer';
 
 @Processor(QUEUE_NAME.ANALYZE_13F)
 export class Analyze13fConsumer extends BaseConsumer {
