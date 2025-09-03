@@ -4,7 +4,6 @@ import { Job } from 'bull';
 import { Inject, Logger } from '@nestjs/common';
 import { Process, Processor } from '@nestjs/bull';
 import { QUEUE_NAME } from '@libs/shared/config';
-import { KcifApi } from '@libs/infrastructure/external-api';
 import {
   ECONOMIC_INFO_SOURCE,
   EconomicInformationMessage,
@@ -13,6 +12,7 @@ import { BaseConsumer } from '../../base.consumer';
 import { EconomicInformationRepositoryImpl } from '@libs/domain';
 import {
   EXTERNAL_API_TOKEN,
+  KcifApiImpl,
   MONGO_REPOSITORY_TOKEN,
   NaverApiImpl,
 } from '@libs/application';
@@ -25,7 +25,7 @@ export class EconomicInformationConsumer extends BaseConsumer {
     @Inject(EXTERNAL_API_TOKEN.NAVER_PAY_API)
     private readonly naverPayApi: NaverApiImpl,
     @Inject(EXTERNAL_API_TOKEN.KCIF_API)
-    private readonly kcifApi: KcifApi,
+    private readonly kcifApi: KcifApiImpl,
   ) {
     super();
   }

@@ -4,13 +4,13 @@ import { Cron } from '@nestjs/schedule';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { errorToJson } from '@libs/shared/common';
-import { SecFeedRedisRepository } from '@libs/infrastructure/redis';
 import { AnalyzeSec13fMessage } from '@libs/shared/core';
 import {
   EXTERNAL_API_TOKEN,
   REDIS_REPOSITORY_TOKEN,
   SecApiImpl,
 } from '@libs/application';
+import { SecFeedRepositoryImpl } from '@libs/domain';
 
 @Injectable()
 export class ScrapeRssJob {
@@ -22,7 +22,7 @@ export class ScrapeRssJob {
     @Inject(EXTERNAL_API_TOKEN.SLACK_API)
     private readonly secApiService: SecApiImpl,
     @Inject(REDIS_REPOSITORY_TOKEN.SEC_FEED)
-    private readonly secFeedRedisRepository: SecFeedRedisRepository,
+    private readonly secFeedRedisRepository: SecFeedRepositoryImpl,
   ) {}
 
   async run() {

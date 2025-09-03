@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { REDIS_NAME } from '@libs/shared/config';
+import { SecFeedRepositoryImpl } from '@libs/domain';
 
 @Injectable()
-export class SecFeedRedisRepository {
+export class SecFeedRedisRepository implements SecFeedRepositoryImpl {
   private readonly SET_NAME = 'SEC_FEED_URL';
 
   constructor(

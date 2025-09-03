@@ -1,9 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { REDIS_NAME } from '@libs/shared/config';
+import { InvestmentRedisRepositoryImpl } from '@libs/domain';
 
 @Injectable()
-export class InvestmentRedisRepository {
+export class InvestmentRedisRepository
+  implements InvestmentRedisRepositoryImpl
+{
   private readonly PREFIX = 'cusip';
   private readonly ACQUISITION = 'acquisition';
   private readonly DIVESTMENT = 'divestment';

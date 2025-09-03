@@ -1,8 +1,11 @@
 import { plainToInstance } from 'class-transformer';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { parseStringPromise } from 'xml2js';
-import { InvestmentRedisRepository } from '@libs/infrastructure/redis';
-import { PortfolioRepositoryImpl, Portfolio } from '@libs/domain';
+import {
+  PortfolioRepositoryImpl,
+  Portfolio,
+  InvestmentRedisRepositoryImpl,
+} from '@libs/domain';
 import { StockInventory } from '../interface';
 import {
   BrowserImpl,
@@ -24,7 +27,7 @@ export class Sec13fTask {
     @Inject(EXTERNAL_API_TOKEN.SLACK_API)
     private readonly slackApi: SlackApiImpl,
     @Inject(REDIS_REPOSITORY_TOKEN.INVESTMENT)
-    private readonly investmentRedisRepo: InvestmentRedisRepository,
+    private readonly investmentRedisRepo: InvestmentRedisRepositoryImpl,
     @Inject(MONGO_REPOSITORY_TOKEN.PORTFOLIO)
     private readonly portfolioRepo: PortfolioRepositoryImpl,
   ) {}
