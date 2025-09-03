@@ -111,9 +111,9 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@libs/shared/common(|/.*)$": "<rootDir>/libs/common/src/$1",
-      "^@libs/shared/core(|/.*)$": "<rootDir>/libs/core/src/$1",
-      "^@libs/shared/config(|/.*)$": "<rootDir>/libs/config/src/$1",
+      "^@libs/shared/common(|/.*)$": "<rootDir>/libs/shared/common/src/$1",
+      "^@libs/shared/core(|/.*)$": "<rootDir>/libs/shared/core/src/$1",
+      "^@libs/shared/config(|/.*)$": "<rootDir>/libs/shared/config/src/$1",
       "^@libs/domain(|/.*)$": "<rootDir>/libs/domain/src/$1",
       "^@libs/infrastructure/ai(|/.*)$": "<rootDir>/libs/infrastructure/ai/src/$1",
       "^@libs/infrastructure/browser(|/.*)$": "<rootDir>/libs/infrastructure/browser/src/$1",

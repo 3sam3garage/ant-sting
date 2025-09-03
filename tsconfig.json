@@ -21,10 +21,10 @@
     "paths": {
       "@libs/shared/common": ["libs/shared/common/src"],
       "@libs/shared/common/*": ["libs/shared/common/src/*"],
-      "@libs/shared/core": ["libs/shared/core/src"],
-      "@libs/shared/core/*": ["libs/shared/core/src/*"],
       "@libs/shared/config": ["libs/shared/config/src"],
       "@libs/shared/config/*": ["libs/shared/config/src/*"],
+      "@libs/shared/core": ["libs/shared/core/src"],
+      "@libs/shared/core/*": ["libs/shared/core/src/*"],
       "@libs/domain": ["libs/domain/src"],
       "@libs/domain/*": ["libs/domain/src/*"],
       "@libs/infrastructure/browser": ["libs/infrastructure/browser/src"],

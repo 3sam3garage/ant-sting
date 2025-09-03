@@ -5,7 +5,6 @@ import { parse as parseToHTML } from 'node-html-parser';
 import { formatSixDigitDate, today } from '@libs/shared/common';
 import { flatten } from 'lodash';
 import { QUEUE_NAME } from '@libs/shared/config';
-import { ECONOMIC_INFO_SOURCE, EconomicInformationMessage } from '@libs/shared/core';
 import {
   EconomicInformation,
   EconomicInformationRepositoryImpl,
@@ -15,6 +14,10 @@ import {
   MONGO_REPOSITORY_TOKEN,
   NaverApiImpl,
 } from '@libs/application';
+import {
+  ECONOMIC_INFO_SOURCE,
+  EconomicInformationMessage,
+} from '@libs/shared/core';
 
 /**
  * 매크로 환경

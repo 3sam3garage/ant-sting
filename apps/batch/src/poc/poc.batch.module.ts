@@ -8,8 +8,12 @@ import {
 import { AiModule } from '@libs/infrastructure/ai';
 import { ExternalApiModule } from '@libs/infrastructure/external-api';
 import { BrowserModule } from '@libs/infrastructure/browser';
-import { QUEUE_NAME, REDIS_NAME, RedisConfigService } from '@libs/shared/config';
 import { InvestmentRedisModule } from '@libs/infrastructure/redis';
+import {
+  QUEUE_NAME,
+  REDIS_NAME,
+  RedisConfigService,
+} from '@libs/shared/config';
 
 import { PocCommand } from './commands';
 import { Sec13fTask } from './tasks/sec-13f.task';
