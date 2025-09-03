@@ -119,7 +119,8 @@
       "^@libs/infrastructure/browser(|/.*)$": "<rootDir>/libs/infrastructure/browser/src/$1",
       "^@libs/infrastructure/external-api(|/.*)$": "<rootDir>/libs/infrastructure/external-api/src/$1",
       "^@libs/infrastructure/mongo(|/.*)$": "<rootDir>/libs/infrastructure/mongo/src/$1",
-      "^@libs/infrastructure/redis(|/.*)$": "<rootDir>/libs/infrastructure/redis/src/$1"
+      "^@libs/infrastructure/redis(|/.*)$": "<rootDir>/libs/infrastructure/redis/src/$1",
+      "^@libs/application(|/.*)$": "<rootDir>/libs/application/src/$1"
     }
   }
 }

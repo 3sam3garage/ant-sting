@@ -5,7 +5,8 @@
   "compilerOptions": {
     "builder": "tsc",
     "deleteOutDir": true,
-    "tsConfigPath": "apps/api/tsconfig.app.json"
+    "tsConfigPath": "apps/api/tsconfig.app.json",
+    "webpack": true
   },
   "monorepo": true,
   "root": "apps/api",
@@ -116,6 +117,15 @@
       "sourceRoot": "libs/domain/src",
       "compilerOptions": {
         "tsConfigPath": "libs/domain/tsconfig.lib.json"
+      }
+    },
+    "application": {
+      "type": "library",
+      "root": "libs/application",
+      "entryFile": "index",
+      "sourceRoot": "libs/application/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/application/tsconfig.lib.json"
       }
     }
   }

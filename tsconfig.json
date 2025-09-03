@@ -19,27 +19,65 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@libs/common": ["libs/common/src"],
-      "@libs/common/*": ["libs/common/src/*"],
-      "@libs/core": ["libs/core/src"],
-      "@libs/core/*": ["libs/core/src/*"],
-      "@libs/config": ["libs/config/src"],
-      "@libs/config/*": ["libs/config/src/*"],
-      "@libs/domain": ["libs/domain/src"],
-      "@libs/domain/*": ["libs/domain/src/*"],
-      "@libs/infrastructure/browser": ["libs/infrastructure/browser/src"],
-      "@libs/infrastructure/browser/*": ["libs/infrastructure/browser/src*"],
-      "@libs/infrastructure/ai": ["libs/infrastructure/ai/src"],
-      "@libs/infrastructure/ai/*": ["libs/infrastructure/ai/src/*"],
-      "@libs/infrastructure/mongo": ["libs/infrastructure/mongo/src"],
-      "@libs/infrastructure/mongo/*": ["libs/infrastructure/mongo/src/*"],
-      "@libs/infrastructure/redis": ["libs/infrastructure/redis/src"],
-      "@libs/infrastructure/redis/*": ["libs/infrastructure/redis/src/*"],
+      "@libs/common": [
+        "libs/common/src"
+      ],
+      "@libs/common/*": [
+        "libs/common/src/*"
+      ],
+      "@libs/core": [
+        "libs/core/src"
+      ],
+      "@libs/core/*": [
+        "libs/core/src/*"
+      ],
+      "@libs/config": [
+        "libs/config/src"
+      ],
+      "@libs/config/*": [
+        "libs/config/src/*"
+      ],
+      "@libs/domain": [
+        "libs/domain/src"
+      ],
+      "@libs/domain/*": [
+        "libs/domain/src/*"
+      ],
+      "@libs/infrastructure/browser": [
+        "libs/infrastructure/browser/src"
+      ],
+      "@libs/infrastructure/browser/*": [
+        "libs/infrastructure/browser/src*"
+      ],
+      "@libs/infrastructure/ai": [
+        "libs/infrastructure/ai/src"
+      ],
+      "@libs/infrastructure/ai/*": [
+        "libs/infrastructure/ai/src/*"
+      ],
+      "@libs/infrastructure/mongo": [
+        "libs/infrastructure/mongo/src"
+      ],
+      "@libs/infrastructure/mongo/*": [
+        "libs/infrastructure/mongo/src/*"
+      ],
+      "@libs/infrastructure/redis": [
+        "libs/infrastructure/redis/src"
+      ],
+      "@libs/infrastructure/redis/*": [
+        "libs/infrastructure/redis/src/*"
+      ],
       "@libs/infrastructure/external-api": [
         "libs/infrastructure/external-api/src"
       ],
       "@libs/infrastructure/external-api/*": [
         "libs/infrastructure/external-api/src/*"
+      ],
+      "@libs/application": [
+        "libs/application/src"
+      ],
+      "@libs/application/*": [
+        "libs/application/src/*"
       ]
     }
   }
