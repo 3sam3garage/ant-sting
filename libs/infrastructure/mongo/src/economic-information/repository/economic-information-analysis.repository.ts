@@ -1,42 +1,64 @@
-import { FilterOperators, Index, MongoRepository } from 'typeorm';
+import { DeepPartial, EntityManager, Index, SaveOptions } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EconomicInformationAnalysis } from '../entity';
+import { InjectEntityManager } from '@nestjs/typeorm';
+import {
+  EconomicInformationAnalysis as DomainEntity,
+  EconomicInformationAnalysisRepositoryImpl,
+} from '@libs/domain';
+import { ObjectId } from 'mongodb';
+import { plainToInstance } from 'class-transformer';
+import { EconomicInformationAnalysis as Persistence } from '../entity';
+import { BaseRepository } from '@libs/infrastructure/mongo/base.repository';
 
 @Index('date', { unique: true })
 @Injectable()
-export class EconomicInformationAnalysisRepository extends MongoRepository<EconomicInformationAnalysis> {
+export class EconomicInformationAnalysisRepository
+  extends BaseRepository<Persistence, DomainEntity>
+  implements EconomicInformationAnalysisRepositoryImpl
+{
   constructor(
-    @InjectRepository(EconomicInformationAnalysis)
-    private readonly repo: MongoRepository<EconomicInformationAnalysis>,
+    @InjectEntityManager()
+    private readonly em: EntityManager,
   ) {
-    super(EconomicInformationAnalysis, repo.manager);
+    super();
+  }
+
+  async createOne(entity: DomainEntity): Promise<DomainEntity> {
+    const persistence = await this.em.save(Persistence, entity);
+    return this.toDomain(persistence);
+  }
+
+  async findOneById(_id: ObjectId): Promise<DomainEntity> {
+    const persistence = await this.em.findOneById(Persistence, _id);
+    return this.toDomain(persistence);
+  }
+
+  async save<T extends DeepPartial<DomainEntity>>(
+    entity: T,
+    options: SaveOptions = { reload: true },
+  ): Promise<Persistence> {
+    return this.em.save(Persistence, entity, options);
   }
 
   async updateOne(
-    entity: EconomicInformationAnalysis,
-    data: Partial<EconomicInformationAnalysis>,
-  ) {
-    Object.assign(entity, data);
-    return this.repo.save(entity);
+    entity: DomainEntity,
+    data: Partial<DomainEntity>,
+  ): Promise<DomainEntity> {
+    Object.assign(this.toPersistence(entity), data);
+    const persistence = await this.em.save(Persistence, entity);
+    return this.toDomain(persistence);
   }
 
-  async findOneByDate(date: string): Promise<EconomicInformationAnalysis> {
-    return this.repo.findOne({ where: { date } });
+  async findOneByDate(date: string): Promise<DomainEntity> {
+    const persistence = await this.em.findOneById(Persistence, date);
+    return this.toDomain(persistence);
   }
 
-  async findByDate(query: {
-    from: Date;
-    to: Date;
-  }): Promise<EconomicInformationAnalysis[]> {
-    const { from, to } = query;
+  protected toDomain(persistence: Persistence): DomainEntity {
+    return plainToInstance(DomainEntity, persistence);
+  }
 
-    const filterQuery: FilterOperators<EconomicInformationAnalysis> = {
-      where: {
-        date: { $gte: from, $lte: to },
-      },
-    };
-
-    return this.repo.find(filterQuery);
+  protected toPersistence(domain: DomainEntity): Persistence {
+    return plainToInstance(Persistence, domain);
   }
 }

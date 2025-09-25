@@ -1,6 +1,6 @@
-import { BaseEntity } from '../base.entity';
+import { BaseDomainEntity } from '../base.domain.entity';
 
-export class EconomicInformation extends BaseEntity {
+export class EconomicInformation extends BaseDomainEntity {
   items: string[] = [];
   date: string;
 

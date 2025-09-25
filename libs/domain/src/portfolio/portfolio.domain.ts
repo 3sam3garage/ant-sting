@@ -1,4 +1,4 @@
-import { BaseEntity } from '../base.entity';
+import { BaseDomainEntity } from '../base.domain.entity';
 import { keyBy } from 'lodash';
 
 export class PortfolioItem {
@@ -10,7 +10,7 @@ export class PortfolioItem {
   portion: number;
 }
 
-export class Portfolio extends BaseEntity {
+export class Portfolio extends BaseDomainEntity {
   issuer: string;
   url: string;
   date: string;

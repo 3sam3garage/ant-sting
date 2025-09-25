@@ -2,10 +2,10 @@ import {
   BeforeInsert,
   BeforeUpdate,
   CreateDateColumn,
-  ObjectId,
   ObjectIdColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ObjectId } from 'mongodb';
 import { IsDate } from 'class-validator';
 
 export class BaseEntity {

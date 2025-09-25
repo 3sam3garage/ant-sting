@@ -1,4 +1,5 @@
 import { EconomicInformationAnalysis } from '../economic-information-analysis.domain';
+import { ObjectId } from 'mongodb';
 
 export interface EconomicInformationAnalysisRepositoryImpl {
   createOne(
@@ -12,7 +13,7 @@ export interface EconomicInformationAnalysisRepositoryImpl {
 
   findOneByDate(date: string): Promise<EconomicInformationAnalysis>;
 
-  findOneById(_id: unknown): Promise<EconomicInformationAnalysis>;
+  findOneById(_id: ObjectId): Promise<EconomicInformationAnalysis>;
 
   save(
     domain: EconomicInformationAnalysis,

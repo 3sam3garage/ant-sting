@@ -1,28 +1,31 @@
 import { plainToInstance } from 'class-transformer';
-import { DeepPartial, MongoRepository, SaveOptions } from 'typeorm';
+import { DeepPartial, EntityManager, SaveOptions } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
 import {
-  Portfolio as PortfolioDomain,
+  Portfolio as DomainEntity,
   PortfolioRepositoryImpl,
 } from '@libs/domain';
-import { Portfolio as PortfolioPersistence } from '../entity';
+import { Portfolio as Persistence } from '../entity';
 import { ObjectId } from 'mongodb';
+import { BaseRepository } from '../../base.repository';
 
 @Injectable()
 export class PortfolioRepository
-  extends MongoRepository<PortfolioPersistence>
+  extends BaseRepository<Persistence, DomainEntity>
   implements PortfolioRepositoryImpl
 {
   constructor(
-    @InjectRepository(PortfolioPersistence)
-    private readonly repo: MongoRepository<PortfolioPersistence>,
+    @InjectEntityManager()
+    private readonly em: EntityManager,
   ) {
-    super(PortfolioPersistence, repo.manager);
+    super();
   }
 
   async findOneByUrl(url: string) {
-    const persistence = await this.repo.findOne({ where: { url } });
+    const persistence = await this.em.findOne(Persistence, {
+      where: { url },
+    });
     if (!persistence) {
       return null;
     }
@@ -30,33 +33,40 @@ export class PortfolioRepository
     return this.toDomain(persistence);
   }
 
-  async save<T extends DeepPartial<PortfolioDomain>>(
-    entities: T,
+  async save<T extends DeepPartial<DomainEntity>>(
+    entity: T,
     options: SaveOptions = { reload: true },
-  ): Promise<T> {
-    return super.save(entities, options);
+  ): Promise<DomainEntity> {
+    const persistence = await this.em.save(Persistence, entity, options);
+    return this.toDomain(persistence);
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  async findOneById(id: ObjectId): Promise<PortfolioDomain> {
-    return this.repo.findOne({ where: { _id: new ObjectId(id) } });
+  async findOneById(_id: ObjectId): Promise<DomainEntity> {
+    const persistence = await this.em.findOneById(Persistence, _id);
+    return this.toDomain(persistence);
   }
 
   async findOnePreviousByIdAndIssuer(
     id: ObjectId,
     issuer: string,
-  ): Promise<PortfolioDomain> {
-    return this.repo.findOne({
-      where: { issuer, _id: { $lt: new ObjectId(id) } },
+  ): Promise<DomainEntity> {
+    const persistence = await this.em.findOne(Persistence, {
+      where: {
+        issuer,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        _id: { $lt: new ObjectId(id) },
+      },
     });
+
+    return this.toDomain(persistence);
   }
 
-  private toDomain(persistence: PortfolioPersistence): PortfolioDomain {
-    return plainToInstance(PortfolioDomain, persistence);
+  protected toDomain(persistence: Persistence): DomainEntity {
+    return plainToInstance(DomainEntity, persistence);
   }
 
-  private toPersistence(domain: PortfolioDomain): PortfolioPersistence {
-    return plainToInstance(PortfolioPersistence, domain);
+  protected toPersistence(domain: DomainEntity): Persistence {
+    return plainToInstance(Persistence, domain);
   }
 }

@@ -1,4 +1,4 @@
-import { BaseEntity } from '../base.entity';
+import { BaseDomainEntity } from '../base.domain.entity';
 
 class Strategy {
   action: string;
@@ -10,7 +10,7 @@ class Question {
   answer: string;
 }
 
-export class EconomicInformationAnalysis extends BaseEntity {
+export class EconomicInformationAnalysis extends BaseDomainEntity {
   summaries: string[];
   insights: string[];
   strategies: Strategy[];

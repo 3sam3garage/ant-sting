@@ -1,65 +1,71 @@
 import { ObjectId } from 'mongodb';
-import { DeepPartial, Index, MongoRepository, SaveOptions } from 'typeorm';
+import { DeepPartial, EntityManager, Index, SaveOptions } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import {
-  EconomicInformation as EiDomain,
+  EconomicInformation as DomainEntity,
   EconomicInformationRepositoryImpl,
 } from '@libs/domain';
-import { EconomicInformation as EiPersistence } from '../entity';
+import { EconomicInformation as Persistence } from '../entity';
+import { BaseRepository } from '../../base.repository';
 
 @Index('date', { unique: true })
 @Injectable()
 export class EconomicInformationRepository
-  extends MongoRepository<EiPersistence>
+  extends BaseRepository<Persistence, DomainEntity>
   implements EconomicInformationRepositoryImpl
 {
   constructor(
-    @InjectRepository(EiPersistence)
-    private readonly repo: MongoRepository<EiPersistence>,
+    @InjectEntityManager()
+    private readonly em: EntityManager,
   ) {
-    super(EiPersistence, repo.manager);
+    super();
   }
 
-  async createOne(entity: EiDomain): Promise<EiDomain> {
-    const persistence = await this.repo.save(entity);
+  async createOne(entity: DomainEntity): Promise<DomainEntity> {
+    const persistence = await this.em.save(Persistence, entity);
     return this.toDomain(persistence);
   }
 
   async updateOne(
-    entity: EiDomain,
-    data: Partial<EiDomain>,
-  ): Promise<EiDomain> {
+    entity: DomainEntity,
+    data: Partial<DomainEntity>,
+  ): Promise<DomainEntity> {
     Object.assign(this.toPersistence(entity), data);
-    const persistence = await this.repo.save(entity);
+    const persistence = await this.em.save(Persistence, entity);
     return this.toDomain(persistence);
   }
 
-  async findOneByDate(date: string): Promise<EiDomain> {
-    const persistence = await this.repo.findOne({ where: { date } });
+  async findOneByDate(date: string): Promise<DomainEntity> {
+    const persistence = await this.em.findOne(Persistence, {
+      where: { date },
+    });
     return this.toDomain(persistence);
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  async findOneById(_id: ObjectId): Promise<EiDomain> {
-    const persistence = await this.repo.findOneById(_id);
+  async findOneById(_id: ObjectId): Promise<DomainEntity> {
+    const persistence = await this.em.findOneById(Persistence, _id);
     return this.toDomain(persistence);
   }
 
-  async save<T extends DeepPartial<EiDomain>>(
-    entities: T,
+  async save<T extends DeepPartial<DomainEntity>>(
+    entity: T,
     options: SaveOptions = { reload: true },
-  ): Promise<T> {
-    return super.save(entities, options);
+  ): Promise<DomainEntity> {
+    const persistence = await this.em.save(Persistence, entity, options);
+    return this.toDomain(persistence);
   }
 
-  private toDomain(persistence: EiPersistence): EiDomain {
-    return plainToInstance(EiDomain, persistence);
+  protected toDomain(persistence: Persistence): DomainEntity {
+    const domain = plainToInstance(DomainEntity, persistence);
+    console.log(persistence._id.toString());
+    console.log(domain._id.toString());
+
+    return domain;
   }
 
-  private toPersistence(domain: EiDomain): EiPersistence {
-    return plainToInstance(EiPersistence, domain);
+  protected toPersistence(domain: DomainEntity): Persistence {
+    return plainToInstance(Persistence, domain);
   }
 }

@@ -1,14 +1,16 @@
 import { ObjectId } from 'mongodb';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { TransformObjectId } from '@libs/shared/core';
 
-export class BaseEntity {
+export class BaseDomainEntity {
+  @TransformObjectId()
   _id: ObjectId;
 
   createdAt: Date;
 
   updatedAt: Date;
 
-  static create<T extends BaseEntity>(
+  static create<T extends BaseDomainEntity>(
     this: ClassConstructor<T>,
     data: Partial<T>,
   ): T {
