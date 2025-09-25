@@ -1,9 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
-import { TransformObjectId } from '@libs/shared/core';
 
 export class BaseDomainEntity {
-  @TransformObjectId()
   _id: ObjectId;
 
   createdAt: Date;

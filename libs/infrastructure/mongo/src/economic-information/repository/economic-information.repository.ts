@@ -58,14 +58,14 @@ export class EconomicInformationRepository
   }
 
   protected toDomain(persistence: Persistence): DomainEntity {
-    const domain = plainToInstance(DomainEntity, persistence);
-    console.log(persistence._id.toString());
-    console.log(domain._id.toString());
-
+    const domain = DomainEntity.create(persistence);
+    domain._id = persistence._id;
     return domain;
   }
 
   protected toPersistence(domain: DomainEntity): Persistence {
-    return plainToInstance(Persistence, domain);
+    const persistence = plainToInstance(Persistence, domain);
+    persistence._id = domain._id;
+    return persistence;
   }
 }

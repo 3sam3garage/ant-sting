@@ -20,6 +20,6 @@ export class BaseConsumer {
 
   @OnQueueError()
   async OnQueueError(e) {
-    Logger.error(e);
+    Logger.error(JSON.stringify(e));
   }
 }

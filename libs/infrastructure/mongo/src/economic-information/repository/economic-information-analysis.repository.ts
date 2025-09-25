@@ -55,10 +55,14 @@ export class EconomicInformationAnalysisRepository
   }
 
   protected toDomain(persistence: Persistence): DomainEntity {
-    return plainToInstance(DomainEntity, persistence);
+    const domain = DomainEntity.create(persistence);
+    domain._id = persistence._id;
+    return domain;
   }
 
   protected toPersistence(domain: DomainEntity): Persistence {
-    return plainToInstance(Persistence, domain);
+    const persistence = plainToInstance(Persistence, domain);
+    persistence._id = domain._id;
+    return persistence;
   }
 }

@@ -20,7 +20,7 @@ import {
 @Processor(QUEUE_NAME.ECONOMIC_INFORMATION)
 export class EconomicInformationConsumer extends BaseConsumer {
   constructor(
-    @Inject(MONGO_REPOSITORY_TOKEN.ECONOMIC_INFORMATION_ANALYSIS)
+    @Inject(MONGO_REPOSITORY_TOKEN.ECONOMIC_INFORMATION)
     private readonly repo: EconomicInformationRepositoryImpl,
     @Inject(EXTERNAL_API_TOKEN.NAVER_PAY_API)
     private readonly naverPayApi: NaverApiImpl,
@@ -46,7 +46,7 @@ export class EconomicInformationConsumer extends BaseConsumer {
 
     const entity = await this.repo.findOneById(new ObjectId(documentId));
     entity.addItem(content);
-    return await this.repo.save(entity);
+    await this.repo.save(entity);
   }
 
   @Process({
@@ -72,6 +72,6 @@ export class EconomicInformationConsumer extends BaseConsumer {
 
     const entity = await this.repo.findOneById(new ObjectId(documentId));
     entity.addItem(content);
-    return await this.repo.save(entity);
+    await this.repo.save(entity);
   }
 }
