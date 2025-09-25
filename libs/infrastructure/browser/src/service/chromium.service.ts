@@ -59,7 +59,7 @@ export class ChromiumService implements OnModuleDestroy {
     const browser = await launch({
       args: [...DEFAULT_CHROMIUM_OPTION_ARGS],
       defaultViewport: { height: 1080, width: 1920 },
-      headless: true,
+      headless: false,
       browser: 'chrome',
       devtools: true,
     });

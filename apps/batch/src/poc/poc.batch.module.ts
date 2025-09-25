@@ -18,6 +18,7 @@ import {
 import { PocCommand } from './commands';
 import { Sec13fTask } from './tasks/sec-13f.task';
 import { ScrapeRssTask } from './tasks/scrape-rss.task';
+import { PostWepollTask } from './tasks/post-wepoll.task';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ScrapeRssTask } from './tasks/scrape-rss.task';
     PocCommand,
     Sec13fTask,
     ScrapeRssTask,
+    PostWepollTask,
     {
       provide: REDIS_NAME.ANT_STING,
       inject: [RedisService],
