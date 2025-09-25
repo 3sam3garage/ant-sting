@@ -6,8 +6,18 @@ networks:
 volumes:
   service_redis:
   service_mongo:
+  service_grafana:
 
 services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - '9111:3000'
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    volumes:
+      - service_grafana:/var/lib/grafana
+
   redis:
     image: redis:8.0-M03-alpine
     container_name: redis
