@@ -9,11 +9,11 @@ import { InvestmentRedisRepository } from './investment.redis.repository';
   providers: [
     {
       provide: REDIS_REPOSITORY_TOKEN.INVESTMENT,
-      useValue: InvestmentRedisRepository,
+      useClass: InvestmentRedisRepository,
     },
     {
       provide: REDIS_REPOSITORY_TOKEN.SEC_FEED,
-      useValue: SecFeedRedisRepository,
+      useClass: SecFeedRedisRepository,
     },
     {
       provide: REDIS_NAME.ANT_STING,

@@ -1,6 +1,5 @@
 import { Inject, Logger } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { format } from 'date-fns';
 import { parseStringPromise } from 'xml2js';
 import { Job, Queue } from 'bull';
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
@@ -100,16 +99,16 @@ export class Analyze13fConsumer extends BaseConsumer {
       const prevEntity = await this.portfolioRepo.findOneByUrl(entity.url);
 
       if (!prevEntity) {
-        const result = await this.portfolioRepo.save(entity);
-        if (
-          result.date === format(new Date(), 'yyyy-MM-dd') &&
-          result.totalValue > 10_000_000_000 / 2
-        ) {
-          await this.queue.add(
-            { _id: result._id.toString(), issuer: result.issuer },
-            { removeOnComplete: true },
-          );
-        }
+        await this.portfolioRepo.save(entity);
+        // if (
+        //   result.date === format(new Date(), 'yyyy-MM-dd') &&
+        //   result.totalValue > 10_000_000_000 / 2
+        // ) {
+        //   await this.queue.add(
+        //     { _id: result._id.toString(), issuer: result.issuer },
+        //     { removeOnComplete: true },
+        //   );
+        // }
       }
     }
   }

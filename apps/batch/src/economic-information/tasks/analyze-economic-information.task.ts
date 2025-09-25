@@ -10,14 +10,10 @@ import {
   AI_TOKEN,
   AIServiceImpl,
   EXTERNAL_API_TOKEN,
-  fromEconomicInfoToSlackMessage,
   MONGO_REPOSITORY_TOKEN,
   SlackApiImpl,
 } from '@libs/application';
 
-/**
- * @poc
- */
 @Injectable()
 export class AnalyzeEconomicInformationTask {
   constructor(
@@ -33,7 +29,7 @@ export class AnalyzeEconomicInformationTask {
 
   async exec() {
     const date = today();
-    // const { startOfDay, endOfDay, date } = figureDateInfo();
+    // const date = format(subDays(new Date(), 1), 'yyyy-MM-dd');
     const [infoEntity, analysisEntity] = await Promise.all([
       this.infoRepo.findOneByDate(date),
       this.analysisRepo.findOneByDate(date),
@@ -57,7 +53,7 @@ export class AnalyzeEconomicInformationTask {
     await this.analysisRepo.save(analysis);
 
     // slack 발송
-    const economicInformationMessage = fromEconomicInfoToSlackMessage(analysis);
-    await this.slackService.sendMessage(economicInformationMessage);
+    // const economicInformationMessage = fromEconomicInfoToSlackMessage(analysis);
+    // await this.slackService.sendMessage(economicInformationMessage);
   }
 }

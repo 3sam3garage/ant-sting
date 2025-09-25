@@ -19,7 +19,7 @@ export class ScrapeRssJob {
   constructor(
     @InjectQueue(QUEUE_NAME.ANALYZE_13F)
     private readonly queue: Queue,
-    @Inject(EXTERNAL_API_TOKEN.SLACK_API)
+    @Inject(EXTERNAL_API_TOKEN.SEC_API_SERVICE)
     private readonly secApiService: SecApiImpl,
     @Inject(REDIS_REPOSITORY_TOKEN.SEC_FEED)
     private readonly secFeedRedisRepository: SecFeedRepositoryImpl,
@@ -44,7 +44,7 @@ export class ScrapeRssJob {
     }
   }
 
-  @Cron('*/5 * * * *', { timeZone: 'Asia/Seoul' })
+  @Cron('* * * * *', { timeZone: 'Asia/Seoul' })
   async handle(): Promise<void> {
     Logger.log(`${new Date()} scrape-sec-rss scheduler start`);
 

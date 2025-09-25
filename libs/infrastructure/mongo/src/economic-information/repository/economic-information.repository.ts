@@ -37,11 +37,16 @@ export class EconomicInformationRepository
     return this.toDomain(persistence);
   }
 
-  async findOneByDate(date: string): Promise<DomainEntity> {
+  async findOneByDate(date: string): Promise<DomainEntity | null> {
     const persistence = await this.em.findOne(Persistence, {
       where: { date },
     });
-    return this.toDomain(persistence);
+
+    if (persistence) {
+      return this.toDomain(persistence);
+    }
+
+    return null;
   }
 
   async findOneById(_id: ObjectId): Promise<DomainEntity> {
