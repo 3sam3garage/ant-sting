@@ -9,7 +9,7 @@ import { Portfolio } from './entity';
   providers: [
     {
       provide: MONGO_REPOSITORY_TOKEN.PORTFOLIO,
-      useValue: PortfolioRepository,
+      useClass: PortfolioRepository,
     },
   ],
   exports: [MONGO_REPOSITORY_TOKEN.PORTFOLIO],

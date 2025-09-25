@@ -8,7 +8,7 @@ import { GeminiService } from './service';
   providers: [
     {
       provide: AI_TOKEN.GEMINI,
-      useValue: GeminiService,
+      useClass: GeminiService,
     },
   ],
   exports: [AI_TOKEN.GEMINI],

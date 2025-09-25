@@ -17,11 +17,11 @@ import { MONGO_REPOSITORY_TOKEN } from '@libs/application';
   providers: [
     {
       provide: MONGO_REPOSITORY_TOKEN.ECONOMIC_INFORMATION,
-      useValue: EconomicInformationRepository,
+      useClass: EconomicInformationRepository,
     },
     {
       provide: MONGO_REPOSITORY_TOKEN.ECONOMIC_INFORMATION_ANALYSIS,
-      useValue: EconomicInformationAnalysisRepository,
+      useClass: EconomicInformationAnalysisRepository,
     },
   ],
   exports: [

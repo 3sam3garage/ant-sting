@@ -1,9 +1,11 @@
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, OnModuleDestroy, Scope } from '@nestjs/common';
 import { Browser, launch, Page } from 'puppeteer';
 import UserAgent from 'user-agents';
 import { DEFAULT_CHROMIUM_OPTION_ARGS, TYPES_TO_BLOCK } from '../constants';
 
-@Injectable()
+@Injectable({
+  scope: Scope.TRANSIENT,
+})
 export class ChromiumService implements OnModuleDestroy {
   private browser: Browser;
 
