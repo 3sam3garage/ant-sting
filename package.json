@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "api": "nest start api --watch",
     "agent": "nest start agent --watch",
     "consumer": "nest start consumer --watch",
     "batch": "nest start batch",

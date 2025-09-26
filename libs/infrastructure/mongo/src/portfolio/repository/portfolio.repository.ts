@@ -22,6 +22,16 @@ export class PortfolioRepository
     super();
   }
 
+  async findByPeriod(start: string, end: string): Promise<DomainEntity[]> {
+    return this.em.find(Persistence, {
+      where: {
+        // eslint-disable-next-line
+        // @ts-ignore
+        date: { $gte: start, $lte: end },
+      },
+    });
+  }
+
   async findOneByUrl(url: string) {
     const persistence = await this.em.findOne(Persistence, {
       where: { url },
@@ -53,8 +63,8 @@ export class PortfolioRepository
     const persistence = await this.em.findOne(Persistence, {
       where: {
         issuer,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
+        // eslint-disable-next-line
+        // @ts-ignore
         _id: { $lt: new ObjectId(id) },
       },
     });

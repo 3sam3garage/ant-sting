@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
+import { PortfolioMongoModule } from '@libs/infrastructure/mongo';
+import { PortfolioAnalysisController, PortfolioController } from './controller';
+import { FigureMostRetainService } from './service';
 
 @Module({
-  imports: [],
-  providers: [],
+  imports: [PortfolioMongoModule],
+  controllers: [PortfolioController, PortfolioAnalysisController],
+  providers: [FigureMostRetainService],
 })
 export class PortfolioModule {}

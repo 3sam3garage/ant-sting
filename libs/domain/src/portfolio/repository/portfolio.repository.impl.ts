@@ -8,4 +8,6 @@ export interface PortfolioRepositoryImpl {
   findOneById(id: unknown): Promise<Portfolio>;
 
   findOnePreviousByIdAndIssuer(id: unknown, issuer: string): Promise<Portfolio>;
+
+  findByPeriod(start: string, end: string): Promise<Portfolio[]>;
 }
