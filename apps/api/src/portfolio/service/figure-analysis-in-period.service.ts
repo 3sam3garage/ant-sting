@@ -46,6 +46,7 @@ export class FigureAnalysisInPeriodService {
 
   private async figureNewlyAcquired(portfolios: Portfolio[]) {
     const acquireMap = new Map<string, number>();
+    const disposeMap = new Map<string, number>();
 
     const tasks = portfolios.map((portfolio) => {
       return this.portfolioRepository.findOnePreviousByIdAndIssuer(
@@ -60,16 +61,32 @@ export class FigureAnalysisInPeriodService {
       const prev = prevPortfolios[i];
 
       if (current && prev) {
-        const { added } = Portfolio.figureAddedAndRemoved(current, prev);
+        const { added, removed } = Portfolio.figureAddedAndRemoved(
+          current,
+          prev,
+        );
         for (const item of added) {
           const prev = acquireMap.get(item.cusip) || 0;
           acquireMap.set(item.cusip, prev + 1);
         }
+
+        for (const item of removed) {
+          const prev = disposeMap.get(item.cusip) || 0;
+          disposeMap.set(item.cusip, prev + 1);
+        }
       }
     }
 
-    const values = [...acquireMap].sort((a, b) => b[1] - a[1]);
-    return values.slice(0, 10);
+    const acquires = [...acquireMap].sort((a, b) => b[1] - a[1]);
+    // return values.slice(0, 10);
+
+    const disposed = [...disposeMap].sort((a, b) => b[1] - a[1]);
+    // return values.slice(0, 10);
+
+    return {
+      acquired: acquires.slice(0, 10),
+      disposed: disposed.slice(0, 10),
+    };
   }
 
   async exec(period: number) {
@@ -78,7 +95,7 @@ export class FigureAnalysisInPeriodService {
     const end = format('yyyy-MM-dd', date);
 
     const portfolios = await this.portfolioRepository.findByPeriod(start, end);
-    const [retain, valued, acquired] = await Promise.all([
+    const [retain, valued, { acquired, disposed }] = await Promise.all([
       this.figureMostRetain(portfolios),
       this.figureMostValued(portfolios),
       await this.figureNewlyAcquired(portfolios),
@@ -92,14 +109,17 @@ export class FigureAnalysisInPeriodService {
     }
 
     return {
+      acquired: acquired.map(([cusip, count]) => {
+        return { name: stockMap.get(cusip).name + ` (${cusip})`, count };
+      }),
+      disposed: disposed.map(([cusip, count]) => {
+        return { name: stockMap.get(cusip)?.name + ` (${cusip})`, count };
+      }),
       retain: retain.map(([cusip, count]) => {
         return { name: stockMap.get(cusip).name + ` (${cusip})`, count };
       }),
       valued: valued.map(([cusip, value]) => {
         return { name: stockMap.get(cusip).name + ` (${cusip})`, value };
-      }),
-      acquired: acquired.map(([cusip, count]) => {
-        return { name: stockMap.get(cusip).name + ` (${cusip})`, count };
       }),
     };
   }
