@@ -18,11 +18,11 @@ export class Portfolio extends BaseDomainEntity {
   items: PortfolioItem[];
 
   static figureAddedAndRemoved(
-    a: Portfolio,
-    b: Portfolio,
+    latest: Portfolio,
+    old: Portfolio,
   ): { added: PortfolioItem[]; removed: PortfolioItem[] } {
-    const newSet = new Set(a.items.map((item) => item.cusip));
-    const removedSet = new Set(b.items.map((item) => item.cusip));
+    const newSet = new Set(latest.items.map((item) => item.cusip));
+    const removedSet = new Set(old.items.map((item) => item.cusip));
     for (const cusip of [...newSet]) {
       const currentIncludes = newSet.has(cusip);
       const prevIncludes = removedSet.has(cusip);
@@ -32,7 +32,7 @@ export class Portfolio extends BaseDomainEntity {
       }
     }
 
-    const cusipMap = keyBy([...a.items, ...b.items], 'cusip');
+    const cusipMap = keyBy([...latest.items, ...old.items], 'cusip');
 
     return {
       added: [...newSet].map((cusip) => cusipMap[cusip]),

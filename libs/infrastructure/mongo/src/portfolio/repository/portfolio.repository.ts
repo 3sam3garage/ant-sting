@@ -59,7 +59,7 @@ export class PortfolioRepository
   async findOnePreviousByIdAndIssuer(
     id: ObjectId,
     issuer: string,
-  ): Promise<DomainEntity> {
+  ): Promise<DomainEntity | null> {
     const persistence = await this.em.findOne(Persistence, {
       where: {
         issuer,
@@ -69,7 +69,11 @@ export class PortfolioRepository
       },
     });
 
-    return this.toDomain(persistence);
+    if (persistence) {
+      return this.toDomain(persistence);
+    }
+
+    return null;
   }
 
   protected toDomain(persistence: Persistence): DomainEntity {

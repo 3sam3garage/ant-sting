@@ -1,10 +1,10 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { FigureMostRetainService } from '../service';
+import { FigureAnalysisInPeriodService } from '../service';
 
 @Controller('portfolio-analysis')
 export class PortfolioAnalysisController {
   constructor(
-    private readonly figureMostRetainService: FigureMostRetainService,
+    private readonly figureMostRetainService: FigureAnalysisInPeriodService,
   ) {}
 
   @Get('in-period')
