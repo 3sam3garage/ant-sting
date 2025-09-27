@@ -113,7 +113,7 @@ export class FigureAnalysisInPeriodService {
         return { name: stockMap.get(cusip).name + ` (${cusip})`, count };
       }),
       disposed: disposed.map(([cusip, count]) => {
-        return { name: stockMap.get(cusip)?.name + ` (${cusip})`, count };
+        return { name: stockMap.get(cusip)?.name + ` (${cusip})`, count }; // 예전에 담았던 종목일 수 있으므로 name 이 없을 수 있음.
       }),
       retain: retain.map(([cusip, count]) => {
         return { name: stockMap.get(cusip).name + ` (${cusip})`, count };
