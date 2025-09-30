@@ -18,7 +18,7 @@
     "batch:poc:sec-13f": "nest start batch -- poc sec-13f",
     "batch:poc:scrape-rss": "nest start batch -- poc scrape-rss",
     "build:api": "nest build api",
-    "build:agetn": "nest build agent",
+    "build:agent": "nest build agent",
     "build:batch": "nest build batch",
     "build:consumer": "nest build consumer",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
