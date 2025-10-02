@@ -1,14 +1,23 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { FigureAnalysisInPeriodService } from '../service';
+import {
+  FigureAcquiredService,
+  FigureAnalysisInPeriodService,
+} from '../service';
 
 @Controller('portfolio-analysis')
 export class PortfolioAnalysisController {
   constructor(
     private readonly figureMostRetainService: FigureAnalysisInPeriodService,
+    private readonly figureAcquiredService: FigureAcquiredService,
   ) {}
 
-  @Get('in-period')
-  async portfolioAnalysis(@Query('period') period: number) {
+  @Get('summary')
+  async summary(@Query('period') period: number) {
     return await this.figureMostRetainService.exec(period);
+  }
+
+  @Get('acquired')
+  async acquired(@Query('period') period: number) {
+    return await this.figureAcquiredService.exec(period);
   }
 }
