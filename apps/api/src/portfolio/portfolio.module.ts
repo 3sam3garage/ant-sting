@@ -4,11 +4,16 @@ import { PortfolioAnalysisController, PortfolioController } from './controller';
 import {
   FigureAnalysisInPeriodService,
   FigureAcquiredService,
+  FigureValueService,
 } from './service';
 
 @Module({
   imports: [PortfolioMongoModule],
   controllers: [PortfolioController, PortfolioAnalysisController],
-  providers: [FigureAnalysisInPeriodService, FigureAcquiredService],
+  providers: [
+    FigureAnalysisInPeriodService,
+    FigureAcquiredService,
+    FigureValueService,
+  ],
 })
 export class PortfolioModule {}
