@@ -10,6 +10,7 @@ import {
   AI_TOKEN,
   AIServiceImpl,
   EXTERNAL_API_TOKEN,
+  fromEconomicInfoToSlackMessage,
   MONGO_REPOSITORY_TOKEN,
   SlackApiImpl,
 } from '@libs/application';
@@ -53,7 +54,7 @@ export class AnalyzeEconomicInformationTask {
     await this.analysisRepo.save(analysis);
 
     // slack 발송
-    // const economicInformationMessage = fromEconomicInfoToSlackMessage(analysis);
-    // await this.slackService.sendMessage(economicInformationMessage);
+    const economicInformationMessage = fromEconomicInfoToSlackMessage(analysis);
+    await this.slackService.sendMessage(economicInformationMessage);
   }
 }

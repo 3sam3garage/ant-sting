@@ -91,7 +91,7 @@ export class FirefoxService implements OnModuleInit, OnModuleDestroy {
       ],
       extraPrefsFirefox,
       defaultViewport: { height: 1080, width: 1920 },
-      headless: false,
+      headless: true,
       browser: 'firefox',
       devtools: true,
     });
