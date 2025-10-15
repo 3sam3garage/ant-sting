@@ -44,7 +44,7 @@ export class ScrapeRssJob {
     }
   }
 
-  @Cron('* * * * *', { timeZone: 'Asia/Seoul' })
+  @Cron('*/5 * * * *', { timeZone: 'Asia/Seoul' })
   async handle(): Promise<void> {
     Logger.log(`${new Date()} scrape-sec-rss scheduler start`);
 
