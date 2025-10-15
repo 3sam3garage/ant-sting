@@ -73,8 +73,8 @@ services:
     command:
       - 'node'
       - './apps/agent/src/main.js'
-
-  kroki:
-    image: yuzutech/kroki
-    ports:
-      - "8000:8000"
+#
+#  kroki:
+#    image: yuzutech/kroki
+#    ports:
+#      - "8000:8000"
