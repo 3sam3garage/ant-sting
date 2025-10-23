@@ -1,8 +1,8 @@
-FROM node:20.19.0-alpine as tsbuild
+FROM node:22.21.0-alpine as tsbuild
 
 
-ARG BUILD_SERVICE_NAME
-ENV BUILD_SERVICE_NAME=$BUILD_SERVICE_NAME
+ARG APP_NAME
+ENV APP_NAME=$APP_NAME
 
 RUN mkdir /usr/app
 WORKDIR /usr/app
@@ -12,13 +12,13 @@ COPY package*.json tsconfig*.json nest-cli*.json ./
 RUN npm ci
 COPY apps ./apps
 COPY libs ./libs
-RUN npm run build:${BUILD_SERVICE_NAME}
+RUN npm run build ${APP_NAME}
 
-FROM node:20.19.0-alpine
+FROM node:22.21.0-alpine
 LABEL maintainer="3sam3 <iamdap91@gmail.com>"
 
-ARG BUILD_SERVICE_NAME
-ENV BUILD_SERVICE_NAME=$BUILD_SERVICE_NAME
+ARG APP_NAME
+ENV APP_NAME=$APP_NAME
 
 RUN mkdir /usr/app
 WORKDIR /usr/app
@@ -42,4 +42,5 @@ EXPOSE 8080
 
 ENTRYPOINT ["/sbin/tini", "--"]
 
-CMD ["node", "./apps/${BUILD_SERVICE_NAME}/src/main.js"]
+# Start the application
+CMD node apps/${APP_NAME}/src/main.js

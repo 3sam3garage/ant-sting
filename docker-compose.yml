@@ -9,14 +9,14 @@ volumes:
   service_grafana:
 
 services:
-  grafana:
-    image: grafana/grafana
-    ports:
-      - '9111:3000'
-    environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-    volumes:
-      - service_grafana:/var/lib/grafana
+  #  grafana:
+  #    image: grafana/grafana
+  #    ports:
+  #      - '9111:3000'
+  #    environment:
+  #      - GF_AUTH_ANONYMOUS_ENABLED=true
+  #    volumes:
+  #      - service_grafana:/var/lib/grafana
 
   redis:
     image: redis:8.0-M03-alpine
@@ -25,12 +25,12 @@ services:
     networks:
       - network
     ports:
-      - 6379:6379
+      - "6379:6379"
     volumes:
       - service_redis:/data
 
   mongo:
-    image: mongo:latest
+    image: mongo:8
     container_name: mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -42,39 +42,54 @@ services:
     volumes:
       - service_mongo:/data/db
     ports:
-      - 27017:27017
+      - "27017:27017"
 
-  batch:
-    image: batch:latest
+  api:
+    build:
+      context: .
+      dockerfile: ./tools/Dockerfile
+      args:
+        APP_NAME: api
+    image: api:latest
     networks:
       network:
     env_file:
       - .env
-    command:
-      - 'node'
-      - './apps/batch/src/main.js'
-
-  consumer:
-    image: consumer:latest
-    networks:
-      network:
-    env_file:
-      - .env
-    command:
-      - 'node'
-      - './apps/consumer/src/main.js'
+    ports:
+      - "3002:3002"
 
   agent:
+    build:
+      context: .
+      dockerfile: ./tools/Dockerfile
+      args:
+        APP_NAME: agent
     image: agent:latest
     networks:
       network:
     env_file:
       - .env
-    command:
-      - 'node'
-      - './apps/agent/src/main.js'
-#
-#  kroki:
-#    image: yuzutech/kroki
-#    ports:
-#      - "8000:8000"
+
+  batch:
+    build:
+      context: .
+      dockerfile: ./tools/Dockerfile
+      args:
+        APP_NAME: batch
+    image: batch:latest
+    networks:
+      network:
+    env_file:
+      - .env
+
+  consumer:
+    build:
+      context: .
+      dockerfile: ./tools/Dockerfile
+      args:
+        APP_NAME: consumer
+    image: consumer:latest
+    networks:
+      network:
+    env_file:
+      - .env
