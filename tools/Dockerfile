@@ -30,6 +30,20 @@ RUN chown node:node /var/log/nodejs
 RUN mkdir /usr/app/temp
 RUN chown node:node /usr/app/temp
 
+# Chromium 설치 (consumer 앱인 경우)
+RUN if [ "$APP_NAME" = "consumer" ]; then \
+    apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont; \
+    fi
+
+#ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+#ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
 COPY --from=tsbuild /usr/app/dist .
 COPY --from=tsbuild /usr/app/node_modules ./node_modules
 COPY package.json nest-cli*.json ./
@@ -37,10 +51,6 @@ COPY package.json nest-cli*.json ./
 RUN npm prune --omit=dev
 
 USER node
-
-EXPOSE 8080
-
-ENTRYPOINT ["/sbin/tini", "--"]
 
 # Start the application
 CMD node apps/${APP_NAME}/src/main.js
