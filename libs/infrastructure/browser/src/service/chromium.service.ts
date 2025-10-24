@@ -37,7 +37,7 @@ export class ChromiumService implements OnModuleDestroy {
   }
 
   async getPage(): Promise<Page> {
-    if (!this.browser) {
+    if (!this.browser || !this.browser.connected) {
       await this.initBrowser();
     }
 
