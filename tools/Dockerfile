@@ -30,8 +30,8 @@ RUN chown node:node /var/log/nodejs
 RUN mkdir /usr/app/temp
 RUN chown node:node /usr/app/temp
 
-# Chromium 설치 (consumer 앱인 경우)
-RUN if [ "$APP_NAME" = "consumer" ]; then \
+# Chromium 설치 (consumer, agent 앱인 경우)
+RUN if [ "$APP_NAME" = "consumer" ] || [ "$APP_NAME" = "agent" ]; then \
     apk add --no-cache \
     chromium \
     nss \
