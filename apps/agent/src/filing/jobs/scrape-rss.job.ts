@@ -8,9 +8,7 @@ import { AnalyzeSec13fMessage } from '@libs/shared/core';
 import {
   BrowserImpl,
   BROWSERS_TOKEN,
-  EXTERNAL_API_TOKEN,
   REDIS_REPOSITORY_TOKEN,
-  SecApiImpl,
 } from '@libs/application';
 import { FilingRss, SecFeedRepositoryImpl } from '@libs/domain';
 import { parseStringPromise } from 'xml2js';
@@ -23,8 +21,6 @@ export class ScrapeRssJob {
   constructor(
     @InjectQueue(QUEUE_NAME.ANALYZE_13F)
     private readonly queue: Queue,
-    // @Inject(EXTERNAL_API_TOKEN.SEC_API_SERVICE)
-    // private readonly secApiService: SecApiImpl,
     @Inject(REDIS_REPOSITORY_TOKEN.SEC_FEED)
     private readonly secFeedRedisRepository: SecFeedRepositoryImpl,
     @Inject(BROWSERS_TOKEN.CHROMIUM)
@@ -32,8 +28,6 @@ export class ScrapeRssJob {
   ) {}
 
   async run() {
-    // const rss = await this.secApiService.fetchRSS();
-
     const page = await this.chromiumService.getPage();
     await page.goto(
       'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=13F-HR&company=&dateb=&owner=include&output=atom&start=0&count=100',
