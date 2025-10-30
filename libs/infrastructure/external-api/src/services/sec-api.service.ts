@@ -25,6 +25,9 @@ export class SecApiService implements SecApiImpl {
     return plainToInstance(SecFiling, response.data);
   }
 
+  /**
+   * @deprecated
+   */
   async fetchRSS(start = 0, count = 100): Promise<FilingRss> {
     const response = await axios.get(
       'https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=13F-HR&company=&dateb=&owner=include&output=atom',

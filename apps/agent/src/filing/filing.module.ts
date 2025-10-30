@@ -10,12 +10,14 @@ import {
   REDIS_NAME,
   RedisConfigService,
 } from '@libs/shared/config';
+import { BrowserModule } from '@libs/infrastructure/browser';
 
 @Module({
   imports: [
     PortfolioMongoModule,
     ExternalApiModule,
     InvestmentRedisModule,
+    BrowserModule,
     BullModule.registerQueueAsync({
       name: QUEUE_NAME.ANALYZE_13F,
       inject: [RedisConfigService],

@@ -52,7 +52,7 @@ services:
         APP_NAME: api
     image: api:latest
     networks:
-      network:
+      - network
     env_file:
       - .env
     ports:
@@ -66,9 +66,12 @@ services:
         APP_NAME: agent
     image: agent:latest
     networks:
-      network:
+      - network
     env_file:
       - .env
+    environment:
+      - PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
 
   batch:
     build:
@@ -78,9 +81,12 @@ services:
         APP_NAME: batch
     image: batch:latest
     networks:
-      network:
+      - network
     env_file:
       - .env
+    environment:
+      - PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
 
   consumer:
     build:
@@ -90,6 +96,9 @@ services:
         APP_NAME: consumer
     image: consumer:latest
     networks:
-      network:
+      - network
     env_file:
       - .env
+    environment:
+      - PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
