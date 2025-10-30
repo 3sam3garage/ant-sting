@@ -70,8 +70,8 @@ services:
     env_file:
       - .env
     environment:
-      - PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
-      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
   batch:
     build:
@@ -85,8 +85,8 @@ services:
     env_file:
       - .env
     environment:
-      - PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
-      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
   consumer:
     build:
@@ -100,5 +100,5 @@ services:
     env_file:
       - .env
     environment:
-      - PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
-      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
